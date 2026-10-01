@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "VitaCite",
+    "slug": "vitacite",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "vitacite",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.vitacite.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
+    },
+    "android": {
+      "package": "org.vitacite.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0f6e64"
+      },
+      "allowBackup": false
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "fr": "./locales/fr.json",
+      "es": "./locales/es.json",
+      "pt": "./locales/pt.json",
+      "de": "./locales/de.json"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0f6e64",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 96
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "apiUrl": "http://localhost:8000"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/icon.png",
+      "name": "VitaCite",
+      "themeColor": "#0f6e64"
+    }
+  }
+}

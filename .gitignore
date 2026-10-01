@@ -63,3 +63,6 @@ mlruns/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Expo web export
+mobile/dist-web/
