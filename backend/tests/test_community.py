@@ -219,3 +219,26 @@ def test_cross_origin_clients_can_use_the_community(client):
     assert r.status_code == 200
     allowed = r.headers["access-control-allow-headers"].lower()
     assert "x-member-token" in allowed and "x-country" in allowed and "PUT" in r.headers["access-control-allow-methods"]
+
+
+def test_retention_purges_old_removed_posts_and_feedback(client, container):
+    from datetime import UTC, datetime, timedelta
+
+    from app.db.models import CommunityPostRow, FeedbackRow
+    from app.services.retention import due, run_retention
+
+    ana = join(client, "Old Removed")
+    keep = post(client, ana, "A kind post that stays").json()["post"]["id"]
+    gone = post(client, ana, "Buy now with promo code HEAL").json()["post"]["id"]
+    client.post(f"/api/v1/admin/community/posts/{gone}/moderate", json={"action": "remove"})
+    client.post("/api/v1/feedback", json={"target_type": "insight", "target_id": "x", "rating": 1})
+    with container.db.session() as s:
+        s.get(CommunityPostRow, gone).created_at = datetime.now(UTC) - timedelta(days=120)
+        for fb in s.query(FeedbackRow):
+            fb.created_at = datetime.now(UTC) - timedelta(days=400)
+    assert due(container.db)
+    result = run_retention(container.settings, container.db)
+    assert result["community_posts"] == 1 and result["feedback"] == 1
+    assert not due(container.db)
+    with container.db.session() as s:
+        assert s.get(CommunityPostRow, gone) is None and s.get(CommunityPostRow, keep) is not None

@@ -10,11 +10,11 @@ rules:
     level: emergency
     block_generation: true
     patterns:
-      - "\\b(kill|hurt|harm) myself\\b|(commit|committing|thinking about|thoughts of|want to) (commit )?suicide|\\bsuicidal\\b|end (it all|my life)|don'?t want to (live|be alive)|better off dead|no reason to live"
-      - "me (tuer|suicider)|pensées suicidaires|idées suicidaires|mettre fin à (mes jours|ma vie)|envie de mourir|plus envie de vivre|en finir avec (la|ma) vie"
-      - "suicidarme|pensamientos suicidas|ideas suicidas|quitarme la vida|matarme|no quiero (vivir|seguir viviendo)|acabar con mi vida"
-      - "suicidar-me|me suicidar|pensamentos suicidas|me matar|tirar a minha (própria )?vida|não quero (mais )?viver|acabar com a minha vida"
-      - "suizidgedanken|suizidal|mich umbringen|mir das leben nehmen|nicht mehr leben (will|möchte)|lebensmüde"
+      - "\\b(kill|hurt|harm) myself\\b|(commit|committing|thinking about|thoughts of|want to) (commit )?suicide|\\bsuicidal\\b|end (it all|my life)|take my (own )?life|don'?t want to (live|be alive)|\\bwant to die\\b|wish i (was|were) dead|better off dead|no reason to live|not worth living"
+      - "me (tuer|suicider)|me donner la mort|pensées suicidaires|idées suicidaires|mettre fin à (mes jours|ma vie)|envie de mourir|je veux mourir|plus envie de vivre|ne veux plus vivre|en finir avec (la|ma) vie|(veux\\s+|envie d['’]|besoin d['’])en finir\\b(?!\\s+avec\\s+(les?|la|ce|cette|mon|ma|mes)\\s+(trait|chimio|radio|douleur|fatigue|examens?))"
+      - "suicidarme|pensamientos suicidas|ideas suicidas|quitarme la vida|matarme|quiero morir(me)?|no quiero (vivir|seguir viviendo)|acabar con (mi vida|todo)|no vale la pena vivir"
+      - "suicidar-me|me suicidar|pensamentos suicidas|me matar|matar-me|quero morrer|tirar a minha (própria )?vida|não quero (mais )?viver|acabar com (a minha vida|tudo)|pôr fim à (minha )?vida|não vale a pena viver"
+      - "suizidgedanken|suizidal|mich umbringen|mir das leben nehmen|nicht mehr leben (will|möchte)|(will|möchte) nicht mehr leben|(will|möchte) sterben|mein leben beenden|allem ein ende (setzen|machen)|lebensmüde"
   - id: medical_emergency
     level: emergency
     block_generation: true

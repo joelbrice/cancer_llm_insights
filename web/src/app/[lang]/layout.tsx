@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const name = brandName();
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: `${name} — ${t("app.tagline")}`, template: `%s · ${name}` },
+    title: { default: `${name} — ${t("app.descriptor")}`, template: `%s · ${name}` },
     description: t("app.description"),
     applicationName: name,
     alternates: { canonical: `/${lang}`, languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}`])) },
-    openGraph: { type: "website", siteName: name, title: name, description: t("app.description"), locale: lang },
+    openGraph: { type: "website", siteName: name, title: `${name} — ${t("app.descriptor")}`, description: t("app.description"), locale: lang },
     appleWebApp: { capable: true, title: BRAND.shortName, statusBarStyle: "default" },
     icons: { icon: "/icon.svg", apple: "/icons/apple-touch-icon.png" },
     formatDetection: { telephone: false },

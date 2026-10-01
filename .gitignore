@@ -71,3 +71,6 @@ mobile/dist-web/
 models/
 ml/serve/ollama/*.gguf
 ml/**/eval_report*
+
+# Kubernetes secrets
+deploy/k8s/overlays/*/secrets.env

@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/.expo
+**/dist-web
+**/__pycache__
+.git
+data/raw
+data/index
+data/processed
+data/cache
+data/finetune
+models
+ml
+backend
+mobile/src
+mobile/assets

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   const t = createTranslator("en");
   return {
     id: "/",
-    name: brandName(),
+    name: `${brandName()} — ${t("app.descriptor")}`,
     short_name: BRAND.shortName,
     description: t("app.description"),
     start_url: "/",
@@ -22,8 +22,10 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
     ],
     shortcuts: [
-      { name: "Ask", url: "/ask", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
-      { name: "Insights", url: "/insights", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("nav.ask"), url: "/ask", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("nav.insights"), url: "/insights", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("nav.community"), url: "/community", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("nav.plan"), url: "/plan", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
     ],
   };
 }

@@ -159,6 +159,11 @@ class Settings(BaseSettings):
     community_reports_per_day: int = 20
     community_reactions_per_hour: int = 300
     community_strikes_to_suspend: int = 3     # removed posts before automatic suspension
+
+    # ── Retention (docs/BUILD_SPEC.md §10.1) ──────────────────────────────────
+    community_removed_retention_days: int = 90
+    feedback_retention_days: int = 365
+    chat_trace_retention_days: int = 30
     max_message_chars: int = 4000
     max_history_messages: int = 12
 

@@ -1,0 +1,43 @@
+# Non-secret settings. Secrets (DATABASE_URL, ADMIN_API_KEY, QDRANT_API_KEY, LLM_API_KEY, bucket credentials)
+# come from the `stepwell-secrets` Secret generated in the overlay.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stepwell-config
+data:
+  ENVIRONMENT: production
+  LOG_JSON: "true"
+  DATA_DIR: /data
+  DATA_SOURCES_FILE: /config/sources.yaml
+  HF_HOME: /models/huggingface
+  VECTOR_STORE: qdrant
+  QUEUE_BACKEND: rq
+  RUN_SCHEDULER: "true"
+  TRUST_FORWARDED_FOR: "true"
+  EMBEDDING_PROVIDER: sentence_transformers
+  EMBEDDING_MODEL: intfloat/multilingual-e5-base
+  LLM_PROVIDER: openai_compatible
+  LLM_MODEL: cancer-insights-llama
+  SYNC_INTERVAL_SECONDS: "300"
+---
+# Where the evidence library lives. In Kubernetes, link buckets (S3/GCS/Azure) — not local folders.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stepwell-sources
+data:
+  sources.yaml: |
+    version: 1
+    defaults:
+      include: ["**/*.pdf", "**/*.html", "**/*.htm", "**/*.md", "**/*.txt", "**/*.docx", "**/*.xml", "**/*.json", "**/*.jsonl", "**/*.csv"]
+    sources:
+      - id: research
+        name: Research articles
+        uri: s3://stepwell-evidence/research
+        storage_options: { key: "${AWS_ACCESS_KEY_ID}", secret: "${AWS_SECRET_ACCESS_KEY}" }
+        defaults: { source_type: auto, credibility: peer_reviewed }
+      - id: guidelines
+        name: Guidelines and agency reports
+        uri: s3://stepwell-evidence/guidelines
+        storage_options: { key: "${AWS_ACCESS_KEY_ID}", secret: "${AWS_SECRET_ACCESS_KEY}" }
+        defaults: { source_type: guideline, credibility: authoritative }

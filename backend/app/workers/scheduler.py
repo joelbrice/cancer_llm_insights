@@ -56,7 +56,18 @@ class SyncScheduler:
         jobs.recover_stale()
         if not jobs.try_lock("scheduler", self.owner, timedelta(seconds=max(90, interval * 2))):
             return False
+        self._retention()
         if jobs.active("ingest") is not None:
             return False
         jobs.submit("ingest", {"mode": "incremental"}, triggered_by="scheduler")
         return True
+
+    def _retention(self) -> None:
+        """Daily data-retention purge, run by the scheduler leader only."""
+        from app.services.retention import due, run_retention
+
+        try:
+            if due(self.container.db):
+                run_retention(self.settings, self.container.db)
+        except Exception:  # retention must never stop syncing
+            log.exception("retention purge failed")

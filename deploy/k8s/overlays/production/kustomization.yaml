@@ -1,0 +1,22 @@
+# kubectl apply -k deploy/k8s/overlays/production   (after: cp secrets.env.example secrets.env && edit)
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: [../../base]
+images:
+  - { name: ghcr.io/joelbrice/stepwell-api, newTag: "1.0.0" }
+  - { name: ghcr.io/joelbrice/stepwell-web, newTag: "1.0.0" }
+secretGenerator:
+  - name: stepwell-secrets
+    namespace: stepwell
+    envs: [secrets.env]
+    options: { disableNameSuffixHash: false }
+patches:
+  - target: { kind: Ingress, name: stepwell }
+    patch: |
+      - { op: replace, path: /spec/tls/0/hosts/0, value: app.stepwell.example }
+      - { op: replace, path: /spec/rules/0/host, value: app.stepwell.example }
+  - target: { kind: ConfigMap, name: stepwell-config }
+    patch: |
+      - { op: add, path: /data/CORS_ORIGINS, value: "https://app.stepwell.example" }
+      - { op: add, path: /data/QDRANT_URL, value: "http://qdrant.data.svc.cluster.local:6333" }
+      - { op: add, path: /data/LLM_BASE_URL, value: "http://vllm.llm.svc.cluster.local:8001/v1" }
