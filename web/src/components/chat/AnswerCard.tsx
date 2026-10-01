@@ -8,7 +8,7 @@ import {
   type ClaimCheck,
   type SafetyAssessment,
   type Translate,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import Link from "next/link";
 import { Fragment, useState, type ReactNode } from "react";
 

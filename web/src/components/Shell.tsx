@@ -1,6 +1,6 @@
 "use client";
 
-import { brandName, LOCALE_NAMES, LOCALES, type Locale } from "@vitacite/shared";
+import { brandName, LOCALE_NAMES, LOCALES, type Locale } from "@stepwell/shared";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -9,9 +9,11 @@ import { useLocale, useT } from "@/lib/i18n-client";
 import { readLocal, writeLocal } from "@/lib/storage";
 
 import { Icon, Logo } from "./Icon";
-import { isActive, PRIMARY_NAV, SECONDARY_NAV } from "./nav";
+import { HEADER_NAV, isActive, PRIMARY_NAV, SECONDARY_NAV } from "./nav";
 
-const THEME_KEY = "vitacite.theme";
+const SHORT = { home: 1, ask: 1, insights: 1, check: 1, plan: 1, community: 1 } as const;
+
+const THEME_KEY = "stepwell.theme";
 type Theme = "system" | "light" | "dark";
 
 /** Inline, render-blocking script: applies the saved theme before first paint (no flash). */
@@ -98,19 +100,23 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
         <Link href={link("/")} className="flex items-center gap-2 font-bold tracking-tight text-ink" aria-label={t("nav.home")}>
           <Logo />
-          <span className="text-lg">{brandName()}</span>
+          <span className="flex flex-col leading-none">
+            <span className="text-lg">{brandName()}</span>
+            <span className="mt-0.5 hidden whitespace-nowrap text-[0.7rem] font-medium tracking-normal text-ink-2 sm:block">{t("app.descriptor")}</span>
+          </span>
         </Link>
         <nav aria-label="Main" className="ml-4 hidden items-center gap-1 lg:flex">
-          {[...PRIMARY_NAV.slice(1), SECONDARY_NAV[0]!, SECONDARY_NAV[1]!].map((item) => {
+          {HEADER_NAV.map((item) => {
             const active = isActive(pathname, lang, item.path);
             return (
               <Link
                 key={item.key}
                 href={link(item.path)}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-full px-3 py-2 text-sm font-medium transition ${active ? "bg-brand-soft text-brand-strong" : "text-ink-2 hover:bg-surface-2 hover:text-ink"}`}
+                className={`whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition ${active ? "bg-brand-soft text-brand-strong" : "text-ink-2 hover:bg-surface-2 hover:text-ink"}`}
+                title={t(`nav.${item.key}`)}
               >
-                {t(`nav.${item.key}`)}
+                {item.key in SHORT ? t(`navShort.${item.key as keyof typeof SHORT}`) : t(`nav.${item.key}`)}
               </Link>
             );
           })}
@@ -180,7 +186,7 @@ export function BottomNav() {
                 className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-medium ${active ? "text-brand" : "text-ink-2"}`}
               >
                 <Icon name={item.icon} size={22} />
-                <span className="max-w-full truncate px-1">{t(`navShort.${item.key as "home" | "ask" | "insights" | "check" | "plan"}`)}</span>
+                <span className="max-w-full truncate px-1">{t(`navShort.${item.key as "home" | "ask" | "insights" | "community" | "plan"}`)}</span>
               </Link>
             </li>
           );

@@ -1,4 +1,4 @@
-import { ApiError } from "@vitacite/shared";
+import { ApiError } from "@stepwell/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useSettings } from "./settings";

@@ -4,10 +4,10 @@ import {
   isLocale,
   negotiateLocale,
   STORAGE_KEYS,
-  VitaCiteClient,
+  StepwellClient,
   type Locale,
   type Translate,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import Constants from "expo-constants";
 import { fetch as expoFetch } from "expo/fetch";
 import { getLocales } from "expo-localization";
@@ -19,7 +19,7 @@ import { palette, type Colors } from "./theme";
 
 configureBrand({ name: process.env.EXPO_PUBLIC_APP_NAME });
 
-export const API_URL_KEY = "vitacite.apiUrl";
+export const API_URL_KEY = "stepwell.apiUrl";
 type ThemePref = "system" | "light" | "dark";
 
 const DEFAULT_API =
@@ -35,7 +35,7 @@ interface SettingsValue {
   colors: Colors;
   apiUrl: string;
   setApiUrl: (url: string | null) => void;
-  api: VitaCiteClient;
+  api: StepwellClient;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
@@ -63,7 +63,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       apiUrl,
       setApiUrl: (url) => setSavedApi(url ? url.replace(/\/+$/, "") : null),
       // expo/fetch streams response bodies, so answers render token by token on device.
-      api: new VitaCiteClient({ baseUrl: apiUrl, fetch: expoFetch as unknown as typeof fetch, timeoutMs: 30_000 }),
+      api: new StepwellClient({ baseUrl: apiUrl, fetch: expoFetch as unknown as typeof fetch, timeoutMs: 30_000 }),
     }),
     [locale, scheme, themePref, apiUrl, setSavedLocale, setThemePref, setSavedApi],
   );

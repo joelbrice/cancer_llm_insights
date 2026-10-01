@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { brandName, LOCALE_NAMES, LOCALES, STORAGE_KEYS } from "@vitacite/shared";
+import { brandName, LOCALE_NAMES, LOCALES, STORAGE_KEYS } from "@stepwell/shared";
 import Constants from "expo-constants";
 import { router, type Href } from "expo-router";
 import { useState } from "react";
@@ -10,13 +10,16 @@ import { API_URL_KEY, useSettings } from "@/lib/settings";
 import { removeKeys } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
 
-export default function More() {
+export default function Me() {
   const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors } = useSettings();
   const [url, setUrl] = useState(apiUrl);
   const links: { href: Href; icon: IconName; label: string }[] = [
     { href: "/plan", icon: "checkbox-outline", label: t("nav.plan") },
+    { href: "/check", icon: "clipboard-outline", label: t("nav.check") },
     { href: "/profile", icon: "person-circle-outline", label: t("nav.profile") },
     { href: "/library", icon: "library-outline", label: t("library.title") },
+    { href: "/methodology", icon: "school-outline", label: t("nav.methodology") },
+    { href: "/guidelines", icon: "shield-checkmark-outline", label: t("nav.guidelines") },
   ];
   const clearAll = () =>
     Alert.alert(t("profile.clear"), undefined, [
@@ -25,14 +28,14 @@ export default function More() {
         text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
-          await removeKeys([STORAGE_KEYS.profile, STORAGE_KEYS.plan, STORAGE_KEYS.check, STORAGE_KEYS.conversation, STORAGE_KEYS.locale, STORAGE_KEYS.theme, API_URL_KEY]);
+          await removeKeys([STORAGE_KEYS.profile, STORAGE_KEYS.plan, STORAGE_KEYS.check, STORAGE_KEYS.conversation, STORAGE_KEYS.locale, STORAGE_KEYS.theme, STORAGE_KEYS.communityToken, API_URL_KEY]);
           Alert.alert(t("profile.cleared"));
         },
       },
     ]);
   return (
     <Screen>
-      <Txt variant="title">{t("nav.settings")}</Txt>
+      <Txt variant="title">{t("nav.me")}</Txt>
       <Card style={{ padding: 0, gap: 0 }}>
         {links.map((l, i) => (
           <Pressable
@@ -89,6 +92,10 @@ export default function More() {
       <Card>
         <Txt variant="h2">{t("about.title")}</Txt>
         <Txt variant="small">{t("about.mission")}</Txt>
+        <Txt style={{ fontWeight: "600" }}>{t("about.nameTitle")}</Txt>
+        <Txt variant="small">{t("about.name")}</Txt>
+        <Txt style={{ fontWeight: "600" }}>{t("about.forTitle")}</Txt>
+        <Txt variant="small">{t("about.for")}</Txt>
         <Txt style={{ fontWeight: "600" }}>{t("about.privacyTitle")}</Txt>
         <Txt variant="small">{t("about.privacy")}</Txt>
         <Txt style={{ fontWeight: "600" }}>{t("about.safetyTitle")}</Txt>

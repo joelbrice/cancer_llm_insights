@@ -170,3 +170,13 @@ def test_parse_json_object_recovers_from_preamble():
     assert parse_json_object('Sure! Here it is: {"x": {"y": 2}} trailing') == {"x": {"y": 2}}
     with pytest.raises(LLMError):
         parse_json_object("no json here")
+
+
+def test_audiences_follow_the_taxonomy_and_legacy_values_are_mapped(container):
+    from types import SimpleNamespace
+
+    insights = container.insights
+    current = insights._audience(SimpleNamespace(topic_id="exercise-during-treatment", audience=["living_with_cancer"]))
+    assert current == ["in_treatment"]
+    legacy = insights._audience(SimpleNamespace(topic_id="retired-topic", audience=["living_with_cancer", "prevention"]))
+    assert legacy == ["in_treatment", "after_treatment", "prevention"]

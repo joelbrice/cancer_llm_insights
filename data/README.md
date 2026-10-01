@@ -81,7 +81,7 @@ Metadata is resolved in this order (later wins):
 | `credibility` | enum | `authoritative`, `peer_reviewed`, `reputable`, `general`, `unverified` |
 | `topics` | list[str] | `["physical_activity", "survivorship"]` |
 | `cancer_types` | list[str] | `["breast", "colorectal"]` |
-| `audience` | list[str] | `prevention`, `living_with_cancer`, `caregivers` |
+| `audience` | list[str] | `prevention`, `in_treatment`, `after_treatment`, `caregivers` |
 | `sample_size` | int | `120000` |
 | `license` | str | `CC-BY-4.0` |
 | `retracted` | bool | `true` excludes the document from retrieval entirely |

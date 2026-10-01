@@ -199,3 +199,72 @@ class KeyValueRow(Base):
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     value: Mapped[dict] = mapped_column(default=dict)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+
+# ── Community ────────────────────────────────────────────────────────────────────────────────────────────────
+class CommunityMemberRow(Base):
+    """Pseudonymous member. No name, email or IP is stored; the access token is kept only as a SHA-256 hash."""
+
+    __tablename__ = "community_members"
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    handle: Mapped[str] = mapped_column(String(40))
+    handle_key: Mapped[str] = mapped_column(String(40), unique=True)  # case/accent-folded for uniqueness
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    language: Mapped[str] = mapped_column(String(8), default="en")
+    journey: Mapped[str | None] = mapped_column(String(24))  # optional badge chosen by the member
+    status: Mapped[str] = mapped_column(String(16), default="active")  # active | suspended | banned
+    guidelines_version: Mapped[int] = mapped_column(Integer, default=1)
+    consented_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    strikes: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class CommunityPostRow(Base):
+    __tablename__ = "community_posts"
+    __table_args__ = (Index("ix_community_feed", "circle", "status", "created_at"),)
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    member_id: Mapped[str | None] = mapped_column(ForeignKey("community_members.id", ondelete="SET NULL"),
+                                                  index=True)
+    parent_id: Mapped[str | None] = mapped_column(String(40), index=True)  # replies are one level deep
+    circle: Mapped[str] = mapped_column(String(32))
+    kind: Mapped[str] = mapped_column(String(16))  # win | encouragement | question | tip | milestone | reply
+    language: Mapped[str] = mapped_column(String(8), index=True)
+    body: Mapped[str] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(16), index=True)  # published | held | removed | deleted
+    flags: Mapped[list] = mapped_column(default=list)
+    notes: Mapped[list] = mapped_column(default=list)  # reader-facing notes, e.g. "care_team"
+    moderation: Mapped[dict] = mapped_column(default=dict)  # automated reasons + moderator decision
+    related_insight_id: Mapped[str | None] = mapped_column(String(120))
+    reaction_counts: Mapped[dict] = mapped_column(default=dict)
+    reply_count: Mapped[int] = mapped_column(Integer, default=0)
+    report_count: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+    edited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CommunityReactionRow(Base):
+    __tablename__ = "community_reactions"
+    __table_args__ = (UniqueConstraint("post_id", "member_id", "kind", name="uq_reaction"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    post_id: Mapped[str] = mapped_column(ForeignKey("community_posts.id", ondelete="CASCADE"), index=True)
+    member_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[str] = mapped_column(String(16))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class CommunityReportRow(Base):
+    __tablename__ = "community_reports"
+    __table_args__ = (UniqueConstraint("post_id", "member_id", name="uq_report"),)
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    post_id: Mapped[str] = mapped_column(ForeignKey("community_posts.id", ondelete="CASCADE"), index=True)
+    member_id: Mapped[str | None] = mapped_column(ForeignKey("community_members.id", ondelete="SET NULL"))
+    reason: Mapped[str] = mapped_column(String(24))
+    note: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(16), default="open")  # open | resolved
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

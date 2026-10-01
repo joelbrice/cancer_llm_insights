@@ -1,9 +1,9 @@
-/* VitaCite service worker — offline reading of insights and visited pages.
+/* Stepwell service worker — offline reading of insights and visited pages.
    Never caches chat (POST), admin or personal data. Bump VERSION to invalidate. */
 const VERSION = "v1";
-const STATIC = `vitacite-static-${VERSION}`;
-const PAGES = `vitacite-pages-${VERSION}`;
-const API = `vitacite-api-${VERSION}`;
+const STATIC = `stepwell-static-${VERSION}`;
+const PAGES = `stepwell-pages-${VERSION}`;
+const API = `stepwell-api-${VERSION}`;
 const PRECACHE = ["/offline.html", "/icon.svg", "/icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {

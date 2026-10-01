@@ -1,4 +1,4 @@
-# VitaCite mobile (iOS · Android · web)
+# Stepwell mobile (iOS · Android · web)
 
 Expo SDK 57 / React Native 0.86 app sharing its API client, types, translations, evidence helpers, lifestyle
 check and plan logic with the web platform (`packages/shared`). Everything a person enters (profile, plan,
@@ -19,7 +19,7 @@ lifestyle-check answers, language, theme) stays on the device in AsyncStorage.
 pnpm install                      # from the repository root (hoisted node_modules, see .npmrc)
 cp mobile/.env.example mobile/.env
 # point EXPO_PUBLIC_API_URL at the API — use your computer's LAN IP for a physical phone
-pnpm --filter @vitacite/mobile start      # then press i / a / w, or scan the QR code with Expo Go
+pnpm --filter @stepwell/mobile start      # then press i / a / w, or scan the QR code with Expo Go
 ```
 
 The API must allow the app's origin for the web target (`CORS_ORIGINS`, defaults include
@@ -28,9 +28,9 @@ The API must allow the app's origin for the web target (`CORS_ORIGINS`, defaults
 ## Checks and builds
 
 ```bash
-pnpm --filter @vitacite/mobile typecheck
-pnpm --filter @vitacite/mobile exec expo export --platform android   # Metro bundle smoke test (CI)
-pnpm --filter @vitacite/mobile exec eas build --profile preview       # signed builds via EAS (needs an Expo account)
+pnpm --filter @stepwell/mobile typecheck
+pnpm --filter @stepwell/mobile exec expo export --platform android   # Metro bundle smoke test (CI)
+pnpm --filter @stepwell/mobile exec eas build --profile preview       # signed builds via EAS (needs an Expo account)
 ```
 
 Store submission checklist (privacy labels, medical disclaimer, crisis-line verification per country) lives in

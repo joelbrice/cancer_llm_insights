@@ -1,17 +1,17 @@
 {
-  "name": "vitacite",
+  "name": "stepwell",
   "private": true,
   "version": "1.0.0",
-  "description": "VitaCite \u2014 evidence-based lifestyle insights for cancer prevention and living well with cancer",
+  "description": "Stepwell \u2014 evidence-based lifestyle insights for cancer prevention and living well with cancer",
   "license": "MIT",
   "packageManager": "pnpm@10.0.0",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "dev:web": "pnpm --filter @vitacite/web dev",
-    "build:web": "pnpm --filter @vitacite/web build",
-    "dev:mobile": "pnpm --filter @vitacite/mobile start",
+    "dev:web": "pnpm --filter @stepwell/web dev",
+    "build:web": "pnpm --filter @stepwell/web build",
+    "dev:mobile": "pnpm --filter @stepwell/mobile start",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test"

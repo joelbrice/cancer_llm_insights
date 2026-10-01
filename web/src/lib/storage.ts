@@ -15,7 +15,7 @@ export function readLocal<T>(key: string, fallback: T): T {
 export function writeLocal(key: string, value: unknown): void {
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
-    window.dispatchEvent(new CustomEvent("vitacite-storage", { detail: key }));
+    window.dispatchEvent(new CustomEvent("stepwell-storage", { detail: key }));
   } catch {
     /* storage unavailable: keep working in memory */
   }
@@ -24,7 +24,7 @@ export function writeLocal(key: string, value: unknown): void {
 export function removeLocal(key: string): void {
   try {
     window.localStorage.removeItem(key);
-    window.dispatchEvent(new CustomEvent("vitacite-storage", { detail: key }));
+    window.dispatchEvent(new CustomEvent("stepwell-storage", { detail: key }));
   } catch {
     /* ignore */
   }
@@ -63,10 +63,10 @@ export function useLocalState<T>(key: string, fallback: T): [T, (next: T | ((pre
       if (changed === key) setValue(readLocal(key, fallback));
     };
     window.addEventListener("storage", sync);
-    window.addEventListener("vitacite-storage", sync);
+    window.addEventListener("stepwell-storage", sync);
     return () => {
       window.removeEventListener("storage", sync);
-      window.removeEventListener("vitacite-storage", sync);
+      window.removeEventListener("stepwell-storage", sync);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fallback is a constant default
   }, [key]);

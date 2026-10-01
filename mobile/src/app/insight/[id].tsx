@@ -10,7 +10,7 @@ import {
   type Insight,
   type InsightPoint,
   type PlanItem,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Share, Text, View } from "react-native";
 

@@ -1,4 +1,4 @@
-import { DICTIONARIES, translateDynamic, type Audience, type InsightQuery } from "@vitacite/shared";
+import { AUDIENCES, DICTIONARIES, translateDynamic, type Audience, type InsightQuery } from "@stepwell/shared";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -74,7 +74,7 @@ export default async function InsightsPage({ params, searchParams }: { params: P
           </label>
           <select id="f-aud" name="audience" defaultValue={query.audience ?? ""} className="field">
             <option value="">{t("common.all")}</option>
-            {(["prevention", "living_with_cancer", "caregivers"] as const).map((a) => (
+            {AUDIENCES.map((a) => (
               <option key={a} value={a}>
                 {t(`audiences.${a}`)}
               </option>

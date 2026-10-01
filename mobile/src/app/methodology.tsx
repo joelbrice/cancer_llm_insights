@@ -1,4 +1,4 @@
-import { DESIGN_TIER, translateDynamic, type EvidenceLevelId } from "@vitacite/shared";
+import { DESIGN_TIER, translateDynamic, type EvidenceLevelId } from "@stepwell/shared";
 import { View } from "react-native";
 
 import { Card, Disclaimer, EvidenceMeter, Screen, Txt } from "@/components/ui";

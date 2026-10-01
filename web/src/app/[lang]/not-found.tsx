@@ -1,4 +1,4 @@
-import { createTranslator, DEFAULT_LOCALE } from "@vitacite/shared";
+import { createTranslator, DEFAULT_LOCALE } from "@stepwell/shared";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/blocks";

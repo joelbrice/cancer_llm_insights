@@ -9,7 +9,7 @@ import {
   type CheckAnswers,
   type CheckStatus,
   type TopicStatus,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 

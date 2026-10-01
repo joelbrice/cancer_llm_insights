@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     )
 
     # ── Application ──────────────────────────────────────────────────────────
-    app_name: str = "VitaCite"
+    app_name: str = "Stepwell"
     version: str = "1.0.0"
     environment: Literal["development", "test", "staging", "production"] = "development"
     log_level: str = "INFO"
@@ -119,7 +119,7 @@ class Settings(BaseSettings):
     # ── Languages ────────────────────────────────────────────────────────────
     supported_languages: CsvList = ["en", "fr", "es", "pt", "de"]
     default_language: str = "en"
-    insight_languages: CsvList = ["en"]
+    insight_languages: CsvList = ["en", "fr", "es", "pt", "de"]  # every UI language gets its own insights
 
     # ── Insights ─────────────────────────────────────────────────────────────
     insight_topics_file: Path | None = None
@@ -148,6 +148,17 @@ class Settings(BaseSettings):
     chat_rate_limit_per_minute: int = 20
     trust_forwarded_for: bool = False
     store_conversations: bool = False
+
+    # ── Community (pseudonymous, members-only, moderated) ──────────────────────
+    community_enabled: bool = True
+    community_min_age: int = 18
+    community_report_threshold: int = 3       # open reports that auto-hide a post pending review
+    community_hold_first_posts: int = 0       # pre-moderate a new member's first N posts (0 = screen only)
+    community_posts_per_hour: int = 6
+    community_replies_per_hour: int = 30
+    community_reports_per_day: int = 20
+    community_reactions_per_hour: int = 300
+    community_strikes_to_suspend: int = 3     # removed posts before automatic suspension
     max_message_chars: int = 4000
     max_history_messages: int = 12
 

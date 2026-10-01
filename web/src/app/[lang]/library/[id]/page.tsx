@@ -1,4 +1,4 @@
-import { formatAuthors, formatReference, sourceLink, translateDynamic } from "@vitacite/shared";
+import { formatAuthors, formatReference, sourceLink, translateDynamic } from "@stepwell/shared";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";

@@ -86,7 +86,7 @@ def test_search_insights_documents_feedback(built_client):
     assert built_client.get("/api/v1/insights/nope").status_code == 404
 
     topics = built_client.get("/api/v1/topics", params={"lang": "fr"}).json()
-    assert len(topics) == 38 and any(t["status"] == "published" for t in topics)
+    assert len(topics) == 43 and any(t["status"] == "published" for t in topics)
 
     docs = built_client.get("/api/v1/documents", params={"sort": "year"}).json()
     assert docs["total"] >= 9 and "meta_analysis" in docs["facets"]["source_type"]

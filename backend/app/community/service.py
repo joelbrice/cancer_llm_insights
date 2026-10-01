@@ -1,0 +1,620 @@
+"""Community service: membership, feed, threads, reactions, reports, moderation, export and erasure."""
+
+from __future__ import annotations
+
+import base64
+import hashlib
+import logging
+import secrets
+from datetime import UTC, datetime, timedelta
+from typing import Any
+
+from sqlalchemy import and_, func, or_, select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
+from app.community.moderation import CommunityConfig, CommunityModerator, Screening, handle_key
+from app.core.language import detect_language
+from app.db.base import Database
+from app.db.models import (
+    CommunityMemberRow,
+    CommunityPostRow,
+    CommunityReactionRow,
+    CommunityReportRow,
+    InsightRow,
+)
+from app.schemas.api import RelatedInsight
+from app.schemas.community import (
+    ActivityItem,
+    Author,
+    CircleInfo,
+    CommunityMeta,
+    Member,
+    MemberActivity,
+    MemberCreate,
+    MemberMe,
+    MemberSession,
+    MemberUpdate,
+    ModerationOutcome,
+    Post,
+    PostCreate,
+    PostPage,
+    PostResult,
+    PostThread,
+    QueueItem,
+    ReactionResult,
+    ReplyCreate,
+    ReportCreate,
+)
+from app.settings import Settings
+
+log = logging.getLogger(__name__)
+
+
+class CommunityError(Exception):
+    def __init__(self, status: int, code: str, message: str = "") -> None:
+        super().__init__(message or code)
+        self.status, self.code, self.message = status, code, message or code
+
+
+def _now() -> datetime:
+    return datetime.now(UTC)
+
+
+def _aware(value: datetime | None) -> datetime | None:
+    return value.replace(tzinfo=UTC) if value is not None and value.tzinfo is None else value
+
+
+def _new_id(prefix: str) -> str:
+    return f"{prefix}_{secrets.token_urlsafe(12)}"
+
+
+def hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def _encode_cursor(post: CommunityPostRow) -> str:
+    raw = f"{_aware(post.created_at).isoformat()}|{post.id}"
+    return base64.urlsafe_b64encode(raw.encode()).decode().rstrip("=")
+
+
+def _decode_cursor(cursor: str) -> tuple[datetime, str]:
+    try:
+        raw = base64.urlsafe_b64decode(cursor + "=" * (-len(cursor) % 4)).decode()
+        stamp, post_id = raw.split("|", 1)
+        return datetime.fromisoformat(stamp), post_id
+    except Exception as exc:
+        raise CommunityError(400, "bad_cursor") from exc
+
+
+class CommunityService:
+    def __init__(self, settings: Settings, db: Database, moderator: CommunityModerator, insights) -> None:
+        self.settings = settings
+        self.db = db
+        self.moderator = moderator
+        self.config: CommunityConfig = moderator.config
+        self.insights = insights
+
+    # ── metadata ──────────────────────────────────────────────────────────────────
+    def meta(self, lang: str) -> CommunityMeta:
+        week = _now().isocalendar().week
+        s = self.settings
+        circles = [
+            CircleInfo(id=c["id"], icon=c["icon"], audience=c["audience"],
+                       title=self.config.localized(c, "title", lang),
+                       description=self.config.localized(c, "description", lang),
+                       prompt=self.config.prompt(c["id"], lang, week))
+            for c in self.config.circles.values()
+        ]
+        return CommunityMeta(
+            enabled=s.community_enabled, guidelines_version=self.config.guidelines_version,
+            min_age=s.community_min_age, circles=circles, kinds=self.config.kinds,
+            reactions=self.config.reactions, report_reasons=self.config.report_reasons,
+            limits={"post_chars": 2000, "reply_chars": 1000, "posts_per_hour": s.community_posts_per_hour,
+                    "replies_per_hour": s.community_replies_per_hour},
+        )
+
+    # ── membership ────────────────────────────────────────────────────────────────
+    def join(self, body: MemberCreate) -> MemberSession:
+        if not (body.accept_guidelines and body.confirm_age and body.consent_health_data):
+            raise CommunityError(422, "consent_required", "guidelines, age and consent must all be confirmed")
+        lang = self._language(body.language)
+        error = self.moderator.check_handle(body.handle)
+        if error:
+            raise CommunityError(422, error)
+        token = secrets.token_urlsafe(32)
+        row = CommunityMemberRow(id=_new_id("m"), handle=body.handle, handle_key=handle_key(body.handle),
+                                 token_hash=hash_token(token), language=lang, journey=body.journey,
+                                 guidelines_version=self.config.guidelines_version)
+        try:
+            with self.db.session() as session:
+                session.add(row)
+        except IntegrityError as exc:
+            raise CommunityError(409, "handle_taken") from exc
+        return MemberSession(member=self._member(row), token=token)
+
+    def authenticate(self, token: str | None) -> CommunityMemberRow:
+        if not token:
+            raise CommunityError(401, "member_token_required")
+        with self.db.session() as session:
+            row = session.scalar(select(CommunityMemberRow).where(CommunityMemberRow.token_hash == hash_token(token)))
+        if row is None:
+            raise CommunityError(401, "invalid_member_token")
+        if row.status == "banned":
+            raise CommunityError(403, "member_banned")
+        return row
+
+    def me(self, member: CommunityMemberRow) -> MemberMe:
+        return MemberMe(member=self._member(member), activity=self._activity(member))
+
+    def mark_seen(self, member: CommunityMemberRow) -> None:
+        with self.db.session() as session:
+            row = session.get(CommunityMemberRow, member.id)
+            if row is not None:
+                row.last_seen_at = _now()
+
+    def update_member(self, member: CommunityMemberRow, body: MemberUpdate) -> Member:
+        with self.db.session() as session:
+            row = session.get(CommunityMemberRow, member.id)
+            assert row is not None
+            if body.handle is not None:
+                handle = " ".join(body.handle.split())
+                error = self.moderator.check_handle(handle)
+                if error:
+                    raise CommunityError(422, error)
+                row.handle, row.handle_key = handle, handle_key(handle)
+            if body.language is not None:
+                row.language = self._language(body.language)
+            if body.journey is not None:
+                row.journey = body.journey
+            if body.clear_journey:
+                row.journey = None
+            try:
+                session.flush()
+            except IntegrityError as exc:
+                raise CommunityError(409, "handle_taken") from exc
+            return self._member(row)
+
+    def export(self, member: CommunityMemberRow) -> dict[str, Any]:
+        """Everything stored about the member (GDPR Art. 15 & 20)."""
+        with self.db.session() as session:
+            posts = session.scalars(select(CommunityPostRow).where(CommunityPostRow.member_id == member.id)
+                                    .order_by(CommunityPostRow.created_at)).all()
+            reactions = session.scalars(select(CommunityReactionRow)
+                                        .where(CommunityReactionRow.member_id == member.id)).all()
+            reports = session.scalars(select(CommunityReportRow)
+                                      .where(CommunityReportRow.member_id == member.id)).all()
+        return {
+            "exported_at": _now().isoformat(),
+            "member": self._member(member).model_dump(mode="json"),
+            "posts": [{"id": p.id, "parent_id": p.parent_id, "circle": p.circle, "kind": p.kind,
+                       "language": p.language, "body": p.body, "status": p.status,
+                       "created_at": _aware(p.created_at).isoformat()} for p in posts],
+            "reactions": [{"post_id": r.post_id, "kind": r.kind, "created_at": _aware(r.created_at).isoformat()}
+                          for r in reactions],
+            "reports": [{"post_id": r.post_id, "reason": r.reason, "created_at": _aware(r.created_at).isoformat()}
+                        for r in reports],
+            "not_stored": "No name, email address, IP address or device identifier is stored.",
+        }
+
+    def erase(self, member: CommunityMemberRow) -> None:
+        """Right to erasure: the account, reactions and reports go; the member's words are deleted. A deleted
+        opening post that others replied to stays as an empty placeholder so their replies keep their context."""
+        with self.db.session() as session:
+            posts = session.scalars(select(CommunityPostRow).where(CommunityPostRow.member_id == member.id)).all()
+            parents_touched: set[str] = set()
+            for post in posts:
+                has_replies = post.parent_id is None and session.scalar(
+                    select(func.count()).select_from(CommunityPostRow)
+                    .where(CommunityPostRow.parent_id == post.id, CommunityPostRow.member_id != member.id)) > 0
+                if has_replies:
+                    post.body, post.status, post.member_id, post.related_insight_id = "", "deleted", None, None
+                else:
+                    if post.parent_id:
+                        parents_touched.add(post.parent_id)
+                    session.delete(post)
+            row = session.get(CommunityMemberRow, member.id)
+            if row is not None:
+                session.delete(row)
+            session.flush()
+            for parent_id in parents_touched:
+                self._refresh_reply_count(session, parent_id)
+
+    # ── posting ───────────────────────────────────────────────────────────────────
+    def create_post(self, member: CommunityMemberRow, body: PostCreate, country: str | None = None) -> PostResult:
+        self._require_active(member)
+        if body.circle not in self.config.circles:
+            raise CommunityError(422, "unknown_circle")
+        self._rate_check(member, replies=False)
+        lang = self._detect(body.body, body.language or member.language)
+        screening = self.moderator.screen(body.body, lang, country)
+        if screening.action == "reject":
+            raise CommunityError(422, screening.reason or "rejected")
+        screening = self._first_posts_rule(member, screening)
+        audience = self.config.circles[body.circle]["audience"]
+        related = None
+        if screening.action == "publish":
+            related = self.insights.match_text(body.body, lang, audience)
+        row = CommunityPostRow(
+            id=_new_id("p"), member_id=member.id, parent_id=None, circle=body.circle, kind=body.kind, language=lang,
+            body=body.body.strip(), status="published" if screening.action == "publish" else "held",
+            flags=screening.flags, notes=screening.notes,
+            moderation={"auto": screening.reason, "priority": screening.priority},
+            related_insight_id=related.id if related else None,
+        )
+        with self.db.session() as session:
+            session.add(row)
+        return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
+
+    def reply(self, member: CommunityMemberRow, post_id: str, body: ReplyCreate,
+              country: str | None = None) -> PostResult:
+        self._require_active(member)
+        with self.db.session() as session:
+            parent = session.get(CommunityPostRow, post_id)
+            if parent is None or parent.parent_id is not None or parent.status != "published":
+                raise CommunityError(404, "post_not_found")
+            circle = parent.circle
+        self._rate_check(member, replies=True)
+        lang = self._detect(body.body, body.language or member.language)
+        screening = self.moderator.screen(body.body, lang, country)
+        if screening.action == "reject":
+            raise CommunityError(422, screening.reason or "rejected")
+        screening = self._first_posts_rule(member, screening)
+        row = CommunityPostRow(
+            id=_new_id("p"), member_id=member.id, parent_id=post_id, circle=circle, kind="reply", language=lang,
+            body=body.body.strip(), status="published" if screening.action == "publish" else "held",
+            flags=screening.flags, notes=screening.notes,
+            moderation={"auto": screening.reason, "priority": screening.priority},
+        )
+        with self.db.session() as session:
+            session.add(row)
+            session.flush()
+            self._refresh_reply_count(session, post_id)
+        return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
+
+    def edit(self, member: CommunityMemberRow, post_id: str, text: str, country: str | None = None) -> PostResult:
+        self._require_active(member)
+        with self.db.session() as session:
+            row = session.get(CommunityPostRow, post_id)
+            if row is None or row.member_id != member.id or row.status in ("removed", "deleted"):
+                raise CommunityError(404, "post_not_found")
+            limit = 1000 if row.parent_id else 2000
+            if len(text) > limit:
+                raise CommunityError(422, "too_long")
+            screening = self.moderator.screen(text, row.language, country)
+            if screening.action == "reject":
+                raise CommunityError(422, screening.reason or "rejected")
+            if row.status == "held" and screening.action == "publish":
+                screening = Screening("hold", reason=row.moderation.get("auto"), flags=row.flags)  # still pending
+            row.body, row.edited_at = text.strip(), _now()
+            row.status = "published" if screening.action == "publish" else "held"
+            row.flags, row.notes = screening.flags, screening.notes
+            row.moderation = {**row.moderation, "auto": screening.reason, "priority": screening.priority}
+            if row.parent_id is None:
+                related = self.insights.match_text(text, row.language,
+                                                   self.config.circles.get(row.circle, {}).get("audience"))
+                row.related_insight_id = related.id if related and row.status == "published" else None
+            session.flush()
+            if row.parent_id:
+                self._refresh_reply_count(session, row.parent_id)
+            return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
+
+    def delete_post(self, member: CommunityMemberRow, post_id: str) -> None:
+        with self.db.session() as session:
+            row = session.get(CommunityPostRow, post_id)
+            if row is None or row.member_id != member.id:
+                raise CommunityError(404, "post_not_found")
+            has_replies = row.parent_id is None and row.reply_count > 0
+            if has_replies:
+                row.body, row.status, row.related_insight_id = "", "deleted", None
+            else:
+                parent_id = row.parent_id
+                session.delete(row)
+                session.flush()
+                if parent_id:
+                    self._refresh_reply_count(session, parent_id)
+
+    # ── reading ───────────────────────────────────────────────────────────────────
+    def feed(self, member: CommunityMemberRow, *, circle: str | None, kind: str | None, language: str | None,
+             cursor: str | None, limit: int = 20) -> PostPage:
+        limit = max(1, min(limit, 50))
+        with self.db.session() as session:
+            visible = or_(CommunityPostRow.status == "published",
+                          and_(CommunityPostRow.status == "held", CommunityPostRow.member_id == member.id))
+            stmt = select(CommunityPostRow).where(CommunityPostRow.parent_id.is_(None), visible)
+            if circle:
+                stmt = stmt.where(CommunityPostRow.circle == circle)
+            if kind:
+                stmt = stmt.where(CommunityPostRow.kind == kind)
+            if language:
+                stmt = stmt.where(CommunityPostRow.language == language)
+            if cursor:
+                stamp, post_id = _decode_cursor(cursor)
+                stmt = stmt.where(or_(CommunityPostRow.created_at < stamp,
+                                      and_(CommunityPostRow.created_at == stamp, CommunityPostRow.id < post_id)))
+            rows = session.scalars(stmt.order_by(CommunityPostRow.created_at.desc(), CommunityPostRow.id.desc())
+                                   .limit(limit + 1)).all()
+            page = rows[:limit]
+            items = self._posts(session, page, member)
+        return PostPage(items=items, next_cursor=_encode_cursor(page[-1]) if len(rows) > limit else None)
+
+    def thread(self, member: CommunityMemberRow, post_id: str) -> PostThread:
+        with self.db.session() as session:
+            root = session.get(CommunityPostRow, post_id)
+            if root is None or root.parent_id is not None or not self._visible(root, member, thread=True):
+                raise CommunityError(404, "post_not_found")
+            replies = session.scalars(select(CommunityPostRow).where(CommunityPostRow.parent_id == post_id)
+                                      .order_by(CommunityPostRow.created_at, CommunityPostRow.id)).all()
+            replies = [r for r in replies if self._visible(r, member)]
+            posts = self._posts(session, [root, *replies], member)
+        return PostThread(post=posts[0], replies=posts[1:])
+
+    # ── reactions & reports ───────────────────────────────────────────────────────
+    def react(self, member: CommunityMemberRow, post_id: str, kind: str, on: bool) -> ReactionResult:
+        self._require_active(member)
+        if kind not in self.config.reactions:
+            raise CommunityError(422, "unknown_reaction")
+        with self.db.session() as session:
+            post = session.get(CommunityPostRow, post_id)
+            if post is None or post.status != "published":
+                raise CommunityError(404, "post_not_found")
+            existing = session.scalar(select(CommunityReactionRow).where(
+                CommunityReactionRow.post_id == post_id, CommunityReactionRow.member_id == member.id,
+                CommunityReactionRow.kind == kind))
+            if on and existing is None:
+                recent = session.scalar(select(func.count()).select_from(CommunityReactionRow).where(
+                    CommunityReactionRow.member_id == member.id,
+                    CommunityReactionRow.created_at >= _now() - timedelta(hours=1)))
+                if recent >= self.settings.community_reactions_per_hour:
+                    raise CommunityError(429, "slow_down")
+                session.add(CommunityReactionRow(post_id=post_id, member_id=member.id, kind=kind))
+            elif not on and existing is not None:
+                session.delete(existing)
+            session.flush()
+            post.reaction_counts = self._reaction_counts(session, post_id)
+            mine = list(session.scalars(select(CommunityReactionRow.kind).where(
+                CommunityReactionRow.post_id == post_id, CommunityReactionRow.member_id == member.id)))
+            return ReactionResult(reactions=post.reaction_counts, my_reactions=sorted(mine))
+
+    def report(self, member: CommunityMemberRow, post_id: str, body: ReportCreate) -> None:
+        with self.db.session() as session:
+            post = session.get(CommunityPostRow, post_id)
+            if post is None or post.status not in ("published", "held"):
+                raise CommunityError(404, "post_not_found")
+            if post.member_id == member.id:
+                raise CommunityError(422, "cannot_report_own_post")
+            today = session.scalar(select(func.count()).select_from(CommunityReportRow).where(
+                CommunityReportRow.member_id == member.id,
+                CommunityReportRow.created_at >= _now() - timedelta(days=1)))
+            if today >= self.settings.community_reports_per_day:
+                raise CommunityError(429, "slow_down")
+            exists = session.scalar(select(CommunityReportRow).where(
+                CommunityReportRow.post_id == post_id, CommunityReportRow.member_id == member.id))
+            if exists is not None:
+                return  # idempotent
+            session.add(CommunityReportRow(id=_new_id("r"), post_id=post_id, member_id=member.id,
+                                           reason=body.reason, note=body.note))
+            session.flush()
+            post.report_count = int(session.scalar(select(func.count()).select_from(CommunityReportRow).where(
+                CommunityReportRow.post_id == post_id, CommunityReportRow.status == "open")) or 0)
+            mod = dict(post.moderation or {})
+            if body.reason == "crisis":
+                mod["priority"] = max(int(mod.get("priority", 0)), 2)  # someone may need help: review first
+            if post.status == "published" and post.report_count >= self.settings.community_report_threshold:
+                post.status = "held"
+                post.flags = [*post.flags, "reported"]
+                mod["auto"] = "reported"
+            post.moderation = mod
+            if post.parent_id:
+                session.flush()
+                self._refresh_reply_count(session, post.parent_id)
+
+    # ── moderation (admin) ────────────────────────────────────────────────────────
+    def queue(self, limit: int = 100) -> list[QueueItem]:
+        with self.db.session() as session:
+            reported_ids = set(session.scalars(select(CommunityReportRow.post_id)
+                                               .where(CommunityReportRow.status == "open")))
+            rows = session.scalars(select(CommunityPostRow).where(or_(
+                CommunityPostRow.status == "held",
+                and_(CommunityPostRow.status == "published", CommunityPostRow.id.in_(reported_ids or {""}))))).all()
+            rows = sorted(rows, key=lambda r: (-int((r.moderation or {}).get("priority", 0)), -r.report_count,
+                                               _aware(r.created_at)))[:limit]
+            reports: dict[str, list[dict]] = {}
+            for rep in session.scalars(select(CommunityReportRow).where(
+                    CommunityReportRow.post_id.in_([r.id for r in rows] or [""]), CommunityReportRow.status == "open")):
+                reports.setdefault(rep.post_id, []).append(
+                    {"reason": rep.reason, "note": rep.note, "created_at": _aware(rep.created_at).isoformat()})
+            posts = self._posts(session, rows, None)
+            return [QueueItem(post=p, member_id=r.member_id, flags=r.flags, moderation=r.moderation or {},
+                              reports=reports.get(r.id, [])) for p, r in zip(posts, rows, strict=True)]
+
+    def decide(self, post_id: str, action: str, note: str | None) -> Post:
+        with self.db.session() as session:
+            post = session.get(CommunityPostRow, post_id)
+            if post is None or post.status == "deleted":
+                raise CommunityError(404, "post_not_found")
+            post.status = "published" if action == "approve" else "removed"
+            post.moderation = {**(post.moderation or {}), "decision": action, "note": note,
+                               "decided_at": _now().isoformat()}
+            if action == "approve" and post.parent_id is None and post.related_insight_id is None:
+                related = self.insights.match_text(post.body, post.language,
+                                                   self.config.circles.get(post.circle, {}).get("audience"))
+                post.related_insight_id = related.id if related else None
+            for rep in session.scalars(select(CommunityReportRow).where(
+                    CommunityReportRow.post_id == post_id, CommunityReportRow.status == "open")):
+                rep.status, rep.resolved_at = "resolved", _now()
+            post.report_count = 0
+            if action == "remove" and post.member_id:
+                author = session.get(CommunityMemberRow, post.member_id)
+                if author is not None:
+                    author.strikes += 1
+                    if author.strikes >= self.settings.community_strikes_to_suspend and author.status == "active":
+                        author.status = "suspended"
+            session.flush()
+            if post.parent_id:
+                self._refresh_reply_count(session, post.parent_id)
+            return self._posts(session, [post], None)[0]
+
+    def set_member_status(self, member_id: str, status: str) -> Member:
+        with self.db.session() as session:
+            row = session.get(CommunityMemberRow, member_id)
+            if row is None:
+                raise CommunityError(404, "member_not_found")
+            row.status = status
+            if status == "active":
+                row.strikes = 0
+            return self._member(row)
+
+    def stats(self) -> dict[str, Any]:
+        with self.db.session() as session:
+            def count(model, *conds) -> int:
+                return int(session.scalar(select(func.count()).select_from(model).where(*conds)) or 0)
+
+            week = _now() - timedelta(days=7)
+            return {
+                "members": count(CommunityMemberRow),
+                "members_active_7d": count(CommunityMemberRow, CommunityMemberRow.last_seen_at >= week),
+                "posts_published": count(CommunityPostRow, CommunityPostRow.status == "published"),
+                "posts_held": count(CommunityPostRow, CommunityPostRow.status == "held"),
+                "posts_removed": count(CommunityPostRow, CommunityPostRow.status == "removed"),
+                "posts_7d": count(CommunityPostRow, CommunityPostRow.created_at >= week),
+                "open_reports": count(CommunityReportRow, CommunityReportRow.status == "open"),
+                "suspended_members": count(CommunityMemberRow, CommunityMemberRow.status != "active"),
+            }
+
+    # ── helpers ───────────────────────────────────────────────────────────────────
+    def _language(self, lang: str | None) -> str:
+        code = (lang or "").split("-")[0].lower()
+        return code if code in self.settings.supported_languages else self.settings.default_language
+
+    def _detect(self, text: str, hint: str) -> str:
+        return detect_language(text, list(self.settings.supported_languages), hint=self._language(hint))
+
+    @staticmethod
+    def _require_active(member: CommunityMemberRow) -> None:
+        if member.status != "active":
+            raise CommunityError(403, f"member_{member.status}")
+
+    def _rate_check(self, member: CommunityMemberRow, *, replies: bool) -> None:
+        limit = self.settings.community_replies_per_hour if replies else self.settings.community_posts_per_hour
+        with self.db.session() as session:
+            recent = session.scalar(select(func.count()).select_from(CommunityPostRow).where(
+                CommunityPostRow.member_id == member.id,
+                CommunityPostRow.parent_id.isnot(None) if replies else CommunityPostRow.parent_id.is_(None),
+                CommunityPostRow.created_at >= _now() - timedelta(hours=1)))
+        if recent >= limit:
+            raise CommunityError(429, "slow_down")
+
+    def _first_posts_rule(self, member: CommunityMemberRow, screening: Screening) -> Screening:
+        n = self.settings.community_hold_first_posts
+        if n <= 0 or screening.action != "publish":
+            return screening
+        with self.db.session() as session:
+            published = session.scalar(select(func.count()).select_from(CommunityPostRow).where(
+                CommunityPostRow.member_id == member.id, CommunityPostRow.status == "published"))
+        if published < n:
+            screening.action, screening.reason = "hold", "new_member"
+        return screening
+
+    @staticmethod
+    def _visible(post: CommunityPostRow, member: CommunityMemberRow, thread: bool = False) -> bool:
+        if post.status == "published":
+            return True
+        if post.status == "held":
+            return post.member_id == member.id
+        return thread and post.status == "deleted" and post.parent_id is None and post.reply_count > 0
+
+    @staticmethod
+    def _reaction_counts(session: Session, post_id: str) -> dict[str, int]:
+        rows = session.execute(select(CommunityReactionRow.kind, func.count()).where(
+            CommunityReactionRow.post_id == post_id).group_by(CommunityReactionRow.kind)).all()
+        return {kind: int(n) for kind, n in rows}
+
+    @staticmethod
+    def _refresh_reply_count(session: Session, parent_id: str) -> None:
+        parent = session.get(CommunityPostRow, parent_id)
+        if parent is not None:
+            parent.reply_count = int(session.scalar(select(func.count()).select_from(CommunityPostRow).where(
+                CommunityPostRow.parent_id == parent_id, CommunityPostRow.status == "published")) or 0)
+
+    def _activity(self, member: CommunityMemberRow) -> MemberActivity:
+        since = _aware(member.last_seen_at) or _now()
+        with self.db.session() as session:
+            my_roots = select(CommunityPostRow.id).where(CommunityPostRow.member_id == member.id,
+                                                         CommunityPostRow.parent_id.is_(None))
+            my_posts = select(CommunityPostRow.id).where(CommunityPostRow.member_id == member.id)
+            replies = session.scalars(select(CommunityPostRow).where(
+                CommunityPostRow.parent_id.in_(my_roots), CommunityPostRow.status == "published",
+                or_(CommunityPostRow.member_id.is_(None), CommunityPostRow.member_id != member.id))
+                .order_by(CommunityPostRow.created_at.desc()).limit(50)).all()
+            reactions = session.execute(select(CommunityReactionRow, CommunityPostRow).join(
+                CommunityPostRow, CommunityPostRow.id == CommunityReactionRow.post_id).where(
+                CommunityReactionRow.post_id.in_(my_posts), CommunityReactionRow.member_id != member.id)
+                .order_by(CommunityReactionRow.created_at.desc()).limit(50)).all()
+            handles = self._handles(session, {r.member_id for r in replies if r.member_id}
+                                    | {rx.member_id for rx, _ in reactions})
+        items = [ActivityItem(type="reply", post_id=r.id, root_id=r.parent_id or r.id,
+                              by=handles.get(r.member_id or "", ""), excerpt=r.body[:140],
+                              created_at=_aware(r.created_at)) for r in replies]
+        items += [ActivityItem(type="reaction", post_id=p.id, root_id=p.parent_id or p.id,
+                               by=handles.get(rx.member_id, ""), kind=rx.kind, created_at=_aware(rx.created_at))
+                  for rx, p in reactions]
+        items.sort(key=lambda i: i.created_at, reverse=True)
+        return MemberActivity(
+            new_replies=sum(1 for r in replies if _aware(r.created_at) > since),
+            new_reactions=sum(1 for rx, _ in reactions if _aware(rx.created_at) > since),
+            recent=items[:20],
+        )
+
+    @staticmethod
+    def _handles(session: Session, ids: set[str]) -> dict[str, str]:
+        if not ids:
+            return {}
+        return dict(session.execute(select(CommunityMemberRow.id, CommunityMemberRow.handle)
+                                    .where(CommunityMemberRow.id.in_(ids))).all())
+
+    def _posts(self, session: Session, rows: list[CommunityPostRow], viewer: CommunityMemberRow | None) -> list[Post]:
+        authors = {}
+        ids = {r.member_id for r in rows if r.member_id}
+        if ids:
+            authors = {m.id: m for m in session.scalars(select(CommunityMemberRow)
+                                                         .where(CommunityMemberRow.id.in_(ids)))}
+        mine: dict[str, list[str]] = {}
+        if viewer is not None and rows:
+            for post_id, kind in session.execute(select(CommunityReactionRow.post_id, CommunityReactionRow.kind).where(
+                    CommunityReactionRow.member_id == viewer.id,
+                    CommunityReactionRow.post_id.in_([r.id for r in rows]))):
+                mine.setdefault(post_id, []).append(kind)
+        related_ids = [r.related_insight_id for r in rows if r.related_insight_id]
+        related: dict[str, RelatedInsight] = {}
+        if related_ids:
+            for ins in session.scalars(select(InsightRow).where(InsightRow.id.in_(set(related_ids)),
+                                                                InsightRow.status == "published")):
+                related[ins.id] = RelatedInsight(id=ins.id, title=ins.title, category=ins.category,
+                                                 evidence_level=ins.evidence_level)
+        out = []
+        for r in rows:
+            author = authors.get(r.member_id or "")
+            out.append(Post(
+                id=r.id, parent_id=r.parent_id, circle=r.circle, kind=r.kind, language=r.language,
+                body=r.body if r.status != "deleted" else "", status=r.status,
+                author=Author(handle=author.handle, journey=author.journey,
+                              is_me=viewer is not None and author.id == viewer.id) if author else None,
+                notes=list(r.notes or []), related_insight=related.get(r.related_insight_id or ""),
+                reactions=dict(r.reaction_counts or {}), my_reactions=sorted(mine.get(r.id, [])),
+                reply_count=r.reply_count, created_at=_aware(r.created_at), edited_at=_aware(r.edited_at),
+            ))
+        return out
+
+    def _post(self, row: CommunityPostRow, member: CommunityMemberRow) -> Post:
+        with self.db.session() as session:
+            return self._posts(session, [row], member)[0]
+
+    @staticmethod
+    def _outcome(row: CommunityPostRow, screening: Screening) -> ModerationOutcome:
+        return ModerationOutcome(status=row.status, reason=screening.reason, safety=screening.safety)
+
+    @staticmethod
+    def _member(row: CommunityMemberRow) -> Member:
+        return Member(id=row.id, handle=row.handle, language=row.language, journey=row.journey, status=row.status,
+                      created_at=_aware(row.created_at), guidelines_version=row.guidelines_version)

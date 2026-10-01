@@ -8,7 +8,7 @@ import {
   type CheckAnswers,
   type CheckStatus,
   type TopicStatus,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";

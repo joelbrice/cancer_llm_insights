@@ -5,7 +5,7 @@
 
 export type Locale = "en" | "fr" | "es" | "pt" | "de";
 export type EvidenceLevelId = "high" | "moderate" | "low" | "very_low" | "insufficient";
-export type Audience = "prevention" | "living_with_cancer" | "caregivers";
+export type Audience = "prevention" | "in_treatment" | "after_treatment" | "caregivers";
 export type SupportLabel = "supported" | "partial" | "unsupported" | "no_citation" | "not_claim" | "not_assessed";
 
 // ── Evidence ──────────────────────────────────────────────────────────────────
@@ -426,4 +426,139 @@ export interface FeedbackCreate {
 
 export interface ApiErrorBody {
   error: { code: number; message: string; request_id?: string | null; details?: unknown };
+}
+
+// ── Community ─────────────────────────────────────────────────────────────────
+export type PostKind = "win" | "encouragement" | "question" | "tip" | "milestone";
+export type ReactionKind = "support" | "strength" | "thanks" | "inspired";
+export type ReportReason = "harmful_medical" | "crisis" | "harassment" | "spam" | "privacy" | "other";
+export type PostStatus = "published" | "held" | "removed" | "deleted";
+
+export interface CircleInfo {
+  id: string;
+  icon: "leaf" | "heart" | "sunrise" | "people" | string;
+  audience: Audience;
+  title: string;
+  description: string;
+  /** This week's encouragement prompt (rotates weekly). */
+  prompt: string;
+}
+
+export interface CommunityMeta {
+  enabled: boolean;
+  guidelines_version: number;
+  min_age: number;
+  circles: CircleInfo[];
+  kinds: PostKind[];
+  reactions: ReactionKind[];
+  report_reasons: ReportReason[];
+  limits: Record<string, number>;
+}
+
+export interface Member {
+  id: string;
+  handle: string;
+  language: string;
+  journey: Audience | null;
+  status: "active" | "suspended" | "banned";
+  created_at: string;
+  guidelines_version: number;
+}
+
+export interface MemberCreate {
+  handle: string;
+  language: string;
+  journey?: Audience | null;
+  accept_guidelines: boolean;
+  confirm_age: boolean;
+  consent_health_data: boolean;
+}
+
+export interface MemberUpdate {
+  handle?: string;
+  language?: string;
+  journey?: Audience;
+  clear_journey?: boolean;
+}
+
+export interface ActivityItem {
+  type: "reply" | "reaction";
+  post_id: string;
+  root_id: string;
+  by: string;
+  kind: ReactionKind | null;
+  excerpt: string | null;
+  created_at: string;
+}
+
+export interface MemberMe {
+  member: Member;
+  activity: { new_replies: number; new_reactions: number; recent: ActivityItem[] };
+}
+
+export interface Author {
+  handle: string;
+  journey: Audience | null;
+  is_me: boolean;
+}
+
+export interface Post {
+  id: string;
+  parent_id: string | null;
+  circle: string;
+  kind: PostKind | "reply";
+  language: string;
+  body: string;
+  status: PostStatus;
+  author: Author | null;
+  notes: "care_team"[] | string[];
+  related_insight: RelatedInsight | null;
+  reactions: Partial<Record<ReactionKind, number>>;
+  my_reactions: ReactionKind[];
+  reply_count: number;
+  created_at: string;
+  edited_at: string | null;
+}
+
+export interface PostPage {
+  items: Post[];
+  next_cursor: string | null;
+}
+
+export interface PostThread {
+  post: Post;
+  replies: Post[];
+}
+
+export interface ModerationOutcome {
+  status: PostStatus;
+  /** Why a post is held: crisis | emergency | urgent | medical_claim | solicitation | abuse | reported | new_member */
+  reason: string | null;
+  safety: SafetyAssessment | null;
+}
+
+export interface PostResult {
+  post: Post;
+  moderation: ModerationOutcome;
+}
+
+export interface ReactionResult {
+  reactions: Partial<Record<ReactionKind, number>>;
+  my_reactions: ReactionKind[];
+}
+
+export interface FeedQuery {
+  circle?: string;
+  kind?: PostKind;
+  lang?: string;
+  cursor?: string | null;
+  limit?: number;
+}
+
+export interface QueueItem {
+  post: Post;
+  member_id: string | null;
+  flags: string[];
+  moderation: { auto?: string | null; priority?: number; decision?: string; note?: string | null };
+  reports: { reason: ReportReason; note: string | null; created_at: string }[];
 }

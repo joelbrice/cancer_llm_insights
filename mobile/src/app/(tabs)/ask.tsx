@@ -8,7 +8,7 @@ import {
   type ClaimCheck,
   type Profile,
   type SafetyAssessment,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import { router, useLocalSearchParams } from "expo-router";
 import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";

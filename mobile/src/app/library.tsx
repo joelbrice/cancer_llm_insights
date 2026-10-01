@@ -1,4 +1,4 @@
-import { formatAuthors, translateDynamic, type DocumentQuery } from "@vitacite/shared";
+import { formatAuthors, translateDynamic, type DocumentQuery } from "@stepwell/shared";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, TextInput, View } from "react-native";

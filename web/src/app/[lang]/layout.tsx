@@ -1,6 +1,6 @@
 import "../globals.css";
 
-import { brandName, BRAND, createTranslator, LOCALES } from "@vitacite/shared";
+import { brandName, BRAND, createTranslator, LOCALES } from "@stepwell/shared";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";

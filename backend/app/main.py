@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
-from app.api.routes import admin, public
+from app.api.routes import admin, community, public
 from app.container import Container, get_container, set_container
 from app.core.logging import configure_logging, request_id_var
 from app.core.metrics import HTTP_LATENCY, HTTP_REQUESTS
@@ -67,9 +67,9 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         CORSMiddleware,
         allow_origins=settings.cors_origins,
         allow_credentials=False,
-        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Content-Type", "Authorization", "X-Admin-Key", "X-Request-ID", "Accept-Language",
-                       "If-None-Match"],
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization", "X-Admin-Key", "X-Member-Token", "X-Country", "X-Request-ID",
+                       "Accept-Language", "If-None-Match"],
         expose_headers=["X-Request-ID", "ETag", "Retry-After"],
         max_age=600,
     )
@@ -95,6 +95,9 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         if settings.is_production:
             response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+        if "/community" in request.url.path:  # people's health stories: never cached, never indexed
+            response.headers["Cache-Control"] = "private, no-store"
+            response.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
         return response
 
     @app.exception_handler(HTTPException)
@@ -138,6 +141,8 @@ def create_app(settings: Settings | None = None, container: Container | None = N
 
     app.include_router(public.router, prefix=settings.api_prefix)
     app.include_router(admin.router, prefix=settings.api_prefix)
+    app.include_router(community.router, prefix=settings.api_prefix)
+    app.include_router(community.admin_router, prefix=settings.api_prefix)
     return app
 
 

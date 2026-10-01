@@ -30,7 +30,7 @@ topics:
 
   - id: quitting-smoking
     category: tobacco
-    audience: [prevention, living_with_cancer]
+    audience: [prevention, in_treatment, after_treatment]
     cancer_types: [lung, head_neck, oesophagus, bladder]
     priority: 1
     title: {en: "Benefits of quitting smoking", fr: "Bénéfices de l'arrêt du tabac", es: "Beneficios de dejar de fumar", pt: "Benefícios de deixar de fumar", de: "Vorteile des Rauchstopps"}
@@ -406,7 +406,7 @@ topics:
 
   - id: stress-and-cancer-risk
     category: sleep_stress
-    audience: [prevention, living_with_cancer]
+    audience: [prevention, in_treatment, after_treatment]
     cancer_types: []
     priority: 3
     title: {en: "Stress and cancer", fr: "Stress et cancer", es: "Estrés y cáncer", pt: "Stress e cancro", de: "Stress und Krebs"}
@@ -421,10 +421,10 @@ topics:
     anchors:
       - ["stress", "psychological distress", "estres", "estresse"]
 
-  # ═══════════════════════════ LIVING WITH CANCER ═══════════════════════════
+  # ══════════════════ THROUGH TREATMENT, RECOVERY & LIFE AFTER CANCER ══════════════════
   - id: exercise-during-treatment
     category: physical_activity
-    audience: [living_with_cancer]
+    audience: [in_treatment]
     cancer_types: []
     priority: 1
     title: {en: "Exercise during cancer treatment", fr: "Activité physique pendant les traitements", es: "Ejercicio durante el tratamiento del cáncer", pt: "Exercício durante o tratamento do cancro", de: "Bewegung während der Krebsbehandlung"}
@@ -442,7 +442,7 @@ topics:
 
   - id: exercise-after-treatment
     category: survivorship
-    audience: [living_with_cancer]
+    audience: [after_treatment]
     cancer_types: [breast, colorectal, prostate]
     priority: 1
     title: {en: "Physical activity after cancer", fr: "Activité physique après un cancer", es: "Actividad física después del cáncer", pt: "Atividade física depois do cancro", de: "Bewegung nach Krebs"}
@@ -460,7 +460,7 @@ topics:
 
   - id: nutrition-during-treatment
     category: treatment_side_effects
-    audience: [living_with_cancer, caregivers]
+    audience: [in_treatment, caregivers]
     cancer_types: []
     priority: 1
     title: {en: "Eating well during treatment", fr: "Bien s'alimenter pendant les traitements", es: "Alimentarse bien durante el tratamiento", pt: "Alimentar-se bem durante o tratamento", de: "Gut essen während der Behandlung"}
@@ -478,7 +478,7 @@ topics:
 
   - id: weight-after-diagnosis
     category: survivorship
-    audience: [living_with_cancer]
+    audience: [after_treatment]
     cancer_types: [breast, colorectal, endometrium, prostate]
     priority: 2
     title: {en: "Weight after a cancer diagnosis", fr: "Poids après un diagnostic de cancer", es: "Peso tras un diagnóstico de cáncer", pt: "Peso após um diagnóstico de cancro", de: "Gewicht nach einer Krebsdiagnose"}
@@ -496,7 +496,7 @@ topics:
 
   - id: smoking-after-diagnosis
     category: survivorship
-    audience: [living_with_cancer]
+    audience: [in_treatment, after_treatment]
     cancer_types: [lung, head_neck]
     priority: 1
     title: {en: "Quitting smoking after a cancer diagnosis", fr: "Arrêter de fumer après un diagnostic de cancer", es: "Dejar de fumar tras un diagnóstico de cáncer", pt: "Deixar de fumar após um diagnóstico de cancro", de: "Rauchstopp nach einer Krebsdiagnose"}
@@ -514,7 +514,7 @@ topics:
 
   - id: alcohol-after-diagnosis
     category: survivorship
-    audience: [living_with_cancer]
+    audience: [after_treatment]
     cancer_types: [breast, head_neck]
     priority: 3
     title: {en: "Alcohol after cancer", fr: "Alcool après un cancer", es: "Alcohol después del cáncer", pt: "Álcool depois do cancro", de: "Alkohol nach Krebs"}
@@ -532,7 +532,7 @@ topics:
 
   - id: cancer-related-fatigue
     category: treatment_side_effects
-    audience: [living_with_cancer]
+    audience: [in_treatment, after_treatment]
     cancer_types: []
     priority: 1
     title: {en: "Managing cancer-related fatigue", fr: "Gérer la fatigue liée au cancer", es: "Manejo de la fatiga relacionada con el cáncer", pt: "Gerir a fadiga associada ao cancro", de: "Umgang mit krebsbedingter Erschöpfung (Fatigue)"}
@@ -549,7 +549,7 @@ topics:
 
   - id: nausea-appetite
     category: treatment_side_effects
-    audience: [living_with_cancer, caregivers]
+    audience: [in_treatment, caregivers]
     cancer_types: []
     priority: 2
     title: {en: "Nausea and loss of appetite", fr: "Nausées et perte d'appétit", es: "Náuseas y pérdida de apetito", pt: "Náuseas e perda de apetite", de: "Übelkeit und Appetitlosigkeit"}
@@ -566,7 +566,7 @@ topics:
 
   - id: sleep-during-cancer
     category: sleep_stress
-    audience: [living_with_cancer]
+    audience: [in_treatment, after_treatment]
     cancer_types: []
     priority: 2
     title: {en: "Sleep problems with cancer", fr: "Troubles du sommeil et cancer", es: "Problemas de sueño y cáncer", pt: "Problemas de sono e cancro", de: "Schlafprobleme bei Krebs"}
@@ -583,7 +583,7 @@ topics:
 
   - id: anxiety-depression
     category: mental_health
-    audience: [living_with_cancer, caregivers]
+    audience: [in_treatment, after_treatment, caregivers]
     cancer_types: []
     priority: 1
     title: {en: "Coping with anxiety and low mood", fr: "Faire face à l'anxiété et à la déprime", es: "Afrontar la ansiedad y el ánimo bajo", pt: "Lidar com a ansiedade e o desânimo", de: "Umgang mit Angst und Niedergeschlagenheit"}
@@ -600,7 +600,7 @@ topics:
 
   - id: supplements-during-treatment
     category: complementary
-    audience: [living_with_cancer]
+    audience: [in_treatment]
     cancer_types: []
     priority: 1
     title: {en: "Supplements and herbs during treatment", fr: "Compléments et plantes pendant les traitements", es: "Suplementos y hierbas durante el tratamiento", pt: "Suplementos e plantas durante o tratamento", de: "Nahrungsergänzung und Pflanzen während der Behandlung"}
@@ -618,7 +618,7 @@ topics:
 
   - id: integrative-therapies
     category: complementary
-    audience: [living_with_cancer]
+    audience: [in_treatment, after_treatment]
     cancer_types: []
     priority: 2
     title: {en: "Evidence-based complementary therapies", fr: "Thérapies complémentaires fondées sur les preuves", es: "Terapias complementarias basadas en la evidencia", pt: "Terapias complementares baseadas na evidência", de: "Evidenzbasierte komplementäre Therapien"}
@@ -635,7 +635,7 @@ topics:
 
   - id: diet-myths
     category: complementary
-    audience: [living_with_cancer, prevention]
+    audience: [prevention, in_treatment, after_treatment]
     cancer_types: []
     priority: 1
     title: {en: "Diet myths: sugar, alkaline diets and fasting", fr: "Idées reçues : sucre, régimes alcalins et jeûne", es: "Mitos: azúcar, dietas alcalinas y ayuno", pt: "Mitos: açúcar, dietas alcalinas e jejum", de: "Ernährungsmythen: Zucker, basische Diäten und Fasten"}
@@ -649,6 +649,92 @@ topics:
     guidance: "Correct misconceptions respectfully with evidence, explain why the body regulates blood pH, report fasting/ketogenic trial evidence accurately (often early-phase), and warn about malnutrition risks."
     anchors:
       - ["sugar", "glucose", "alkaline", "ketogenic", "fasting", "sucre", "alcalin", "jeune", "azucar", "ayuno", "acucar", "jejum", "zucker", "basisch", "fasten"]
+
+  - id: fear-of-recurrence
+    category: mental_health
+    audience: [after_treatment, caregivers]
+    cancer_types: []
+    priority: 1
+    title: {en: "Living with the fear of cancer coming back", fr: "Vivre avec la peur de la récidive", es: "Vivir con el miedo a que el cáncer vuelva", pt: "Viver com o medo de o cancro voltar", de: "Mit der Angst vor einem Rückfall leben"}
+    question:
+      en: "What helps people manage the fear of cancer coming back after treatment?"
+      fr: "Qu'est-ce qui aide à gérer la peur que le cancer revienne après les traitements ?"
+      es: "¿Qué ayuda a manejar el miedo a que el cáncer vuelva después del tratamiento?"
+      pt: "O que ajuda a gerir o medo de o cancro voltar depois do tratamento?"
+      de: "Was hilft, mit der Angst vor einem Wiederauftreten der Krebserkrankung nach der Behandlung umzugehen?"
+    queries: ["fear of cancer recurrence intervention randomised trial", "fear of recurrence cognitive behavioural therapy cancer survivors", "fear of recurrence survivors systematic review"]
+    guidance: "Normalise fear of recurrence, describe evidence-based psychological approaches (for example CBT-based, mindfulness-based or metacognitive programmes), the value of a clear follow-up plan and knowing which symptoms to report, and when to seek professional help. Never quote individual recurrence risks."
+    anchors:
+      - ["fear of recurrence", "fear of cancer recurrence", "recurrence fear", "peur de la recidive", "peur de recidive", "peur de la rechute", "miedo a la recaida", "miedo a la recurrencia", "miedo a la recidiva", "medo da recidiva", "medo de recidiva", "medo da recorrencia", "progredienzangst", "rezidivangst", "angst vor einem ruckfall", "angst vor dem ruckfall"]
+
+  - id: return-to-work
+    category: survivorship
+    audience: [in_treatment, after_treatment]
+    cancer_types: []
+    priority: 2
+    title: {en: "Returning to work and daily life", fr: "Reprendre le travail et la vie quotidienne", es: "Volver al trabajo y a la vida diaria", pt: "Regressar ao trabalho e à vida diária", de: "Rückkehr in Arbeit und Alltag"}
+    question:
+      en: "What helps people return to work and daily activities during or after cancer treatment?"
+      fr: "Qu'est-ce qui aide à reprendre le travail et les activités quotidiennes pendant ou après un traitement contre le cancer ?"
+      es: "¿Qué ayuda a volver al trabajo y a las actividades diarias durante o después del tratamiento del cáncer?"
+      pt: "O que ajuda a regressar ao trabalho e às atividades diárias durante ou após o tratamento do cancro?"
+      de: "Was hilft Menschen, während oder nach einer Krebsbehandlung in Arbeit und Alltag zurückzukehren?"
+    queries: ["return to work cancer survivors intervention systematic review", "vocational rehabilitation cancer", "work participation after cancer"]
+    guidance: "Cover a gradual return, workplace adjustments, multidisciplinary or vocational rehabilitation, managing fatigue and concentration at work, and talking with the employer and the care team. Say that employment rights and benefits differ between countries without stating legal specifics."
+    anchors:
+      - ["return to work", "returning to work", "employment", "work participation", "vocational", "workplace", "reprise du travail", "retour au travail", "retour a l'emploi", "maintien dans l'emploi", "vuelta al trabajo", "reincorporacion laboral", "retorno al trabajo", "regresso ao trabalho", "retorno ao trabalho", "ruckkehr an den arbeitsplatz", "ruckkehr in den beruf", "wiedereinglieder", "berufliche rehabilitation"]
+      - ["cancer", "tumou", "tumor", "oncolog", "krebs", "cancro"]
+
+  - id: lymphoedema
+    category: treatment_side_effects
+    audience: [in_treatment, after_treatment]
+    cancer_types: [breast, gynaecological, melanoma, head_and_neck]
+    priority: 2
+    title: {en: "Lymphoedema: exercise and self-care", fr: "Lymphœdème : activité physique et soins personnels", es: "Linfedema: ejercicio y autocuidado", pt: "Linfedema: exercício e autocuidado", de: "Lymphödem: Bewegung und Selbstfürsorge"}
+    question:
+      en: "Is exercise safe for people with, or at risk of, lymphoedema after cancer treatment, and what self-care helps?"
+      fr: "L'activité physique est-elle sûre en cas de lymphœdème, ou de risque de lymphœdème, après un cancer, et quels soins personnels aident ?"
+      es: "¿Es seguro el ejercicio para las personas con linfedema, o en riesgo de padecerlo, tras el tratamiento del cáncer, y qué autocuidado ayuda?"
+      pt: "O exercício é seguro para pessoas com linfedema, ou em risco de o ter, após o tratamento do cancro, e que autocuidado ajuda?"
+      de: "Ist Bewegung bei einem Lymphödem oder einem Lymphödemrisiko nach einer Krebsbehandlung sicher, und welche Selbstfürsorge hilft?"
+    queries: ["resistance exercise lymphedema breast cancer randomized", "lymphoedema risk exercise systematic review", "complete decongestive therapy lymphedema"]
+    guidance: "Cover the evidence on supervised, progressive resistance and aerobic exercise, early signs of lymphoedema to report, skin care, and compression or specialist therapy only as advised by the care team or a lymphoedema service."
+    anchors:
+      - ["lymphoedem", "lymphedem", "lymphoedeme", "linfedem", "lymphodem"]
+
+  - id: cognitive-changes
+    category: treatment_side_effects
+    audience: [in_treatment, after_treatment]
+    cancer_types: []
+    priority: 2
+    title: {en: "Memory and concentration changes (“chemo brain”)", fr: "Troubles de la mémoire et de la concentration (« chimio-cerveau »)", es: "Cambios de memoria y concentración («quimiocerebro»)", pt: "Alterações de memória e concentração («quimiocérebro»)", de: "Gedächtnis- und Konzentrationsprobleme („Chemobrain“)"}
+    question:
+      en: "What helps with memory and concentration problems during and after cancer treatment?"
+      fr: "Qu'est-ce qui aide en cas de troubles de la mémoire et de la concentration pendant et après un traitement du cancer ?"
+      es: "¿Qué ayuda con los problemas de memoria y concentración durante y después del tratamiento del cáncer?"
+      pt: "O que ajuda nos problemas de memória e concentração durante e após o tratamento do cancro?"
+      de: "Was hilft bei Gedächtnis- und Konzentrationsproblemen während und nach einer Krebsbehandlung?"
+    queries: ["cancer-related cognitive impairment intervention systematic review", "cognitive rehabilitation cancer survivors randomized", "physical activity cognitive function cancer survivors"]
+    guidance: "Explain that cognitive changes are common and often improve over time; cover evidence for cognitive rehabilitation or training, physical activity, sleep and fatigue management, practical day-to-day strategies, and when to tell the care team."
+    anchors:
+      - ["cognitive", "cognition", "memory", "chemo brain", "chemobrain", "chemo-brain", "concentration", "cognitif", "memoire", "chimio-cerveau", "cognitiv", "memoria", "concentracion", "quimiocerebro", "concentracao", "gedachtnis", "konzentration", "kognitiv"]
+
+  - id: peer-support
+    category: mental_health
+    audience: [in_treatment, after_treatment, caregivers]
+    cancer_types: []
+    priority: 2
+    title: {en: "Peer support and support groups", fr: "Soutien par les pairs et groupes de parole", es: "Apoyo entre iguales y grupos de apoyo", pt: "Apoio de pares e grupos de apoio", de: "Unterstützung durch Gleichbetroffene und Selbsthilfegruppen"}
+    question:
+      en: "Do peer support and support groups help people affected by cancer?"
+      fr: "Le soutien par les pairs et les groupes de parole aident-ils les personnes touchées par le cancer ?"
+      es: "¿Ayudan el apoyo entre iguales y los grupos de apoyo a las personas afectadas por el cáncer?"
+      pt: "O apoio de pares e os grupos de apoio ajudam as pessoas afetadas pelo cancro?"
+      de: "Helfen Peer-Unterstützung und Selbsthilfegruppen Menschen, die von Krebs betroffen sind?"
+    queries: ["peer support cancer systematic review", "online support groups cancer patients outcomes", "support group psychosocial outcomes cancer randomized"]
+    guidance: "Describe what peer support can offer (shared experience, practical tips, less isolation), what the evidence shows and its limits, in-person, telephone and online formats, why moderated groups matter, and why medical information heard from peers should be checked with the care team."
+    anchors:
+      - ["peer support", "peer-support", "peer mentor", "support group", "online communit", "self-help group", "soutien par les pairs", "pair-aidan", "groupe de parole", "groupes de parole", "apoyo entre iguales", "apoyo de pares", "grupo de apoyo", "grupos de apoyo", "apoio de pares", "apoio entre pares", "grupo de apoio", "grupos de apoio", "selbsthilfe", "gleichbetroffen", "peer-unterstutzung"]
 
   - id: caregiver-wellbeing
     category: caregivers

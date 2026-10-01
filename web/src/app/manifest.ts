@@ -1,4 +1,4 @@
-import { BRAND, brandName, createTranslator } from "@vitacite/shared";
+import { BRAND, brandName, createTranslator } from "@stepwell/shared";
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {

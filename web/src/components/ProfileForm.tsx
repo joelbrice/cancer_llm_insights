@@ -1,6 +1,6 @@
 "use client";
 
-import { STORAGE_KEYS, type Audience, type Profile } from "@vitacite/shared";
+import { AUDIENCES, STORAGE_KEYS, type Profile } from "@stepwell/shared";
 import { useState } from "react";
 
 import { useT } from "@/lib/i18n-client";
@@ -26,7 +26,7 @@ export function ProfileForm() {
       <fieldset>
         <legend className="label">{t("profile.audience")}</legend>
         <div className="grid gap-2 sm:grid-cols-3">
-          {(["prevention", "living_with_cancer", "caregivers"] as Audience[]).map((a) => (
+          {AUDIENCES.map((a) => (
             <label key={a} className={`flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border px-3 ${profile.audience === a ? "border-brand bg-brand-soft" : "border-line-strong"}`}>
               <input type="radio" name="audience" className="accent-[var(--brand)]" checked={profile.audience === a} onChange={() => update({ audience: a })} />
               {t(`audiences.${a}`)}

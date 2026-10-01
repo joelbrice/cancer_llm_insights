@@ -1,4 +1,4 @@
-import { LEVEL_COLORS, type EvidenceLevelId } from "@vitacite/shared";
+import { LEVEL_COLORS, type EvidenceLevelId } from "@stepwell/shared";
 
 /** Same tokens as the web app (globals.css) so both platforms read as one product. */
 export const palette = {

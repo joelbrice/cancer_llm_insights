@@ -1,4 +1,4 @@
-import { formatAuthors, translateDynamic, type DocumentQuery } from "@vitacite/shared";
+import { formatAuthors, translateDynamic, type DocumentQuery } from "@stepwell/shared";
 import type { Metadata } from "next";
 import Link from "next/link";
 

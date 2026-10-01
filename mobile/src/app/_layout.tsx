@@ -32,6 +32,9 @@ function Navigator() {
         <Stack.Screen name="plan" options={{ title: t("plan.title") }} />
         <Stack.Screen name="profile" options={{ title: t("profile.title") }} />
         <Stack.Screen name="methodology" options={{ title: t("nav.methodology") }} />
+        <Stack.Screen name="check" options={{ title: t("check.title") }} />
+        <Stack.Screen name="community/[id]" options={{ title: t("community.title") }} />
+        <Stack.Screen name="guidelines" options={{ title: t("community.guidelinesTitle") }} />
       </Stack>
     </>
   );

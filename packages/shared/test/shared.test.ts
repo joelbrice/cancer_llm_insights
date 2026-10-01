@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  AUDIENCES,
   CHECK_ITEMS,
+  communityErrorCode,
+  REACTION_EMOJI,
+  suggestHandle,
   DICTIONARIES,
   LOCALES,
   SseParser,
-  VitaCiteClient,
+  StepwellClient,
   addToPlan,
   bmiOption,
   createTranslator,
@@ -45,7 +49,7 @@ describe("i18n", () => {
   it("interpolates params and the brand name", () => {
     const t = createTranslator("fr");
     expect(t("common.sources", { n: 3 })).toBe("3 sources");
-    expect(t("home.howTitle")).toBe("Comment fonctionne VitaCite");
+    expect(t("home.howTitle")).toBe("Comment fonctionne Stepwell");
   });
 
   it("negotiates locales", () => {
@@ -79,7 +83,7 @@ describe("sse", () => {
         controller.close();
       },
     });
-    const client = new VitaCiteClient({
+    const client = new StepwellClient({
       baseUrl: "http://api",
       fetch: async (url) => {
         expect(url).toBe("http://api/api/v1/chat");
@@ -93,7 +97,7 @@ describe("sse", () => {
   });
 
   it("maps API errors", async () => {
-    const client = new VitaCiteClient({
+    const client = new StepwellClient({
       baseUrl: "",
       fetch: async () => new Response(JSON.stringify({ error: { code: 429, message: "rate limit exceeded" } }), { status: 429 }),
     });
@@ -168,5 +172,35 @@ describe("lifestyle check & plan", () => {
     expect(streak(plan[0]!, "2026-W40")).toBe(3);
     expect(streak(plan[0]!, "2026-W41")).toBe(3);
     expect(streak(plan[0]!, "2026-W43")).toBe(0);
+  });
+});
+
+describe("community", () => {
+  it("sends the member token and country only on community calls, and surfaces moderation error codes", async () => {
+    const calls: { url: string; init?: RequestInit }[] = [];
+    const fetcher = async (url: string, init?: RequestInit) => {
+      calls.push({ url, init });
+      if (url.endsWith("/community/posts") && init?.method === "POST")
+        return new Response(JSON.stringify({ error: { code: 422, message: "contact_details" } }), { status: 422 });
+      return new Response(JSON.stringify({ items: [], next_cursor: null }), { status: 200 });
+    };
+    const client = new StepwellClient({ baseUrl: "https://api.example.org/", fetch: fetcher });
+    await client.community.feed("tok", { circle: "prevention", cursor: null });
+    expect(calls[0]!.url).toBe("https://api.example.org/api/v1/community/posts?circle=prevention");
+    expect((calls[0]!.init!.headers as Record<string, string>)["X-Member-Token"]).toBe("tok");
+    const error = await client.community.post("tok", { circle: "prevention", kind: "win", body: "call 0612345678" }, "FR").catch((e) => e);
+    expect(communityErrorCode(error.message)).toBe("contact_details");
+    expect((calls[1]!.init!.headers as Record<string, string>)["X-Country"]).toBe("FR");
+    await client.status().catch(() => undefined);
+    expect((calls[2]!.init!.headers as Record<string, string>)["X-Member-Token"]).toBeUndefined();
+  });
+
+  it("suggests friendly, localised pseudonyms", () => {
+    let i = 0;
+    const seq = [0.1, 0.5, 0.99];
+    const handle = suggestHandle("fr", () => seq[i++ % seq.length]!);
+    expect(handle).toMatch(/^\p{L}+ \p{L}+ \d{2}$/u);
+    expect(AUDIENCES).toEqual(["prevention", "in_treatment", "after_treatment", "caregivers"]);
+    expect(Object.keys(REACTION_EMOJI)).toEqual(["support", "strength", "thanks", "inspired"]);
   });
 });

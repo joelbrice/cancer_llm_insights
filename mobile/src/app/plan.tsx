@@ -1,16 +1,30 @@
 import { Ionicons } from "@expo/vector-icons";
-import { isoWeek, removeFromPlan, STORAGE_KEYS, streak, toggleCheckin, type PlanItem } from "@vitacite/shared";
+import { isoWeek, removeFromPlan, STORAGE_KEYS, streak, toggleCheckin, type PlanItem, type Profile } from "@stepwell/shared";
 import { router } from "expo-router";
+import { useState } from "react";
 import { Pressable, View } from "react-native";
 
 import { Button, Card, EvidenceBadge, Loading, Screen, Txt } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
-import { useStored } from "@/lib/storage";
+import { communityMessage, useCommunityToken } from "@/lib/community";
+import { readJSON, useStored } from "@/lib/storage";
 import { radius } from "@/lib/theme";
 
 export default function Plan() {
-  const { t, colors } = useSettings();
+  const { t, colors, api, locale } = useSettings();
   const [plan, setPlan, loaded] = useStored<PlanItem[]>(STORAGE_KEYS.plan, []);
+  const [token] = useCommunityToken();
+  const [shared, setShared] = useState<Record<string, string>>({});
+  const share = async (item: PlanItem, weeks: number) => {
+    if (!token) return;
+    const profile = await readJSON<Profile>(STORAGE_KEYS.profile, {});
+    try {
+      await api.community.post(token, { circle: profile.audience ?? "prevention", kind: "milestone", body: t("community.milestoneText", { n: weeks, text: item.text }), language: locale }, profile.country ?? null);
+      setShared((s) => ({ ...s, [item.id]: t("community.milestoneShared") }));
+    } catch (e) {
+      setShared((s) => ({ ...s, [item.id]: communityMessage(t, e) }));
+    }
+  };
   const week = isoWeek();
   if (!loaded) return <Loading />;
   return (
@@ -68,6 +82,11 @@ export default function Plan() {
                 {t("plan.fromInsight", { title: item.insightTitle })}
               </Txt>
             </Pressable>
+            {token && n > 0 && !shared[item.id] ? (
+              <Button variant="ghost" icon="people-outline" label={t("community.shareMilestone")} onPress={() => void share(item, n)} />
+            ) : shared[item.id] ? (
+              <Txt variant="small">{shared[item.id]}</Txt>
+            ) : null}
             <Button variant="ghost" icon="close" label={t("plan.remove")} onPress={() => setPlan((prev) => removeFromPlan(prev, item.id))} />
           </Card>
         );

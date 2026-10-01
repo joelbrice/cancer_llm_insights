@@ -1,6 +1,6 @@
 "use client";
 
-import { configureBrand, createTranslator, type Locale, type Translate } from "@vitacite/shared";
+import { configureBrand, createTranslator, type Locale, type Translate } from "@stepwell/shared";
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 
 configureBrand({ name: process.env.NEXT_PUBLIC_APP_NAME });

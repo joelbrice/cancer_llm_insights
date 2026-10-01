@@ -189,7 +189,8 @@ CATEGORIES: dict[str, str] = {
 }
 
 AUDIENCES: dict[str, str] = {
-    "prevention": "Reduce my risk",
-    "living_with_cancer": "Living with cancer",
+    "prevention": "Lower my risk",
+    "in_treatment": "Going through treatment",
+    "after_treatment": "Recovering & life after cancer",
     "caregivers": "Supporting someone",
 }

@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ["@vitacite/shared"],
+  transpilePackages: ["@stepwell/shared"],
   // Same-origin API in development and simple deployments; in Kubernetes the ingress routes /api to the backend.
   async rewrites() {
     return [{ source: "/api/v1/:path*", destination: `${API_INTERNAL_URL}/api/v1/:path*` }];
@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/:path*", headers: securityHeaders },
       { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }] },
+      // Community pages show people's health stories: never indexed or archived.
+      { source: "/:lang/community/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] },
     ];
   },
 };

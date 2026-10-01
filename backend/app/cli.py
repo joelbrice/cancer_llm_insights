@@ -9,7 +9,7 @@ import typer
 
 from app.core.logging import configure_logging
 
-app = typer.Typer(add_completion=False, help="VitaCite engine operations", no_args_is_help=True)
+app = typer.Typer(add_completion=False, help="Stepwell engine operations", no_args_is_help=True)
 
 
 def _container():

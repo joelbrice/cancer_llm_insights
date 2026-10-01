@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 from app.safety.guardrails import SafetyAssessment
 from app.schemas.evidence import Citation, EvidenceAssessment, SourceRef, Verification
 
-Audience = Literal["prevention", "living_with_cancer", "caregivers"]
+Audience = Literal["prevention", "in_treatment", "after_treatment", "caregivers"]
 
 
 # ── Chat ─────────────────────────────────────────────────────────────────────

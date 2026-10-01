@@ -1,4 +1,4 @@
-import { DESIGN_TIER, LEVEL_GRADE, translateDynamic, type EvidenceLevelId } from "@vitacite/shared";
+import { DESIGN_TIER, LEVEL_GRADE, translateDynamic, type EvidenceLevelId } from "@stepwell/shared";
 import type { Metadata } from "next";
 
 import { PageHeader } from "@/components/blocks";

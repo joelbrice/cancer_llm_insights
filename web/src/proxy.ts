@@ -1,4 +1,4 @@
-import { isLocale, negotiateLocale } from "@vitacite/shared";
+import { isLocale, negotiateLocale } from "@stepwell/shared";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Locale routing: /, /ask … → /{locale}/… using the saved choice (cookie) or Accept-Language. */

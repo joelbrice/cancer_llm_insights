@@ -6,7 +6,7 @@ import {
   type Insight,
   type InsightPoint,
   type Translate,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";

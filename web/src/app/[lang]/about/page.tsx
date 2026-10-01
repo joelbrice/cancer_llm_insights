@@ -1,8 +1,8 @@
-import { BRAND, brandName } from "@vitacite/shared";
+import { BRAND, brandName } from "@stepwell/shared";
 import type { Metadata } from "next";
 
 import { PageHeader } from "@/components/blocks";
-import { Icon } from "@/components/Icon";
+import { Icon, Logo } from "@/components/Icon";
 import { api, load } from "@/lib/api";
 import { resolveLocale } from "@/lib/i18n";
 
@@ -18,6 +18,22 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHeader title={t("about.title")} />
       <p className="text-lg leading-relaxed text-ink">{t("about.mission")}</p>
+      <section className="card flex gap-4 p-5">
+        <span className="shrink-0">
+          <Logo size={40} />
+        </span>
+        <div>
+          <h2 className="font-semibold">{t("about.nameTitle")}</h2>
+          <p className="mt-2 text-ink-2">{t("about.name")}</p>
+        </div>
+      </section>
+      <section className="card p-5">
+        <h2 className="flex items-center gap-2 font-semibold">
+          <Icon name="users" size={18} />
+          {t("about.forTitle")}
+        </h2>
+        <p className="mt-2 text-ink-2">{t("about.for")}</p>
+      </section>
       <section className="card p-5">
         <h2 className="flex items-center gap-2 font-semibold">
           <Icon name="lock" size={18} />

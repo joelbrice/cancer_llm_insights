@@ -1,12 +1,12 @@
 import "server-only";
 
-import { ApiError, VitaCiteClient } from "@vitacite/shared";
+import { ApiError, StepwellClient } from "@stepwell/shared";
 import { connection } from "next/server";
 
 const API_INTERNAL_URL = process.env.API_INTERNAL_URL ?? "http://localhost:8000";
 
 /** Server-side API client (server components). Data is per request: never prerendered at build time. */
-export const api = new VitaCiteClient({
+export const api = new StepwellClient({
   baseUrl: API_INTERNAL_URL,
   timeoutMs: 15_000,
   fetch: (url, init) => fetch(url, { ...init, cache: "no-store" }),

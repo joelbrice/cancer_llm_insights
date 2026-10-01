@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "VitaCite",
-    "slug": "vitacite",
+    "name": "Stepwell",
+    "slug": "stepwell",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "vitacite",
+    "scheme": "stepwell",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.vitacite.app",
+      "bundleIdentifier": "org.stepwell.app",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -18,7 +18,7 @@
       }
     },
     "android": {
-      "package": "org.vitacite.app",
+      "package": "org.stepwell.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f6e64"
@@ -54,7 +54,7 @@
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/icon.png",
-      "name": "VitaCite",
+      "name": "Stepwell",
       "themeColor": "#0f6e64"
     }
   }

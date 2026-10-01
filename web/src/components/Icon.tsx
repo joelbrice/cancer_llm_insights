@@ -41,6 +41,13 @@ const PATHS = {
   leaf: "M11 20A7 7 0 0 1 4 13c0-6 7-10 16-10 0 9-4 16-9 17Zm0 0c0-5 2-8 6-11",
   trash: "M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6",
   file: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 0v6h6",
+  sunrise: "M3 18h18M6 18a6 6 0 0 1 12 0M12 4v4M4.9 9.1l1.4 1.4M19.1 9.1l-1.4 1.4M8 22h8",
+  flag: "M4 22V4m0 0h12l-2 4 2 4H4",
+  download: "M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3",
+  logout: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3",
+  key: "M14.5 9.5a5 5 0 1 0-1.9 3.9L14 15h2v2h2v2h3v-3l-6.4-6.4a5 5 0 0 0-.1-.1ZM8 9h.01",
+  edit: "M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z",
+  steps: "M3 20h5v-5h5v-5h5V5h3",
 } as const;
 
 export type IconName = keyof typeof PATHS;
@@ -69,11 +76,12 @@ export function Icon({ name, size = 20, title, ...rest }: { name: IconName; size
 
 /** Brand mark: a leaf-shaped "V" whose stem is a citation bracket — life + evidence. */
 export function Logo({ size = 28 }: { size?: number }) {
+  // Stepwell mark: steps rising towards a sun — small steps towards better health.
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
       <rect width="32" height="32" rx="9" fill="var(--brand)" />
-      <path d="M7.5 9.5 13.5 23l6-13.5" fill="none" stroke="var(--on-brand)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M22.5 8h2.5v7.5h-2.5" fill="none" stroke="var(--on-brand)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.85" />
+      <path d="M6 25.5h5V21h5v-4.5h5V12h5" fill="none" stroke="var(--on-brand)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="23.5" cy="6.6" r="2.4" fill="var(--on-brand)" opacity="0.9" />
     </svg>
   );
 }

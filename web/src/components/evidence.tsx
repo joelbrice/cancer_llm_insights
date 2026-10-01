@@ -8,7 +8,7 @@ import {
   type Citation,
   type EvidenceLevelId,
   type Translate,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 
 import { Icon } from "./Icon";
 

@@ -10,7 +10,7 @@ import {
   type AdminSource,
   type Job,
   type PlatformStatus,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 import { ADMIN_KEY_STORAGE, browserApi } from "@/lib/browser-api";

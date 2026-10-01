@@ -1,6 +1,6 @@
 "use client";
 
-import { addToPlan, planItemId, STORAGE_KEYS, type PlanItem } from "@vitacite/shared";
+import { addToPlan, planItemId, STORAGE_KEYS, type PlanItem } from "@stepwell/shared";
 import { useState } from "react";
 
 import { browserApi } from "@/lib/browser-api";

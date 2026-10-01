@@ -8,7 +8,7 @@ import {
   type Citation,
   type Profile,
   type SafetyAssessment,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { browserApi } from "@/lib/browser-api";

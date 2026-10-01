@@ -1,6 +1,6 @@
 "use client";
 
-import type { Citation } from "@vitacite/shared";
+import type { Citation } from "@stepwell/shared";
 import { useEffect, useRef } from "react";
 
 import { useT } from "@/lib/i18n-client";

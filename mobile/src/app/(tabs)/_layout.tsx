@@ -22,14 +22,15 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.brand,
         tabBarInactiveTintColor: colors.ink2,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
+        tabBarLabelStyle: { fontSize: 10.5, fontWeight: "600", letterSpacing: -0.1 },
+        tabBarItemStyle: { paddingHorizontal: 0 },
       }}
     >
       <Tabs.Screen name="index" options={tab(t("navShort.home"), "home-outline", "home")} />
       <Tabs.Screen name="ask" options={tab(t("navShort.ask"), "chatbubble-ellipses-outline", "chatbubble-ellipses")} />
       <Tabs.Screen name="insights" options={tab(t("navShort.insights"), "sparkles-outline", "sparkles")} />
-      <Tabs.Screen name="check" options={tab(t("navShort.check"), "clipboard-outline", "clipboard")} />
-      <Tabs.Screen name="more" options={tab(t("nav.settings"), "ellipsis-horizontal-circle-outline", "ellipsis-horizontal-circle")} />
+      <Tabs.Screen name="community" options={tab(t("navShort.community"), "people-outline", "people")} />
+      <Tabs.Screen name="me" options={tab(t("navShort.me"), "person-circle-outline", "person-circle")} />
     </Tabs>
   );
 }

@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { brandName } from "@vitacite/shared";
+import { brandName, type Audience } from "@stepwell/shared";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { Image, Pressable, TextInput, View } from "react-native";
 
 import { Button, Card, Disclaimer, ErrorNote, InsightRow, Screen, StatusCard, Txt, type IconName } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
@@ -14,10 +14,11 @@ export default function Home() {
   const [q, setQ] = useState("");
   const status = useApi(() => api.status(), [api]);
   const featured = useApi(() => api.insights({ lang: locale, page_size: 4 }), [api, locale]);
-  const paths: { key: "prevention" | "living" | "caregivers"; icon: IconName }[] = [
-    { key: "prevention", icon: "leaf-outline" },
-    { key: "living", icon: "heart-outline" },
-    { key: "caregivers", icon: "people-outline" },
+  const paths: { key: "prevention" | "treatment" | "after" | "caregivers"; audience: Audience; icon: IconName }[] = [
+    { key: "prevention", audience: "prevention", icon: "leaf-outline" },
+    { key: "treatment", audience: "in_treatment", icon: "heart-outline" },
+    { key: "after", audience: "after_treatment", icon: "sunny-outline" },
+    { key: "caregivers", audience: "caregivers", icon: "people-outline" },
   ];
   const ask = () => {
     if (!q.trim()) return;
@@ -27,10 +28,11 @@ export default function Home() {
   return (
     <Screen>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-        <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: colors.brand, alignItems: "center", justifyContent: "center" }}>
-          <Txt style={{ color: colors.onBrand, fontWeight: "800" }}>V</Txt>
+        <Image source={require("../../../assets/icon.png")} style={{ width: 34, height: 34, borderRadius: 9 }} accessibilityIgnoresInvertColors />
+        <View>
+          <Txt variant="h2">{brandName()}</Txt>
+          <Txt variant="muted">{t("app.descriptor")}</Txt>
         </View>
-        <Txt variant="h2">{brandName()}</Txt>
       </View>
       <View style={{ gap: space(2) }}>
         <Txt style={{ color: colors.brand, fontWeight: "600" }}>{t("app.tagline")}</Txt>
@@ -56,7 +58,7 @@ export default function Home() {
 
       <Txt variant="h2">{t("home.pathsTitle")}</Txt>
       {paths.map((p) => (
-        <Pressable key={p.key} onPress={() => router.push({ pathname: "/insights", params: { audience: p.key === "living" ? "living_with_cancer" : p.key } })} accessibilityRole="button">
+        <Pressable key={p.key} onPress={() => router.push({ pathname: "/insights", params: { audience: p.audience } })} accessibilityRole="button">
           <Card style={{ flexDirection: "row", gap: space(3), alignItems: "center" }}>
             <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: colors.brandSoft, alignItems: "center", justifyContent: "center" }}>
               <Ionicons name={p.icon} size={22} color={colors.brand} />
@@ -77,6 +79,17 @@ export default function Home() {
           ))}
         </>
       ) : null}
+
+      <Card style={{ backgroundColor: colors.brandSoft, borderColor: colors.brandSoft }}>
+        <View style={{ flexDirection: "row", gap: space(3), alignItems: "center" }}>
+          <Ionicons name="people" size={26} color={colors.brand} />
+          <Txt variant="h2" style={{ flex: 1 }}>
+            {t("home.communityTitle")}
+          </Txt>
+        </View>
+        <Txt variant="small">{t("home.communityBody")}</Txt>
+        <Button label={t("home.communityCta")} icon="people-outline" onPress={() => router.push("/community")} />
+      </Card>
 
       <Card>
         <Txt style={{ fontWeight: "600" }}>{t("home.checkTitle")}</Txt>

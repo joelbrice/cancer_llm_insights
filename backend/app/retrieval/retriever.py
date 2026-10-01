@@ -57,7 +57,7 @@ class RetrievalResult:
 @dataclass(slots=True)
 class Personalization:
     cancer_types: list[str] = field(default_factory=list)
-    audience: str | None = None  # prevention | living_with_cancer | caregivers
+    audience: str | None = None  # prevention | in_treatment | after_treatment | caregivers
 
 
 class HybridRetriever:

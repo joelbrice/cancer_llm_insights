@@ -1,10 +1,14 @@
 "use client";
 
-import { isoWeek, removeFromPlan, STORAGE_KEYS, streak, toggleCheckin, type PlanItem } from "@vitacite/shared";
+import { isoWeek, removeFromPlan, STORAGE_KEYS, streak, toggleCheckin, type PlanItem, type Profile } from "@stepwell/shared";
 import Link from "next/link";
+import { useState } from "react";
+
+import { browserApi } from "@/lib/browser-api";
+import { communityError, useCommunityToken } from "@/lib/community";
 
 import { useLocale, useT } from "@/lib/i18n-client";
-import { useLocalState } from "@/lib/storage";
+import { readLocal, useLocalState } from "@/lib/storage";
 
 import { EvidenceBadge } from "./evidence";
 import { Icon } from "./Icon";
@@ -13,7 +17,26 @@ export function PlanView() {
   const t = useT();
   const lang = useLocale();
   const [plan, setPlan, loaded] = useLocalState<PlanItem[]>(STORAGE_KEYS.plan, []);
+  const [token] = useCommunityToken();
+  const [shared, setShared] = useState<Record<string, string>>({});
   const week = isoWeek();
+
+  /** Celebrate a streak with the community (a "milestone" post in the member's journey circle). */
+  const share = async (item: PlanItem, weeks: number) => {
+    if (!token) return;
+    const profile = readLocal<Profile>(STORAGE_KEYS.profile, {});
+    try {
+      await browserApi().community.post(token, {
+        circle: profile.audience ?? "prevention",
+        kind: "milestone",
+        body: t("community.milestoneText", { n: weeks, text: item.text }),
+        language: lang,
+      }, profile.country ?? null);
+      setShared((s) => ({ ...s, [item.id]: t("community.milestoneShared") }));
+    } catch (error) {
+      setShared((s) => ({ ...s, [item.id]: communityError(t, error) }));
+    }
+  };
   if (!loaded) return <p className="text-ink-2">{t("common.loading")}</p>;
   if (!plan.length) {
     return (
@@ -56,6 +79,16 @@ export function PlanView() {
               <Link href={`/${lang}/insights/${encodeURIComponent(item.insightId)}`} className="text-xs text-brand hover:underline">
                 {t("plan.fromInsight", { title: item.insightTitle })}
               </Link>
+              {token && weeks > 0 && !shared[item.id] ? (
+                <button type="button" className="btn btn-ghost !min-h-9 !px-3 text-sm" onClick={() => void share(item, weeks)}>
+                  <Icon name="users" size={16} />
+                  {t("community.shareMilestone")}
+                </button>
+              ) : shared[item.id] ? (
+                <span role="status" className="text-xs text-ink-2">
+                  {shared[item.id]}
+                </span>
+              ) : null}
               <button type="button" className="btn btn-ghost !min-h-9 !px-3 text-sm" onClick={() => setPlan((prev) => removeFromPlan(prev, item.id))}>
                 <Icon name="trash" size={16} />
                 {t("plan.remove")}

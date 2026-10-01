@@ -1,6 +1,21 @@
 import { readSse } from "./sse";
 import type {
   AdminSource,
+  CommunityMeta,
+  FeedQuery,
+  Member,
+  MemberCreate,
+  MemberMe,
+  MemberUpdate,
+  Post,
+  PostKind,
+  PostPage,
+  PostResult,
+  PostThread,
+  QueueItem,
+  ReactionKind,
+  ReactionResult,
+  ReportReason,
   ApiErrorBody,
   ChatEvent,
   ChatRequest,
@@ -67,7 +82,7 @@ function qs(params?: Query): string {
   return text ? `?${text}` : "";
 }
 
-export class VitaCiteClient {
+export class StepwellClient {
   private readonly base: string;
   private readonly fetcher: FetchLike;
 
@@ -181,6 +196,32 @@ export class VitaCiteClient {
     return final;
   }
 
+  // ── community (member token sent as X-Member-Token; optional country for local crisis lines) ──────
+  readonly community = {
+    meta: (lang?: string, signal?: AbortSignal) => this.request<CommunityMeta>("GET", `/community/meta${qs({ lang })}`, undefined, { signal }),
+    join: (body: MemberCreate) => this.request<{ member: Member; token: string }>("POST", "/community/members", body),
+    me: (token: string, signal?: AbortSignal) => this.request<MemberMe>("GET", "/community/members/me", undefined, { signal, headers: member(token) }),
+    markSeen: (token: string) => this.request<void>("POST", "/community/members/me/seen", undefined, { headers: member(token) }),
+    updateMe: (token: string, body: MemberUpdate) => this.request<Member>("PATCH", "/community/members/me", body, { headers: member(token) }),
+    exportMe: (token: string) => this.request<Record<string, unknown>>("GET", "/community/members/me/export", undefined, { headers: member(token) }),
+    eraseMe: (token: string) => this.request<void>("DELETE", "/community/members/me", undefined, { headers: member(token) }),
+    feed: (token: string, query: FeedQuery = {}, signal?: AbortSignal) =>
+      this.request<PostPage>("GET", `/community/posts${qs({ ...query })}`, undefined, { signal, headers: member(token) }),
+    thread: (token: string, id: string, signal?: AbortSignal) =>
+      this.request<PostThread>("GET", `/community/posts/${encodeURIComponent(id)}`, undefined, { signal, headers: member(token) }),
+    post: (token: string, body: { circle: string; kind: PostKind; body: string; language?: string }, country?: string | null) =>
+      this.request<PostResult>("POST", "/community/posts", body, { headers: member(token, country) }),
+    reply: (token: string, id: string, body: { body: string; language?: string }, country?: string | null) =>
+      this.request<PostResult>("POST", `/community/posts/${encodeURIComponent(id)}/replies`, body, { headers: member(token, country) }),
+    edit: (token: string, id: string, text: string, country?: string | null) =>
+      this.request<PostResult>("PATCH", `/community/posts/${encodeURIComponent(id)}`, { body: text }, { headers: member(token, country) }),
+    remove: (token: string, id: string) => this.request<void>("DELETE", `/community/posts/${encodeURIComponent(id)}`, undefined, { headers: member(token) }),
+    react: (token: string, id: string, kind: ReactionKind, on: boolean) =>
+      this.request<ReactionResult>(on ? "PUT" : "DELETE", `/community/posts/${encodeURIComponent(id)}/reactions/${kind}`, undefined, { headers: member(token) }),
+    report: (token: string, id: string, reason: ReportReason, note?: string) =>
+      this.request<{ ok: boolean }>("POST", `/community/posts/${encodeURIComponent(id)}/reports`, { reason, note }, { headers: member(token) }),
+  };
+
   // ── admin ─────────────────────────────────────────────────────────────────
   readonly admin = {
     sources: () => this.request<AdminSource[]>("GET", "/admin/sources", undefined, { admin: true }),
@@ -202,7 +243,19 @@ export class VitaCiteClient {
     job: (id: string) => this.request<Job>("GET", `/admin/jobs/${encodeURIComponent(id)}`, undefined, { admin: true }),
     cancelJob: (id: string) => this.request<Job>("POST", `/admin/jobs/${encodeURIComponent(id)}/cancel`, undefined, { admin: true }),
     stats: () => this.request<Record<string, unknown>>("GET", "/admin/stats", undefined, { admin: true }),
+    communityQueue: (limit = 100) => this.request<QueueItem[]>("GET", `/admin/community/queue${qs({ limit })}`, undefined, { admin: true }),
+    moderate: (id: string, action: "approve" | "remove", note?: string) =>
+      this.request<Post>("POST", `/admin/community/posts/${encodeURIComponent(id)}/moderate`, { action, note }, { admin: true }),
+    memberStatus: (id: string, status: "active" | "suspended" | "banned") =>
+      this.request<Member>("POST", `/admin/community/members/${encodeURIComponent(id)}/status`, { status }, { admin: true }),
+    communityStats: () => this.request<Record<string, number>>("GET", "/admin/community/stats", undefined, { admin: true }),
   };
+}
+
+function member(token: string, country?: string | null): Record<string, string> {
+  const headers: Record<string, string> = { "X-Member-Token": token };
+  if (country) headers["X-Country"] = country;
+  return headers;
 }
 
 async function toApiError(response: Response): Promise<ApiError> {

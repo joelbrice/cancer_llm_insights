@@ -1,4 +1,4 @@
-import { configureBrand, createTranslator, isLocale, type Locale, type Translate } from "@vitacite/shared";
+import { configureBrand, createTranslator, isLocale, type Locale, type Translate } from "@stepwell/shared";
 import { notFound } from "next/navigation";
 
 configureBrand({ name: process.env.NEXT_PUBLIC_APP_NAME });

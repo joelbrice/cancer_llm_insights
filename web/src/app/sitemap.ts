@@ -1,4 +1,4 @@
-import { LOCALES } from "@vitacite/shared";
+import { LOCALES } from "@stepwell/shared";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {

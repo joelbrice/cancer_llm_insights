@@ -134,6 +134,14 @@ class Container:
         return SFTExporter(self.settings, self.retriever, self.insights, self.composer, self.guardrails)
 
     @cached_property
+    def community(self):
+        from app.community.moderation import CommunityConfig, CommunityModerator
+        from app.community.service import CommunityService
+
+        return CommunityService(self.settings, self.db, CommunityModerator(CommunityConfig(), self.guardrails),
+                                self.insights)
+
+    @cached_property
     def jobs(self):
         from app.workers.jobs import InlineQueue, JobManager, RQQueue
         from app.workers.tasks import run_job

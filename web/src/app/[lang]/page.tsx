@@ -1,3 +1,4 @@
+import type { Audience } from "@stepwell/shared";
 import Link from "next/link";
 
 import { ApiDown, DataStatusCard, InsightCard } from "@/components/blocks";
@@ -13,9 +14,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     load(() => api.insights({ lang, page_size: 6 })),
   ]);
 
-  const paths: { key: "prevention" | "living" | "caregivers"; audience: string; icon: IconName }[] = [
+  const paths: { key: "prevention" | "treatment" | "after" | "caregivers"; audience: Audience; icon: IconName }[] = [
     { key: "prevention", audience: "prevention", icon: "leaf" },
-    { key: "living", audience: "living_with_cancer", icon: "heart" },
+    { key: "treatment", audience: "in_treatment", icon: "heart" },
+    { key: "after", audience: "after_treatment", icon: "sunrise" },
     { key: "caregivers", audience: "caregivers", icon: "users" },
   ];
 
@@ -45,7 +47,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <h2 id="paths" className="mb-4 text-xl font-semibold text-ink">
           {t("home.pathsTitle")}
         </h2>
-        <ul className="grid gap-4 md:grid-cols-3">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {paths.map((p) => (
             <li key={p.key}>
               <Link href={href(lang, `/insights?audience=${p.audience}`)} className="card group flex h-full gap-4 p-5 transition hover:shadow-card">
@@ -98,6 +100,23 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             </li>
           ))}
         </ol>
+      </section>
+
+      <section aria-labelledby="community" className="overflow-hidden rounded-3xl border border-line bg-brand-soft p-6 md:p-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface text-brand">
+            <Icon name="users" size={24} />
+          </span>
+          <div className="flex-1">
+            <h2 id="community" className="text-xl font-semibold text-ink">
+              {t("home.communityTitle")}
+            </h2>
+            <p className="mt-1 max-w-2xl text-ink-2">{t("home.communityBody")}</p>
+          </div>
+          <Link href={href(lang, "/community")} className="btn btn-primary">
+            {t("home.communityCta")}
+          </Link>
+        </div>
       </section>
 
       <section className="card flex flex-col gap-4 p-6 md:flex-row md:items-center">

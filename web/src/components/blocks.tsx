@@ -6,7 +6,7 @@ import {
   type Locale,
   type PlatformStatus,
   type Translate,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import Link from "next/link";
 import type { ReactNode } from "react";
 

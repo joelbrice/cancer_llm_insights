@@ -1,4 +1,4 @@
-import { STORAGE_KEYS, type Audience, type Profile } from "@vitacite/shared";
+import { AUDIENCES, STORAGE_KEYS, type Profile } from "@stepwell/shared";
 import { useEffect, useState } from "react";
 import { TextInput, View } from "react-native";
 
@@ -7,7 +7,6 @@ import { useSettings } from "@/lib/settings";
 import { useStored } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
 
-const AUDIENCES: Audience[] = ["prevention", "living_with_cancer", "caregivers"];
 const AGES = ["<30", "30-39", "40-49", "50-59", "60-69", "70+"] as const;
 const SEXES = ["female", "male", "intersex", "prefer_not_to_say"] as const;
 const PHASES = ["pre_treatment", "in_treatment", "post_treatment", "advanced", "survivorship"] as const;
@@ -50,7 +49,7 @@ export default function ProfileScreen() {
       <Choice label={t("profile.audience")} options={AUDIENCES} value={draft.audience} onChange={(audience) => set({ audience })} render={(a) => t(`audiences.${a}`)} />
       <Choice label={t("profile.ageRange")} options={AGES} value={draft.age_range} onChange={(age_range) => set({ age_range })} render={(a) => a} />
       <Choice label={t("profile.sex")} options={SEXES} value={draft.sex} onChange={(sex) => set({ sex })} render={(s) => t(`profile.sexes.${s}`)} />
-      {draft.audience === "living_with_cancer" || draft.audience === "caregivers" ? (
+      {draft.audience && draft.audience !== "prevention" ? (
         <Choice label={t("profile.phase")} options={PHASES} value={draft.treatment_phase} onChange={(treatment_phase) => set({ treatment_phase })} render={(p) => t(`profile.phases.${p}`)} />
       ) : null}
       <View style={{ gap: 6 }}>

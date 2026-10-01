@@ -1,8 +1,8 @@
 /** Brand constants. The product name is a single value so it can be changed without touching translations. */
 export const BRAND = {
-  name: "VitaCite",
+  name: "Stepwell",
   /** Short name for home screens (keeps the word "cancer" off the user's phone for privacy). */
-  shortName: "VitaCite",
+  shortName: "Stepwell",
   themeColor: "#0f6e64",
   backgroundColor: "#f7f6f2",
   repository: "https://github.com/joelbrice/cancer_llm_insights",

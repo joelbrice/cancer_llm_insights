@@ -75,8 +75,12 @@ def normalize_whitespace(text: str) -> str:
     return _MULTI_NL.sub("\n\n", text).strip()
 
 
+_LIGATURES = str.maketrans({"œ": "oe", "Œ": "OE", "æ": "ae", "Æ": "AE", "ß": "ss", "ẞ": "SS"})
+
+
 def fold_accents(text: str) -> str:
-    decomposed = unicodedata.normalize("NFKD", text)
+    """Strip diacritics and expand ligatures (lymphœdème → lymphoedeme, Größe → Grosse) for matching."""
+    decomposed = unicodedata.normalize("NFKD", text.translate(_LIGATURES))
     return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
 
 

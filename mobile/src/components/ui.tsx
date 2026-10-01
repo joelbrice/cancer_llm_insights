@@ -11,7 +11,7 @@ import {
   type InsightSummary,
   type PlatformStatus,
   type SafetyAssessment,
-} from "@vitacite/shared";
+} from "@stepwell/shared";
 import * as WebBrowser from "expo-web-browser";
 import { useState, type ComponentProps, type ReactNode } from "react";
 import {

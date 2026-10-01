@@ -70,10 +70,12 @@ export function streak(item: PlanItem, week: string = isoWeek()): number {
 }
 
 export const STORAGE_KEYS = {
-  profile: "vitacite.profile.v1",
-  plan: "vitacite.plan.v1",
-  check: "vitacite.check.v1",
-  locale: "vitacite.locale",
-  theme: "vitacite.theme",
-  conversation: "vitacite.conversation.v1",
+  profile: "stepwell.profile.v1",
+  plan: "stepwell.plan.v1",
+  check: "stepwell.check.v1",
+  locale: "stepwell.locale",
+  theme: "stepwell.theme",
+  conversation: "stepwell.conversation.v1",
+  /** Community member token (pseudonymous; deleting it signs this device out of the community). */
+  communityToken: "stepwell.community.v1",
 } as const;

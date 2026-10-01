@@ -27,7 +27,7 @@ from app.core.text import fold_accents
 from app.db.base import Database
 from app.db.models import InsightRow
 from app.evidence.grading import EvidenceGrader, GradedSource
-from app.evidence.taxonomy import LEVEL_ORDER, EvidenceLevel, level_rank
+from app.evidence.taxonomy import AUDIENCES, LEVEL_ORDER, EvidenceLevel, level_rank
 from app.evidence.verification import ClaimVerifier
 from app.i18n import t
 from app.llm.extractive import ExtractiveComposer
@@ -50,6 +50,9 @@ log = logging.getLogger(__name__)
 _MARK = re.compile(r"\[(\d+)\]")
 LIMITATION_CODES = {"observational", "single_source", "old", "mixed", "partial_support", "cap_no_human",
                     "cap_secondary_only", "cap_observational"}
+
+
+_LEGACY_AUDIENCE = {"living_with_cancer": ["in_treatment", "after_treatment"]}
 
 
 def _anchor_pattern(terms: list[str]) -> re.Pattern[str]:
@@ -291,11 +294,22 @@ class InsightService:
             row.generated_at = datetime.now(UTC)
 
     # ── reads ────────────────────────────────────────────────────────────────
-    @staticmethod
-    def _summary(row: InsightRow) -> InsightSummary:
+    def _audience(self, row: InsightRow) -> list[str]:
+        """The taxonomy is the source of truth (journeys can be re-tagged without rebuilding insights); rows from
+        older taxonomies are mapped (living_with_cancer → in_treatment + after_treatment)."""
+        topic = self._topic_index.get(row.topic_id)
+        if topic is not None:
+            return list(topic.audience)
+        mapped: list[str] = []
+        for a in row.audience or []:
+            mapped += _LEGACY_AUDIENCE.get(a, [a])
+        return [a for a in dict.fromkeys(mapped) if a in AUDIENCES]
+
+    def _summary(self, row: InsightRow) -> InsightSummary:
         ev = row.evidence or {}
         return InsightSummary(
-            id=row.id, topic_id=row.topic_id, language=row.language, category=row.category, audience=row.audience,
+            id=row.id, topic_id=row.topic_id, language=row.language, category=row.category,
+            audience=self._audience(row),
             cancer_types=row.cancer_types, title=row.title, question=row.question, summary=row.summary,
             evidence_level=row.evidence_level, evidence_grade=ev.get("grade", "–"), evidence_score=row.evidence_score,
             n_sources=int(ev.get("n_sources", 0)), status=row.status, updated_at=row.updated_at,
@@ -315,7 +329,7 @@ class InsightService:
                 stmt = stmt.where(InsightRow.evidence_level.in_(allowed))
             rows = list(session.scalars(stmt.order_by(InsightRow.evidence_score.desc(), InsightRow.title)))
         if audience:
-            rows = [r for r in rows if audience in (r.audience or [])]
+            rows = [r for r in rows if audience in self._audience(r)]
         if cancer_type:
             rows = [r for r in rows if cancer_type in (r.cancer_types or [])]
         if q:
@@ -369,6 +383,24 @@ class InsightService:
                 select(InsightRow).where(InsightRow.id.in_(ids), InsightRow.status == "published"))}
         return [RelatedInsight(id=r.id, title=r.title, category=r.category, evidence_level=r.evidence_level)
                 for i in ids if (r := rows.get(i))][:k]
+
+    def match_text(self, text: str, language: str, audience: str | None = None) -> RelatedInsight | None:
+        """Published insight whose topic anchors all occur in a free text (used to link community posts to
+        "what the research says"). Precision over recall: no anchors, no link."""
+        haystack = fold_accents(text).lower()
+        candidates = [t_ for t_ in self.topics if t_.anchors and all(p.search(haystack) for p in t_.anchors)]
+        if not candidates:
+            return None
+        candidates.sort(key=lambda t_: (audience not in t_.audience if audience else False, t_.priority,
+                                        -len(t_.anchors)))
+        ids = [f"{t_.id}.{language}" for t_ in candidates]
+        with self.db.session() as session:
+            rows = {r.id: r for r in session.scalars(
+                select(InsightRow).where(InsightRow.id.in_(ids), InsightRow.status == "published"))}
+        for insight_id in ids:
+            if (r := rows.get(insight_id)) is not None:
+                return RelatedInsight(id=r.id, title=r.title, category=r.category, evidence_level=r.evidence_level)
+        return None
 
     def count_published(self) -> int:
         with self.db.session() as session:

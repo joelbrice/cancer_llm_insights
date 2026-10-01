@@ -1,4 +1,4 @@
-import { DICTIONARIES, translateDynamic, type Audience } from "@vitacite/shared";
+import { DICTIONARIES, translateDynamic, type Audience } from "@stepwell/shared";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, TextInput, View } from "react-native";
