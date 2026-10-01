@@ -1,0 +1,668 @@
+# Insight topic taxonomy — clinical-lead controlled.
+#
+# Each topic becomes one evidence-graded insight per language once the corpus contains enough evidence
+# (INSIGHT_MIN_SOURCES). `anchors` are curated, accent-folded multilingual term prefixes: a passage only counts as
+# evidence for a topic if it matches at least one term of EVERY anchor group (precision gate). `guidance` tells the synthesis engine what a complete answer should cover IF the
+# evidence supports it — it never adds facts: every statement must be cited from the corpus.
+#
+# Framework alignment: European Code Against Cancer (IARC), WCRF/AICR Cancer Prevention Recommendations,
+# IARC Monographs classifications, WHO physical-activity guidelines, ACS / ASCO / ACSM survivorship guidance,
+# MASCC & SIO-ASCO integrative-oncology guidance.
+version: 1
+topics:
+  # ═══════════════════════════ PREVENTION ═══════════════════════════
+  - id: tobacco-smoking
+    category: tobacco
+    audience: [prevention]
+    cancer_types: [lung, head_neck, oesophagus, bladder, pancreas, kidney, stomach, liver, cervix, colorectal, leukaemia]
+    priority: 1
+    title: {en: "Tobacco and cancer", fr: "Tabac et cancer", es: "Tabaco y cáncer", pt: "Tabaco e cancro", de: "Tabak und Krebs"}
+    question:
+      en: "How does smoking or using tobacco affect cancer risk?"
+      fr: "Comment le tabac influence-t-il le risque de cancer ?"
+      es: "¿Cómo afecta fumar o consumir tabaco al riesgo de cáncer?"
+      pt: "Como é que fumar ou consumir tabaco afeta o risco de cancro?"
+      de: "Wie beeinflusst Rauchen oder Tabakkonsum das Krebsrisiko?"
+    queries: ["smoking tobacco cancer risk", "cigarette smoking lung cancer cause", "smokeless tobacco cancer"]
+    guidance: "Cover the range of cancers linked to tobacco, dose-response, all forms (cigarettes, cigars, pipes, smokeless, waterpipe), and that tobacco is the largest preventable cause of cancer."
+    anchors:
+      - ["smok", "tobacco", "cigar", "nicotin", "tabac", "tabag", "fumeur", "fumer", "fumar", "fumad", "fumo", "rauch", "zigar"]
+
+  - id: quitting-smoking
+    category: tobacco
+    audience: [prevention, living_with_cancer]
+    cancer_types: [lung, head_neck, oesophagus, bladder]
+    priority: 1
+    title: {en: "Benefits of quitting smoking", fr: "Bénéfices de l'arrêt du tabac", es: "Beneficios de dejar de fumar", pt: "Benefícios de deixar de fumar", de: "Vorteile des Rauchstopps"}
+    question:
+      en: "What happens to cancer risk after stopping smoking, and what helps people quit?"
+      fr: "Que devient le risque de cancer après l'arrêt du tabac, et qu'est-ce qui aide à arrêter ?"
+      es: "¿Qué ocurre con el riesgo de cáncer al dejar de fumar y qué ayuda a conseguirlo?"
+      pt: "O que acontece ao risco de cancro depois de deixar de fumar e o que ajuda a parar?"
+      de: "Was passiert mit dem Krebsrisiko nach einem Rauchstopp, und was hilft beim Aufhören?"
+    queries: ["smoking cessation reduces cancer risk over time", "quitting smoking at any age benefits", "smoking cessation support counselling medication effectiveness"]
+    guidance: "Emphasise that it is never too late, how risk falls with years since quitting, and evidence-based cessation support (counselling, medication). Non-judgemental tone."
+    anchors:
+      - ["smok", "tobacco", "cigar", "tabac", "fumer", "fumeur", "fumar", "fumo", "rauch"]
+      - ["quit", "cessation", "stop smoking", "stopped smoking", "former smoker", "arret", "sevrage", "ex-fumeur", "dejar de fumar", "abandono", "deixar de fumar", "cessacao", "rauchstopp", "aufhor", "entwohn", "ehemalige"]
+
+  - id: secondhand-smoke
+    category: tobacco
+    audience: [prevention, caregivers]
+    cancer_types: [lung]
+    priority: 2
+    title: {en: "Second-hand smoke", fr: "Tabagisme passif", es: "Humo ajeno", pt: "Fumo passivo", de: "Passivrauchen"}
+    question:
+      en: "Does breathing other people's tobacco smoke increase cancer risk?"
+      fr: "Respirer la fumée de tabac des autres augmente-t-il le risque de cancer ?"
+      es: "¿Respirar el humo del tabaco de otras personas aumenta el riesgo de cáncer?"
+      pt: "Respirar o fumo do tabaco de outras pessoas aumenta o risco de cancro?"
+      de: "Erhöht das Einatmen von fremdem Tabakrauch das Krebsrisiko?"
+    queries: ["secondhand smoke lung cancer risk never smokers", "passive smoking exposure home workplace cancer"]
+    guidance: "Cover risk to never-smokers, homes and cars, children, and smoke-free policies."
+    anchors:
+      - ["secondhand", "second-hand", "passive smok", "involuntary smok", "environmental tobacco", "tabagisme passif", "fumee passive", "humo ajeno", "fumador pasivo", "tabagismo passivo", "fumo passivo", "passivrauch"]
+
+  - id: e-cigarettes
+    category: tobacco
+    audience: [prevention]
+    cancer_types: [lung, head_neck]
+    priority: 3
+    title: {en: "E-cigarettes and vaping", fr: "Cigarette électronique et vapotage", es: "Cigarrillos electrónicos y vapeo", pt: "Cigarros eletrónicos e vaping", de: "E-Zigaretten und Vaping"}
+    question:
+      en: "What does the evidence say about e-cigarettes, cancer risk and quitting smoking?"
+      fr: "Que disent les données sur la cigarette électronique, le risque de cancer et l'arrêt du tabac ?"
+      es: "¿Qué dice la evidencia sobre los cigarrillos electrónicos, el riesgo de cáncer y dejar de fumar?"
+      pt: "O que diz a evidência sobre cigarros eletrónicos, risco de cancro e deixar de fumar?"
+      de: "Was sagt die Evidenz zu E-Zigaretten, Krebsrisiko und Rauchstopp?"
+    queries: ["e-cigarettes cancer risk long-term evidence", "electronic cigarettes smoking cessation trial", "vaping carcinogens exposure compared with smoking"]
+    guidance: "Distinguish long-term uncertainty from relative exposure compared with smoking, and their role (if any) as a cessation aid for current smokers versus uptake by non-smokers and young people."
+    anchors:
+      - ["e-cig", "ecig", "electronic cigarette", "vaping", "vape", "vapoteu", "vapotage", "cigarette electronique", "cigarrillo electronico", "vapeo", "cigarro eletronico", "e-zigarette"]
+
+  - id: alcohol-risk
+    category: alcohol
+    audience: [prevention]
+    cancer_types: [breast, colorectal, liver, oesophagus, head_neck, stomach]
+    priority: 1
+    title: {en: "Alcohol and cancer", fr: "Alcool et cancer", es: "Alcohol y cáncer", pt: "Álcool e cancro", de: "Alkohol und Krebs"}
+    question:
+      en: "How does drinking alcohol affect cancer risk, and is any amount safe?"
+      fr: "Comment la consommation d'alcool influence-t-elle le risque de cancer, et existe-t-il une dose sans risque ?"
+      es: "¿Cómo afecta el consumo de alcohol al riesgo de cáncer? ¿Hay alguna cantidad segura?"
+      pt: "Como é que o consumo de álcool afeta o risco de cancro? Existe alguma quantidade segura?"
+      de: "Wie beeinflusst Alkohol das Krebsrisiko, und gibt es eine unbedenkliche Menge?"
+    queries: ["alcohol consumption cancer risk dose response", "light drinking breast cancer risk", "no safe level of alcohol cancer", "alcohol and tobacco combined risk head and neck cancer"]
+    guidance: "Cover dose-response, risk even at low intake (notably breast cancer), that all types of alcoholic drinks count, the multiplied risk with tobacco, and practical ways to cut down."
+    anchors:
+      - ["alcohol", "alcool", "alkohol", "ethanol", "drinking", "drinker", "wine", "beer", "liquor", "binge"]
+
+  - id: body-weight
+    category: body_weight
+    audience: [prevention]
+    cancer_types: [breast, colorectal, endometrium, oesophagus, kidney, liver, pancreas, gallbladder, ovary, thyroid, stomach, myeloma, meningioma]
+    priority: 1
+    title: {en: "Body weight and cancer", fr: "Poids et cancer", es: "Peso corporal y cáncer", pt: "Peso corporal e cancro", de: "Körpergewicht und Krebs"}
+    question:
+      en: "How is excess body weight linked to cancer, and does losing weight help?"
+      fr: "Quel est le lien entre l'excès de poids et le cancer, et perdre du poids aide-t-il ?"
+      es: "¿Qué relación hay entre el exceso de peso y el cáncer? ¿Ayuda perder peso?"
+      pt: "Qual a relação entre o excesso de peso e o cancro? Perder peso ajuda?"
+      de: "Wie hängt Übergewicht mit Krebs zusammen, und hilft Abnehmen?"
+    queries: ["excess body fatness cancer risk sites", "obesity cancer risk meta-analysis", "intentional weight loss cancer risk reduction", "waist circumference cancer"]
+    guidance: "Cover which cancers are linked, biological mechanisms in plain words, evidence on weight loss (including bariatric surgery data if present), and avoid weight stigma."
+    anchors:
+      - ["obes", "overweight", "body weight", "weight gain", "weight loss", "body mass", "bmi", "adipos", "body fat", "waist", "surpoids", "poids", "sobrepeso", "peso corporal", "excesso de peso", "ubergewicht", "korpergewicht", "adipositas"]
+
+  - id: physical-activity-prevention
+    category: physical_activity
+    audience: [prevention]
+    cancer_types: [colorectal, breast, endometrium, oesophagus, kidney, bladder, stomach]
+    priority: 1
+    title: {en: "Physical activity to lower cancer risk", fr: "Activité physique et prévention du cancer", es: "Actividad física para reducir el riesgo de cáncer", pt: "Atividade física para reduzir o risco de cancro", de: "Bewegung zur Senkung des Krebsrisikos"}
+    question:
+      en: "How much does physical activity lower cancer risk, and how much activity is recommended?"
+      fr: "Dans quelle mesure l'activité physique réduit-elle le risque de cancer, et quelle quantité est recommandée ?"
+      es: "¿Cuánto reduce la actividad física el riesgo de cáncer y cuánta se recomienda?"
+      pt: "Quanto é que a atividade física reduz o risco de cancro e quanta é recomendada?"
+      de: "Wie stark senkt körperliche Aktivität das Krebsrisiko, und wie viel wird empfohlen?"
+    queries: ["physical activity cancer risk reduction colon breast endometrial", "leisure-time physical activity risk of cancer types", "recommended minutes moderate vigorous activity per week"]
+    guidance: "Cover the cancers with the strongest evidence, recommended weekly amounts (moderate vs vigorous), that some activity is better than none, and practical ways to start."
+    anchors:
+      - ["physical activ", "exercis", "sedentar", "fitness", "aerobic", "walking", "activite physique", "actividad fisica", "ejercicio", "atividade fisica", "exercicio", "korperliche aktiv", "bewegung", "sport"]
+
+  - id: sedentary-time
+    category: physical_activity
+    audience: [prevention]
+    cancer_types: [colorectal, endometrium, lung]
+    priority: 3
+    title: {en: "Sitting time", fr: "Temps assis et sédentarité", es: "Tiempo sentado", pt: "Tempo sentado", de: "Sitzzeit"}
+    question:
+      en: "Is spending a lot of time sitting linked to cancer, independently of exercise?"
+      fr: "Passer beaucoup de temps assis est-il lié au cancer, indépendamment de l'activité physique ?"
+      es: "¿Pasar mucho tiempo sentado se relaciona con el cáncer, independientemente del ejercicio?"
+      pt: "Passar muito tempo sentado está associado ao cancro, independentemente do exercício?"
+      de: "Ist viel Sitzen unabhängig von Bewegung mit Krebs verbunden?"
+    queries: ["sedentary behaviour sitting time cancer risk", "television viewing time cancer incidence"]
+    guidance: "Be clear about the strength of evidence (mostly observational) and practical tips to break up sitting."
+    anchors:
+      - ["sedentar", "sitting", "television", "screen time", "assis", "sentado", "sitzen", "sitzzeit"]
+
+  - id: processed-red-meat
+    category: nutrition
+    audience: [prevention]
+    cancer_types: [colorectal, stomach]
+    priority: 1
+    title: {en: "Processed and red meat", fr: "Viandes transformées et viande rouge", es: "Carnes procesadas y carne roja", pt: "Carnes processadas e carne vermelha", de: "Verarbeitetes und rotes Fleisch"}
+    question:
+      en: "How do processed meat and red meat affect cancer risk, and how much is too much?"
+      fr: "Comment les viandes transformées et la viande rouge influencent-elles le risque de cancer, et à partir de quelle quantité ?"
+      es: "¿Cómo afectan las carnes procesadas y la carne roja al riesgo de cáncer y cuánto es demasiado?"
+      pt: "Como é que as carnes processadas e a carne vermelha afetam o risco de cancro e quanto é demasiado?"
+      de: "Wie beeinflussen verarbeitetes und rotes Fleisch das Krebsrisiko, und wie viel ist zu viel?"
+    queries: ["processed meat colorectal cancer carcinogenic classification", "red meat consumption colorectal cancer risk per 100 g", "limit red meat portions per week recommendation"]
+    guidance: "Distinguish processed meat from unprocessed red meat (different strength of evidence), explain hazard classification versus size of risk, give portion guidance if present, and suggest alternatives."
+    anchors:
+      - ["processed meat", "red meat", "meat", "bacon", "sausage", "viande", "jambon", "charcut", "carne", "embutido", "presunto", "salsicha", "fleisch", "wurst"]
+
+  - id: plant-foods-fibre
+    category: nutrition
+    audience: [prevention]
+    cancer_types: [colorectal, oesophagus, head_neck, lung]
+    priority: 1
+    title: {en: "Whole grains, fibre, vegetables and fruit", fr: "Céréales complètes, fibres, légumes et fruits", es: "Cereales integrales, fibra, verduras y frutas", pt: "Cereais integrais, fibra, legumes e fruta", de: "Vollkorn, Ballaststoffe, Gemüse und Obst"}
+    question:
+      en: "Do whole grains, fibre, vegetables and fruit lower cancer risk?"
+      fr: "Les céréales complètes, les fibres, les légumes et les fruits réduisent-ils le risque de cancer ?"
+      es: "¿Los cereales integrales, la fibra, las verduras y las frutas reducen el riesgo de cáncer?"
+      pt: "Os cereais integrais, a fibra, os legumes e a fruta reduzem o risco de cancro?"
+      de: "Senken Vollkorn, Ballaststoffe, Gemüse und Obst das Krebsrisiko?"
+    queries: ["dietary fibre whole grains colorectal cancer risk", "fruit and vegetable intake cancer risk", "plant-based diet cancer prevention", "grams of fibre per day recommendation"]
+    guidance: "Cover which associations are strongest (e.g. fibre and colorectal cancer), recommended amounts if stated, and practical swaps. Note where evidence is limited."
+    anchors:
+      - ["fibre", "fiber", "whole grain", "wholegrain", "vegetable", "fruit", "legume", "pulses", "cereales completes", "fibra", "cereales integrales", "verdura", "cereais integrais", "ballaststoff", "vollkorn", "gemuse", "obst"]
+
+  - id: sugary-drinks-ultra-processed
+    category: nutrition
+    audience: [prevention]
+    cancer_types: [colorectal, breast]
+    priority: 2
+    title: {en: "Sugary drinks and ultra-processed foods", fr: "Boissons sucrées et aliments ultra-transformés", es: "Bebidas azucaradas y ultraprocesados", pt: "Bebidas açucaradas e ultraprocessados", de: "Zuckergetränke und hochverarbeitete Lebensmittel"}
+    question:
+      en: "Are sugary drinks, fast food and ultra-processed foods linked to cancer?"
+      fr: "Les boissons sucrées, la restauration rapide et les aliments ultra-transformés sont-ils liés au cancer ?"
+      es: "¿Las bebidas azucaradas, la comida rápida y los ultraprocesados se relacionan con el cáncer?"
+      pt: "As bebidas açucaradas, a comida rápida e os ultraprocessados estão associados ao cancro?"
+      de: "Hängen Zuckergetränke, Fast Food und hochverarbeitete Lebensmittel mit Krebs zusammen?"
+    queries: ["sugar-sweetened beverages cancer risk weight gain", "ultra-processed food consumption cancer incidence cohort", "fast food energy dense foods obesity cancer"]
+    guidance: "Separate direct evidence from indirect effects via weight gain; flag emerging/observational nature of ultra-processed food evidence."
+    anchors:
+      - ["sugary", "sweetened", "soft drink", "soda", "ultra-processed", "ultraprocessed", "fast food", "boissons sucrees", "ultra-transform", "azucarad", "ultraprocesad", "acucarad", "ultraprocessad", "zuckergetrank", "hochverarbeit"]
+
+  - id: supplements-prevention
+    category: nutrition
+    audience: [prevention]
+    cancer_types: [lung, prostate]
+    priority: 2
+    title: {en: "Dietary supplements for prevention", fr: "Compléments alimentaires et prévention", es: "Suplementos dietéticos y prevención", pt: "Suplementos alimentares e prevenção", de: "Nahrungsergänzungsmittel zur Vorbeugung"}
+    question:
+      en: "Can vitamin or mineral supplements prevent cancer?"
+      fr: "Les compléments de vitamines ou de minéraux peuvent-ils prévenir le cancer ?"
+      es: "¿Pueden los suplementos de vitaminas o minerales prevenir el cáncer?"
+      pt: "Os suplementos de vitaminas ou minerais podem prevenir o cancro?"
+      de: "Können Vitamin- oder Mineralstoffpräparate Krebs vorbeugen?"
+    queries: ["vitamin supplements cancer prevention randomized trials", "beta-carotene supplementation lung cancer smokers trial", "vitamin D supplementation cancer incidence trial", "high-dose supplements harm"]
+    guidance: "Cover trial evidence (including any showing harm, e.g. high-dose beta-carotene in smokers), the food-first principle, and legitimate medical reasons for supplements prescribed by a clinician."
+    anchors:
+      - ["supplement", "vitamin", "beta-carotene", "multivitamin", "selenium", "complement alimentaire", "complements alimentaires", "suplemento", "nahrungserganz"]
+
+  - id: sun-uv-sunbeds
+    category: sun_uv
+    audience: [prevention]
+    cancer_types: [melanoma, skin]
+    priority: 1
+    title: {en: "Sun, UV and sunbeds", fr: "Soleil, UV et cabines de bronzage", es: "Sol, rayos UV y camas solares", pt: "Sol, UV e solários", de: "Sonne, UV-Strahlung und Solarien"}
+    question:
+      en: "How can I reduce skin cancer risk from the sun and sunbeds?"
+      fr: "Comment réduire le risque de cancer de la peau lié au soleil et aux cabines de bronzage ?"
+      es: "¿Cómo puedo reducir el riesgo de cáncer de piel por el sol y las camas solares?"
+      pt: "Como posso reduzir o risco de cancro da pele causado pelo sol e pelos solários?"
+      de: "Wie kann ich mein Hautkrebsrisiko durch Sonne und Solarien senken?"
+    queries: ["ultraviolet radiation melanoma skin cancer risk sunburn", "sunbed indoor tanning melanoma risk", "sunscreen use melanoma prevention trial", "childhood sunburn skin cancer"]
+    guidance: "Cover sunburn (especially in childhood), sunbeds, protective behaviours (shade, clothing, sunscreen) and skin self-awareness. Note differences by skin type."
+    anchors:
+      - ["ultraviolet", "uv radiation", "uv exposure", "sunbed", "tanning", "sunscreen", "sunburn", "sun exposure", "sun protection", "melanoma", "skin cancer", "soleil", "bronzage", "creme solaire", "bronceado", "protector solar", "bronzeamento", "protetor solar", "solarium", "sonnenbrand", "sonnenschutz", "hautkrebs"]
+
+  - id: hpv-vaccination
+    category: infections_vaccination
+    audience: [prevention, caregivers]
+    cancer_types: [cervix, head_neck, anus, vulva, vagina, penis]
+    priority: 1
+    title: {en: "HPV vaccination", fr: "Vaccination contre le HPV", es: "Vacunación contra el VPH", pt: "Vacinação contra o HPV", de: "HPV-Impfung"}
+    question:
+      en: "How effective is HPV vaccination at preventing cancer, and who should get it?"
+      fr: "Quelle est l'efficacité de la vaccination HPV contre le cancer, et qui devrait se faire vacciner ?"
+      es: "¿Qué eficacia tiene la vacuna contra el VPH para prevenir el cáncer y quién debería recibirla?"
+      pt: "Qual a eficácia da vacina contra o HPV na prevenção do cancro e quem a deve fazer?"
+      de: "Wie wirksam ist die HPV-Impfung gegen Krebs, und wer sollte sich impfen lassen?"
+    queries: ["HPV vaccination cervical cancer incidence reduction population", "human papillomavirus vaccine safety effectiveness", "HPV vaccine boys girls recommended age"]
+    guidance: "Cover population-level effectiveness, safety evidence, recommended ages, and that screening is still needed for vaccinated women."
+    anchors:
+      - ["hpv", "papillomavir", "papilomavir", "papillomvir"]
+
+  - id: hepatitis-b-c
+    category: infections_vaccination
+    audience: [prevention]
+    cancer_types: [liver]
+    priority: 2
+    title: {en: "Hepatitis B and C", fr: "Hépatites B et C", es: "Hepatitis B y C", pt: "Hepatites B e C", de: "Hepatitis B und C"}
+    question:
+      en: "How do hepatitis B and C cause liver cancer, and how can this be prevented?"
+      fr: "Comment les hépatites B et C provoquent-elles le cancer du foie, et comment le prévenir ?"
+      es: "¿Cómo causan las hepatitis B y C el cáncer de hígado y cómo se puede prevenir?"
+      pt: "Como é que as hepatites B e C causam cancro do fígado e como se pode prevenir?"
+      de: "Wie verursachen Hepatitis B und C Leberkrebs, und wie lässt sich das verhindern?"
+    queries: ["hepatitis B vaccination liver cancer prevention", "hepatitis C antiviral treatment hepatocellular carcinoma risk", "chronic viral hepatitis testing"]
+    guidance: "Cover vaccination (hepatitis B), testing and treatment (hepatitis C cure rates if present), and transmission prevention. Especially relevant in high-prevalence regions."
+    anchors:
+      - ["hepatitis", "hepatite", "hbv", "hcv"]
+
+  - id: h-pylori
+    category: infections_vaccination
+    audience: [prevention]
+    cancer_types: [stomach]
+    priority: 3
+    title: {en: "Helicobacter pylori and stomach cancer", fr: "Helicobacter pylori et cancer de l'estomac", es: "Helicobacter pylori y cáncer de estómago", pt: "Helicobacter pylori e cancro do estômago", de: "Helicobacter pylori und Magenkrebs"}
+    question:
+      en: "Does treating Helicobacter pylori infection reduce stomach cancer risk?"
+      fr: "Traiter une infection à Helicobacter pylori réduit-il le risque de cancer de l'estomac ?"
+      es: "¿Tratar la infección por Helicobacter pylori reduce el riesgo de cáncer de estómago?"
+      pt: "Tratar a infeção por Helicobacter pylori reduz o risco de cancro do estômago?"
+      de: "Senkt die Behandlung einer Helicobacter-pylori-Infektion das Magenkrebsrisiko?"
+    queries: ["Helicobacter pylori eradication gastric cancer prevention trial", "H. pylori screen and treat"]
+    guidance: "Cover eradication-trial evidence and who may benefit from testing; refer testing decisions to clinicians."
+    anchors:
+      - ["pylori", "helicobacter"]
+
+  - id: screening-programmes
+    category: screening
+    audience: [prevention]
+    cancer_types: [breast, cervix, colorectal, lung]
+    priority: 1
+    title: {en: "Cancer screening", fr: "Dépistage des cancers", es: "Cribado del cáncer", pt: "Rastreio do cancro", de: "Krebsfrüherkennung"}
+    question:
+      en: "Which cancer screening tests are proven to save lives, and who is eligible?"
+      fr: "Quels dépistages des cancers ont prouvé qu'ils sauvent des vies, et pour qui ?"
+      es: "¿Qué pruebas de cribado del cáncer han demostrado salvar vidas y a quién se dirigen?"
+      pt: "Que exames de rastreio do cancro comprovadamente salvam vidas e a quem se destinam?"
+      de: "Welche Krebsfrüherkennungsuntersuchungen retten nachweislich Leben, und für wen?"
+    queries: ["organised screening programme mortality reduction breast cervical colorectal", "low-dose CT lung cancer screening high risk trial", "faecal immunochemical test colorectal screening", "HPV testing cervical screening interval", "overdiagnosis screening harms benefits"]
+    guidance: "Cover programmes with mortality benefit (breast, cervical, colorectal; lung for high-risk people), eligibility as defined by national programmes, benefits AND harms (false positives, overdiagnosis), and to see a doctor for symptoms regardless of screening."
+    anchors:
+      - ["screening", "mammogra", "colonoscop", "immunochemical", "pap smear", "pap test", "cervical cytology", "low-dose ct", "low-dose computed", "depistage", "cribado", "tamizaje", "rastreio", "rastreamento", "fruherkennung", "vorsorge"]
+
+  - id: family-history-genetics
+    category: screening
+    audience: [prevention]
+    cancer_types: [breast, ovary, colorectal, prostate, pancreas]
+    priority: 2
+    title: {en: "Family history and inherited risk", fr: "Antécédents familiaux et risque héréditaire", es: "Antecedentes familiares y riesgo hereditario", pt: "Antecedentes familiares e risco hereditário", de: "Familiengeschichte und erbliches Risiko"}
+    question:
+      en: "When does a family history of cancer suggest inherited risk, and what can be done?"
+      fr: "Quand des antécédents familiaux de cancer évoquent-ils un risque héréditaire, et que faire ?"
+      es: "¿Cuándo sugieren los antecedentes familiares de cáncer un riesgo hereditario y qué se puede hacer?"
+      pt: "Quando é que os antecedentes familiares de cancro sugerem um risco hereditário e o que se pode fazer?"
+      de: "Wann deutet eine familiäre Krebsgeschichte auf ein erbliches Risiko hin, und was kann man tun?"
+    queries: ["hereditary cancer syndromes BRCA Lynch referral criteria", "genetic counselling family history cancer", "risk-reducing strategies inherited mutation carriers"]
+    guidance: "Cover red flags in family history, genetic counselling, enhanced screening/risk-reducing options in general terms. Lifestyle still matters. Never estimate individual risk."
+    anchors:
+      - ["family history", "hereditary", "inherited", "brca", "lynch syndrome", "genetic counsel", "germline", "antecedents familiaux", "hereditaire", "antecedentes familiares", "hereditari", "familiengeschichte", "erblich", "genetische beratung"]
+
+  - id: breastfeeding
+    category: reproductive_health
+    audience: [prevention]
+    cancer_types: [breast, ovary]
+    priority: 3
+    title: {en: "Breastfeeding", fr: "Allaitement", es: "Lactancia materna", pt: "Amamentação", de: "Stillen"}
+    question:
+      en: "Does breastfeeding lower the mother's risk of cancer?"
+      fr: "L'allaitement réduit-il le risque de cancer chez la mère ?"
+      es: "¿La lactancia materna reduce el riesgo de cáncer de la madre?"
+      pt: "A amamentação reduz o risco de cancro da mãe?"
+      de: "Senkt Stillen das Krebsrisiko der Mutter?"
+    queries: ["breastfeeding duration maternal breast cancer risk", "lactation protective ovarian cancer"]
+    guidance: "Cover the association and duration effects; be supportive of people who cannot or choose not to breastfeed."
+    anchors:
+      - ["breastfe", "breast-fe", "lactation", "allaitement", "lactancia", "amamenta", "aleitamento", "stillen"]
+
+  - id: menopausal-hormone-therapy
+    category: reproductive_health
+    audience: [prevention]
+    cancer_types: [breast, endometrium, ovary]
+    priority: 2
+    title: {en: "Menopausal hormone therapy", fr: "Traitement hormonal de la ménopause", es: "Terapia hormonal de la menopausia", pt: "Terapêutica hormonal da menopausa", de: "Hormonersatztherapie in den Wechseljahren"}
+    question:
+      en: "How does menopausal hormone therapy affect cancer risk?"
+      fr: "Comment le traitement hormonal de la ménopause influence-t-il le risque de cancer ?"
+      es: "¿Cómo afecta la terapia hormonal de la menopausia al riesgo de cáncer?"
+      pt: "Como é que a terapêutica hormonal da menopausa afeta o risco de cancro?"
+      de: "Wie beeinflusst eine Hormonersatztherapie in den Wechseljahren das Krebsrisiko?"
+    queries: ["menopausal hormone therapy breast cancer risk duration type", "estrogen progestogen therapy endometrial cancer"]
+    guidance: "Cover differences by type and duration and that decisions are individual benefit-risk discussions with a clinician."
+    anchors:
+      - ["hormone replacement", "hormone therapy", "menopausal hormone", "hrt", "estrogen", "oestrogen", "progest", "traitement hormonal", "terapia hormonal", "terapeutica hormonal", "hormonersatz"]
+      - ["menopaus", "postmenopaus", "climater", "wechseljahr"]
+
+  - id: radon-air-pollution
+    category: environment
+    audience: [prevention]
+    cancer_types: [lung]
+    priority: 2
+    title: {en: "Radon and air pollution", fr: "Radon et pollution de l'air", es: "Radón y contaminación del aire", pt: "Radão e poluição do ar", de: "Radon und Luftverschmutzung"}
+    question:
+      en: "How do radon at home and outdoor air pollution affect lung cancer risk?"
+      fr: "Comment le radon domestique et la pollution de l'air extérieur influencent-ils le risque de cancer du poumon ?"
+      es: "¿Cómo afectan el radón en el hogar y la contaminación del aire al riesgo de cáncer de pulmón?"
+      pt: "Como é que o radão em casa e a poluição do ar afetam o risco de cancro do pulmão?"
+      de: "Wie beeinflussen Radon im Haus und Luftverschmutzung das Lungenkrebsrisiko?"
+    queries: ["residential radon lung cancer risk testing mitigation", "outdoor air pollution particulate matter lung cancer", "household solid fuel smoke lung cancer"]
+    guidance: "Cover home radon testing/mitigation, outdoor and household (solid fuel) air pollution, and the interaction with smoking."
+    anchors:
+      - ["radon", "air pollution", "particulate", "pm2.5", "solid fuel", "household air", "pollution", "contaminacion del aire", "poluicao", "luftverschmutzung", "feinstaub"]
+
+  - id: occupational-exposures
+    category: environment
+    audience: [prevention]
+    cancer_types: [lung, mesothelioma, bladder, skin, leukaemia]
+    priority: 3
+    title: {en: "Cancer risks at work", fr: "Risques de cancer au travail", es: "Riesgos de cáncer en el trabajo", pt: "Riscos de cancro no trabalho", de: "Krebsrisiken am Arbeitsplatz"}
+    question:
+      en: "Which workplace exposures increase cancer risk, and how can workers protect themselves?"
+      fr: "Quelles expositions professionnelles augmentent le risque de cancer, et comment se protéger ?"
+      es: "¿Qué exposiciones laborales aumentan el riesgo de cáncer y cómo pueden protegerse los trabajadores?"
+      pt: "Que exposições no trabalho aumentam o risco de cancro e como se podem os trabalhadores proteger?"
+      de: "Welche Belastungen am Arbeitsplatz erhöhen das Krebsrisiko, und wie kann man sich schützen?"
+    queries: ["occupational carcinogens asbestos silica diesel exhaust cancer", "workplace exposure protection cancer prevention", "outdoor workers UV exposure skin cancer"]
+    guidance: "Cover main occupational carcinogens, rights and protective measures, and to inform clinicians of past exposures."
+    anchors:
+      - ["occupation", "workplace", "asbestos", "silica", "diesel", "exposition professionnelle", "amiante", "laboral", "amianto", "ocupacional", "arbeitsplatz", "berufs", "asbest"]
+
+  - id: night-shift-sleep
+    category: sleep_stress
+    audience: [prevention]
+    cancer_types: [breast, prostate, colorectal]
+    priority: 3
+    title: {en: "Night shifts and sleep", fr: "Travail de nuit et sommeil", es: "Turnos de noche y sueño", pt: "Trabalho noturno e sono", de: "Nachtschicht und Schlaf"}
+    question:
+      en: "Are night-shift work and poor sleep linked to cancer risk?"
+      fr: "Le travail de nuit et le manque de sommeil sont-ils liés au risque de cancer ?"
+      es: "¿El trabajo nocturno y dormir mal se relacionan con el riesgo de cáncer?"
+      pt: "O trabalho noturno e a falta de sono estão associados ao risco de cancro?"
+      de: "Hängen Nachtschichtarbeit und schlechter Schlaf mit dem Krebsrisiko zusammen?"
+    queries: ["night shift work circadian disruption cancer risk", "sleep duration cancer incidence cohort"]
+    guidance: "Be explicit about limited/mixed evidence and avoid alarmism."
+    anchors:
+      - ["night shift", "shift work", "night work", "circadian", "sleep", "travail de nuit", "sommeil", "turno de noche", "trabalho noturno", "nachtschicht", "schichtarbeit", "schlaf"]
+
+  - id: stress-and-cancer-risk
+    category: sleep_stress
+    audience: [prevention, living_with_cancer]
+    cancer_types: []
+    priority: 3
+    title: {en: "Stress and cancer", fr: "Stress et cancer", es: "Estrés y cáncer", pt: "Stress e cancro", de: "Stress und Krebs"}
+    question:
+      en: "Does stress cause cancer or make it worse?"
+      fr: "Le stress cause-t-il le cancer ou l'aggrave-t-il ?"
+      es: "¿El estrés causa cáncer o lo empeora?"
+      pt: "O stress causa cancro ou piora-o?"
+      de: "Verursacht Stress Krebs oder verschlimmert er ihn?"
+    queries: ["psychological stress cancer incidence meta-analysis", "stress indirect effects smoking alcohol eating cancer"]
+    guidance: "Distinguish direct causal evidence (weak/inconsistent) from indirect behavioural pathways; reassure people they did not cause their cancer by being stressed."
+    anchors:
+      - ["stress", "psychological distress", "estres", "estresse"]
+
+  # ═══════════════════════════ LIVING WITH CANCER ═══════════════════════════
+  - id: exercise-during-treatment
+    category: physical_activity
+    audience: [living_with_cancer]
+    cancer_types: []
+    priority: 1
+    title: {en: "Exercise during cancer treatment", fr: "Activité physique pendant les traitements", es: "Ejercicio durante el tratamiento del cáncer", pt: "Exercício durante o tratamento do cancro", de: "Bewegung während der Krebsbehandlung"}
+    question:
+      en: "Is it safe and helpful to exercise during cancer treatment?"
+      fr: "Est-il sûr et bénéfique de faire de l'activité physique pendant un traitement contre le cancer ?"
+      es: "¿Es seguro y útil hacer ejercicio durante el tratamiento del cáncer?"
+      pt: "É seguro e útil fazer exercício durante o tratamento do cancro?"
+      de: "Ist Bewegung während einer Krebsbehandlung sicher und hilfreich?"
+    queries: ["exercise during chemotherapy fatigue quality of life randomized", "exercise guidelines cancer survivors aerobic resistance training", "exercise safety precautions during cancer treatment"]
+    guidance: "Cover benefits (fatigue, physical function, anxiety/depression, quality of life), recommended types and amounts, safety precautions (e.g. low blood counts, bone metastases, lymphoedema) and checking with the care team / exercise professional."
+    anchors:
+      - ["exercis", "physical activ", "aerobic", "resistance training", "yoga", "activite physique", "ejercicio", "actividad fisica", "exercicio", "atividade fisica", "bewegung", "sport", "training"]
+      - ["chemo", "radiother", "radiation therapy", "during treatment", "during cancer treatment", "receiving", "traitement", "tratamiento", "tratamento", "behandlung", "therapie", "patients", "survivors"]
+
+  - id: exercise-after-treatment
+    category: survivorship
+    audience: [living_with_cancer]
+    cancer_types: [breast, colorectal, prostate]
+    priority: 1
+    title: {en: "Physical activity after cancer", fr: "Activité physique après un cancer", es: "Actividad física después del cáncer", pt: "Atividade física depois do cancro", de: "Bewegung nach Krebs"}
+    question:
+      en: "Is physical activity after cancer linked to better survival and lower recurrence?"
+      fr: "L'activité physique après un cancer est-elle associée à une meilleure survie et moins de récidives ?"
+      es: "¿La actividad física después del cáncer se asocia con mejor supervivencia y menos recurrencias?"
+      pt: "A atividade física depois do cancro está associada a melhor sobrevivência e menos recidivas?"
+      de: "Ist Bewegung nach Krebs mit besserem Überleben und weniger Rückfällen verbunden?"
+    queries: ["post-diagnosis physical activity mortality recurrence breast colorectal cancer", "exercise trial colon cancer survivors disease-free survival", "resistance training lymphedema breast cancer survivors safety"]
+    guidance: "Distinguish observational associations from trial results, cover lymphoedema safety of strength training if evidence present, and practical return-to-activity advice."
+    anchors:
+      - ["exercis", "physical activ", "aerobic", "resistance training", "yoga", "activite physique", "ejercicio", "actividad fisica", "exercicio", "atividade fisica", "bewegung", "sport", "training"]
+      - ["survivor", "after treatment", "after diagnosis", "post-diagnosis", "recurrence", "survival", "mortality", "apres le", "despues del", "depois do", "nach der", "rezidiv", "recidiv", "recaida", "survie", "supervivencia", "sobrevivencia", "uberleben", "lymphedema", "lymphoedema"]
+
+  - id: nutrition-during-treatment
+    category: treatment_side_effects
+    audience: [living_with_cancer, caregivers]
+    cancer_types: []
+    priority: 1
+    title: {en: "Eating well during treatment", fr: "Bien s'alimenter pendant les traitements", es: "Alimentarse bien durante el tratamiento", pt: "Alimentar-se bem durante o tratamento", de: "Gut essen während der Behandlung"}
+    question:
+      en: "How should people eat during cancer treatment to stay strong and avoid malnutrition?"
+      fr: "Comment s'alimenter pendant un traitement du cancer pour rester fort et éviter la dénutrition ?"
+      es: "¿Cómo alimentarse durante el tratamiento del cáncer para mantenerse fuerte y evitar la desnutrición?"
+      pt: "Como alimentar-se durante o tratamento do cancro para se manter forte e evitar a desnutrição?"
+      de: "Wie sollte man sich während einer Krebsbehandlung ernähren, um bei Kräften zu bleiben und Mangelernährung zu vermeiden?"
+    queries: ["malnutrition cancer patients protein energy intake guidelines", "nutrition support during chemotherapy weight loss", "food safety neutropenia cancer treatment", "dietitian referral oncology"]
+    guidance: "Cover protein/energy needs, preventing unintended weight loss and muscle loss, food safety when immunity is low, dietitian referral, and that restrictive 'cancer diets' can cause harm."
+    anchors:
+      - ["nutrition", "malnutrition", "diet", "eating", "food", "protein", "dietitian", "appetite", "alimentation", "denutrition", "nutricion", "desnutricion", "alimentacion", "nutricao", "desnutricao", "alimentacao", "ernahrung", "mangelernahrung"]
+      - ["chemo", "during treatment", "radiother", "patients", "traitement", "tratamiento", "tratamento", "behandlung", "neutropen"]
+
+  - id: weight-after-diagnosis
+    category: survivorship
+    audience: [living_with_cancer]
+    cancer_types: [breast, colorectal, endometrium, prostate]
+    priority: 2
+    title: {en: "Weight after a cancer diagnosis", fr: "Poids après un diagnostic de cancer", es: "Peso tras un diagnóstico de cáncer", pt: "Peso após um diagnóstico de cancro", de: "Gewicht nach einer Krebsdiagnose"}
+    question:
+      en: "Does body weight after diagnosis matter for outcomes, and what is a safe approach?"
+      fr: "Le poids après le diagnostic influence-t-il le pronostic, et quelle approche est sûre ?"
+      es: "¿Importa el peso después del diagnóstico para la evolución y cuál es un enfoque seguro?"
+      pt: "O peso após o diagnóstico importa para a evolução e qual é uma abordagem segura?"
+      de: "Spielt das Gewicht nach der Diagnose eine Rolle für den Verlauf, und was ist ein sicherer Ansatz?"
+    queries: ["obesity after diagnosis cancer recurrence mortality", "weight loss intervention breast cancer survivors trial", "sarcopenia cancer outcomes"]
+    guidance: "Cover both excess weight and unintended weight/muscle loss, the role of supervised programmes, and avoiding weight loss during active treatment unless advised."
+    anchors:
+      - ["weight", "obes", "bmi", "body mass", "sarcopen", "muscle mass", "poids", "peso", "gewicht"]
+      - ["survivor", "after diagnosis", "post-diagnosis", "recurrence", "survival", "patients", "apres le diagnostic", "pacientes", "patient"]
+
+  - id: smoking-after-diagnosis
+    category: survivorship
+    audience: [living_with_cancer]
+    cancer_types: [lung, head_neck]
+    priority: 1
+    title: {en: "Quitting smoking after a cancer diagnosis", fr: "Arrêter de fumer après un diagnostic de cancer", es: "Dejar de fumar tras un diagnóstico de cáncer", pt: "Deixar de fumar após um diagnóstico de cancro", de: "Rauchstopp nach einer Krebsdiagnose"}
+    question:
+      en: "Does quitting smoking after a cancer diagnosis improve treatment results and survival?"
+      fr: "Arrêter de fumer après un diagnostic de cancer améliore-t-il les résultats des traitements et la survie ?"
+      es: "¿Dejar de fumar tras el diagnóstico mejora los resultados del tratamiento y la supervivencia?"
+      pt: "Deixar de fumar após o diagnóstico melhora os resultados do tratamento e a sobrevivência?"
+      de: "Verbessert ein Rauchstopp nach der Diagnose Behandlungsergebnisse und Überleben?"
+    queries: ["smoking cessation after cancer diagnosis survival", "continued smoking treatment complications radiotherapy surgery", "tobacco cessation in oncology care"]
+    guidance: "Cover survival and treatment-complication evidence, that it is never too late, and that oncology teams can provide cessation support. Compassionate tone."
+    anchors:
+      - ["smok", "tobacco", "tabac", "fumar", "fumo", "rauch"]
+      - ["after diagnosis", "after a cancer diagnosis", "patients", "survival", "treatment", "survivor", "apres le diagnostic", "pacientes", "diagnos"]
+
+  - id: alcohol-after-diagnosis
+    category: survivorship
+    audience: [living_with_cancer]
+    cancer_types: [breast, head_neck]
+    priority: 3
+    title: {en: "Alcohol after cancer", fr: "Alcool après un cancer", es: "Alcohol después del cáncer", pt: "Álcool depois do cancro", de: "Alkohol nach Krebs"}
+    question:
+      en: "Should people limit alcohol after a cancer diagnosis?"
+      fr: "Faut-il limiter l'alcool après un diagnostic de cancer ?"
+      es: "¿Conviene limitar el alcohol tras un diagnóstico de cáncer?"
+      pt: "Deve limitar-se o álcool após um diagnóstico de cancro?"
+      de: "Sollte man Alkohol nach einer Krebsdiagnose einschränken?"
+    queries: ["alcohol after cancer diagnosis recurrence second primary", "alcohol interaction cancer treatment"]
+    guidance: "Cover recurrence/second cancer associations, interactions with treatment, and that evidence may be limited by cancer type."
+    anchors:
+      - ["alcohol", "alcool", "alkohol", "drinking"]
+      - ["after diagnosis", "survivor", "recurrence", "patients", "during treatment", "second primary", "diagnos"]
+
+  - id: cancer-related-fatigue
+    category: treatment_side_effects
+    audience: [living_with_cancer]
+    cancer_types: []
+    priority: 1
+    title: {en: "Managing cancer-related fatigue", fr: "Gérer la fatigue liée au cancer", es: "Manejo de la fatiga relacionada con el cáncer", pt: "Gerir a fadiga associada ao cancro", de: "Umgang mit krebsbedingter Erschöpfung (Fatigue)"}
+    question:
+      en: "What helps with cancer-related fatigue?"
+      fr: "Qu'est-ce qui aide à lutter contre la fatigue liée au cancer ?"
+      es: "¿Qué ayuda con la fatiga relacionada con el cáncer?"
+      pt: "O que ajuda na fadiga associada ao cancro?"
+      de: "Was hilft bei krebsbedingter Erschöpfung (Fatigue)?"
+    queries: ["cancer-related fatigue interventions exercise psychological meta-analysis", "fatigue management guideline cancer", "energy conservation cancer fatigue"]
+    guidance: "Cover exercise and psychosocial interventions (strongest evidence), mind-body approaches, sleep, and checking for treatable causes (anaemia, thyroid, depression) with the care team."
+    anchors:
+      - ["fatigue", "tiredness", "exhaustion", "fatiga", "cansancio", "cansaco", "erschopf"]
+
+  - id: nausea-appetite
+    category: treatment_side_effects
+    audience: [living_with_cancer, caregivers]
+    cancer_types: []
+    priority: 2
+    title: {en: "Nausea and loss of appetite", fr: "Nausées et perte d'appétit", es: "Náuseas y pérdida de apetito", pt: "Náuseas e perda de apetite", de: "Übelkeit und Appetitlosigkeit"}
+    question:
+      en: "What helps with nausea and poor appetite during cancer treatment?"
+      fr: "Qu'est-ce qui aide en cas de nausées et de perte d'appétit pendant les traitements ?"
+      es: "¿Qué ayuda con las náuseas y la falta de apetito durante el tratamiento?"
+      pt: "O que ajuda nas náuseas e na falta de apetite durante o tratamento?"
+      de: "Was hilft bei Übelkeit und Appetitlosigkeit während der Behandlung?"
+    queries: ["chemotherapy-induced nausea non-pharmacological interventions", "ginger acupressure nausea chemotherapy trial", "small frequent meals appetite cancer"]
+    guidance: "Cover practical eating strategies, evidence on complementary approaches (ginger, acupressure) graded honestly, and that anti-sickness medicines are prescribed by the care team — report uncontrolled vomiting urgently."
+    anchors:
+      - ["nausea", "vomit", "appetite", "nausee", "vomissement", "appetit", "vomito", "apetito", "apetite", "ubelkeit", "erbrechen"]
+
+  - id: sleep-during-cancer
+    category: sleep_stress
+    audience: [living_with_cancer]
+    cancer_types: []
+    priority: 2
+    title: {en: "Sleep problems with cancer", fr: "Troubles du sommeil et cancer", es: "Problemas de sueño y cáncer", pt: "Problemas de sono e cancro", de: "Schlafprobleme bei Krebs"}
+    question:
+      en: "What helps people with cancer sleep better?"
+      fr: "Qu'est-ce qui aide les personnes atteintes de cancer à mieux dormir ?"
+      es: "¿Qué ayuda a las personas con cáncer a dormir mejor?"
+      pt: "O que ajuda as pessoas com cancro a dormir melhor?"
+      de: "Was hilft Menschen mit Krebs, besser zu schlafen?"
+    queries: ["insomnia cancer survivors cognitive behavioral therapy for insomnia trial", "sleep hygiene cancer patients", "exercise yoga sleep quality cancer"]
+    guidance: "Cover CBT-I (if evidence present), sleep habits, physical activity, and when to discuss sleep with the care team."
+    anchors:
+      - ["sleep", "insomnia", "sommeil", "insomnie", "sueno", "insomnio", "insonia", "schlaf"]
+
+  - id: anxiety-depression
+    category: mental_health
+    audience: [living_with_cancer, caregivers]
+    cancer_types: []
+    priority: 1
+    title: {en: "Coping with anxiety and low mood", fr: "Faire face à l'anxiété et à la déprime", es: "Afrontar la ansiedad y el ánimo bajo", pt: "Lidar com a ansiedade e o desânimo", de: "Umgang mit Angst und Niedergeschlagenheit"}
+    question:
+      en: "What support helps people living with cancer cope with anxiety and depression?"
+      fr: "Quel soutien aide les personnes atteintes de cancer à faire face à l'anxiété et à la dépression ?"
+      es: "¿Qué apoyo ayuda a las personas con cáncer a afrontar la ansiedad y la depresión?"
+      pt: "Que apoio ajuda as pessoas com cancro a lidar com a ansiedade e a depressão?"
+      de: "Welche Unterstützung hilft Menschen mit Krebs bei Angst und Depression?"
+    queries: ["psychosocial interventions anxiety depression cancer meta-analysis", "mindfulness-based interventions cancer patients", "fear of recurrence interventions", "screening for distress oncology"]
+    guidance: "Normalise emotional reactions, cover evidence-based psychological support, peer support, mindfulness, physical activity, and when to seek professional help. Include crisis signposting if evidence/context suggests."
+    anchors:
+      - ["anxiety", "depress", "distress", "psychosocial", "mindfulness", "emotional", "fear of recurrence", "anxiete", "angoisse", "ansiedad", "ansiedade", "angst"]
+
+  - id: supplements-during-treatment
+    category: complementary
+    audience: [living_with_cancer]
+    cancer_types: []
+    priority: 1
+    title: {en: "Supplements and herbs during treatment", fr: "Compléments et plantes pendant les traitements", es: "Suplementos y hierbas durante el tratamiento", pt: "Suplementos e plantas durante o tratamento", de: "Nahrungsergänzung und Pflanzen während der Behandlung"}
+    question:
+      en: "Are supplements and herbal products safe to take during cancer treatment?"
+      fr: "Les compléments alimentaires et produits à base de plantes sont-ils sûrs pendant un traitement du cancer ?"
+      es: "¿Es seguro tomar suplementos y productos herbales durante el tratamiento del cáncer?"
+      pt: "É seguro tomar suplementos e produtos à base de plantas durante o tratamento do cancro?"
+      de: "Sind Nahrungsergänzungsmittel und pflanzliche Produkte während einer Krebsbehandlung sicher?"
+    queries: ["herb drug interactions chemotherapy St John's wort", "antioxidant supplements during chemotherapy radiotherapy outcomes", "dietary supplement use during breast cancer treatment survival", "grapefruit drug interaction oral anticancer"]
+    guidance: "Cover known interaction mechanisms and examples present in the evidence, possible harm from high-dose antioxidants during treatment, and telling the care team/pharmacist about everything taken."
+    anchors:
+      - ["supplement", "herbal", "herbs", "st john", "antioxidant", "curcumin", "turmeric", "grapefruit", "complement", "millepertuis", "suplemento", "hierba", "erva", "nahrungserganz", "johanniskraut", "antioxyd", "antioxid"]
+      - ["chemo", "treatment", "radiother", "interaction", "traitement", "tratamiento", "tratamento", "behandlung", "wechselwirk", "interacc", "interac"]
+
+  - id: integrative-therapies
+    category: complementary
+    audience: [living_with_cancer]
+    cancer_types: []
+    priority: 2
+    title: {en: "Evidence-based complementary therapies", fr: "Thérapies complémentaires fondées sur les preuves", es: "Terapias complementarias basadas en la evidencia", pt: "Terapias complementares baseadas na evidência", de: "Evidenzbasierte komplementäre Therapien"}
+    question:
+      en: "Which complementary therapies (like yoga, acupuncture or massage) have evidence for easing symptoms?"
+      fr: "Quelles thérapies complémentaires (yoga, acupuncture, massage…) ont fait leurs preuves pour soulager les symptômes ?"
+      es: "¿Qué terapias complementarias (yoga, acupuntura, masaje…) tienen evidencia para aliviar síntomas?"
+      pt: "Que terapias complementares (ioga, acupuntura, massagem…) têm evidência no alívio de sintomas?"
+      de: "Welche komplementären Therapien (z. B. Yoga, Akupunktur, Massage) lindern nachweislich Beschwerden?"
+    queries: ["integrative oncology guideline acupuncture yoga massage symptom management", "yoga cancer fatigue anxiety trial", "acupuncture aromatase inhibitor arthralgia trial", "complementary therapy versus alternative medicine survival"]
+    guidance: "Distinguish complementary (alongside treatment) from alternative (instead of treatment) — the latter is linked to worse survival if evidence present. Grade each therapy honestly."
+    anchors:
+      - ["acupunct", "yoga", "massage", "mindfulness", "meditation", "tai chi", "qigong", "music therapy", "integrative", "complementary", "acupuntura", "masaje", "massagem", "akupunktur", "komplementar"]
+
+  - id: diet-myths
+    category: complementary
+    audience: [living_with_cancer, prevention]
+    cancer_types: []
+    priority: 1
+    title: {en: "Diet myths: sugar, alkaline diets and fasting", fr: "Idées reçues : sucre, régimes alcalins et jeûne", es: "Mitos: azúcar, dietas alcalinas y ayuno", pt: "Mitos: açúcar, dietas alcalinas e jejum", de: "Ernährungsmythen: Zucker, basische Diäten und Fasten"}
+    question:
+      en: "Does sugar feed cancer, and can alkaline diets or fasting treat it?"
+      fr: "Le sucre nourrit-il le cancer, et les régimes alcalins ou le jeûne peuvent-ils le soigner ?"
+      es: "¿El azúcar alimenta el cáncer? ¿Pueden las dietas alcalinas o el ayuno tratarlo?"
+      pt: "O açúcar alimenta o cancro? As dietas alcalinas ou o jejum podem tratá-lo?"
+      de: "Füttert Zucker den Krebs, und können basische Diäten oder Fasten ihn behandeln?"
+    queries: ["sugar feeds cancer myth glucose metabolism", "alkaline diet cancer evidence", "fasting during chemotherapy trial", "ketogenic diet cancer treatment evidence"]
+    guidance: "Correct misconceptions respectfully with evidence, explain why the body regulates blood pH, report fasting/ketogenic trial evidence accurately (often early-phase), and warn about malnutrition risks."
+    anchors:
+      - ["sugar", "glucose", "alkaline", "ketogenic", "fasting", "sucre", "alcalin", "jeune", "azucar", "ayuno", "acucar", "jejum", "zucker", "basisch", "fasten"]
+
+  - id: caregiver-wellbeing
+    category: caregivers
+    audience: [caregivers]
+    cancer_types: []
+    priority: 2
+    title: {en: "Looking after yourself as a caregiver", fr: "Prendre soin de soi quand on est aidant", es: "Cuidarse cuando se es cuidador", pt: "Cuidar de si enquanto cuidador", de: "Für sich selbst sorgen als pflegende Angehörige"}
+    question:
+      en: "What helps caregivers of people with cancer protect their own health and wellbeing?"
+      fr: "Qu'est-ce qui aide les aidants de personnes atteintes de cancer à préserver leur santé et leur bien-être ?"
+      es: "¿Qué ayuda a los cuidadores de personas con cáncer a proteger su salud y bienestar?"
+      pt: "O que ajuda os cuidadores de pessoas com cancro a proteger a sua saúde e bem-estar?"
+      de: "Was hilft pflegenden Angehörigen von Menschen mit Krebs, ihre eigene Gesundheit zu schützen?"
+    queries: ["caregiver burden cancer interventions psychosocial", "family caregivers cancer support programs", "caregiver depression anxiety cancer"]
+    guidance: "Cover caregiver strain, effective support interventions, respite, and practical self-care; validate their role."
+    anchors:
+      - ["caregiver", "carer", "family member", "aidant", "proche aidant", "cuidador", "pflegende", "angehorige"]
