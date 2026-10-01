@@ -66,3 +66,8 @@ mlruns/
 
 # Expo web export
 mobile/dist-web/
+
+# Trained adapters, merged weights and GGUF files (large, licence-bound)
+models/
+ml/serve/ollama/*.gguf
+ml/**/eval_report*
