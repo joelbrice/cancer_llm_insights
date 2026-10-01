@@ -153,3 +153,13 @@ def test_rate_limit(tmp_path, corpus):
         assert codes[:3] == [200, 200, 200] and codes[-1] == 429
     container.close()
     deps._limiter = None
+
+
+def test_streamed_final_event_is_always_complete(built_client):
+    """Regression: abstained/safety-blocked finals must carry every ChatResponse field (clients read them)."""
+    for question in ["I have crushing chest pain and can't breathe", "Is radon at home a cause of lung cancer?"]:
+        events = parse_sse(built_client.post("/api/v1/chat", json={"messages": [{"role": "user", "content": question}]}).text)
+        final = next(data for name, data in events if name == "final")
+        for key in ("citations", "related_insights", "output_flags", "evidence", "verification", "timings_ms", "retrieved"):
+            assert key in final, key
+        assert final["abstained"] is True

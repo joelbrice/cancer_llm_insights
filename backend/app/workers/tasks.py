@@ -39,7 +39,11 @@ def run_job(job_id: str) -> None:
                                                  int(params.get("distractors", 2)), progress=progress)
         else:
             raise ValueError(f"unknown job kind {job.kind}")
-        jobs.finish(job_id, status="succeeded", stats=result)
+        if job.kind == "ingest" and job.triggered_by == "scheduler" and not result.get("changed") \
+                and not result.get("errors") and not result.get("source_errors"):
+            jobs.discard(job_id)  # periodic no-op sync: keep the job history meaningful
+        else:
+            jobs.finish(job_id, status="succeeded", stats=result)
         container.refresh_gauges()
         log.info("job %s succeeded", job_id)
     except InterruptedError:

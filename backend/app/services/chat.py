@@ -100,7 +100,7 @@ class ChatService:
                     "disclaimer": t("disclaimer", lang), "model": self.model_name, "timings_ms": timings, **extra}
             CHAT_REQUESTS.labels(language=lang, safety=safety.level,
                                  outcome="abstained" if body.get("abstained") else "answered").inc()
-            return "final", body
+            return "final", ChatResponse(**body).model_dump(mode="json")  # complete payload, defaults filled
 
         if safety.block_generation:
             yield finish(" ".join(n.message for n in safety.notices), abstained=True, abstain_reason="safety")

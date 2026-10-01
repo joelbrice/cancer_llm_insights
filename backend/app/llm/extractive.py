@@ -34,6 +34,11 @@ _RECOMMENDATION_CUES = re.compile(
 )
 _NOISE = re.compile(r"^(table|figure|fig\.|tableau|tabla|tabela|abbildung)\b|we searched|were recruited|"
                     r"funding|conflict of interest|copyright|all rights reserved|©", re.IGNORECASE)
+_ANAPHORIC_START = re.compile(
+    r"^(these|this|those|that|they|it|such|both|the latter|the former|ces|cette|ce|cela|ils|elles|celles?|ceux|"
+    r"estos|estas|este|esta|esto|ellos|ellas|estes|estas|isso|isto|eles|elas|diese[rsnm]?|dies|sie|es)\b",
+    re.IGNORECASE,
+)
 _GOOD_SECTIONS = re.compile(r"conclusion|result|finding|key|summary|recommend|abstract|résumé|résultat|"
                             r"conclusi|resultado|resumen|resumo|ergebnis|zusammenfassung|empfehl", re.IGNORECASE)
 
@@ -60,7 +65,7 @@ class ExtractiveComposer:
                 continue  # passage is about something else (shares only generic words with the question)
             for span in sentence_spans(chunk.text):
                 n_words = len(words(span.text))
-                if 7 <= n_words <= 70 and not _NOISE.search(span.text):
+                if 7 <= n_words <= 70 and not _NOISE.search(span.text) and not _ANAPHORIC_START.match(span.text.lstrip("•-* ")):
                     units.append((chunk, span, set(analyze(span.text, chunk.source.language))))
         idf = idf_weights([terms for _, _, terms in units]) if len(units) >= 5 else {}
         candidates: list[Picked] = []

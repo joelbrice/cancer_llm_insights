@@ -19,6 +19,13 @@ export const en = {
     menu: "Menu",
     skip: "Skip to content",
   },
+  navShort: {
+    home: "Home",
+    ask: "Ask",
+    insights: "Insights",
+    check: "Check",
+    plan: "Plan",
+  },
   common: {
     loading: "Loading…",
     retry: "Try again",

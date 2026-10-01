@@ -86,7 +86,8 @@ export function formatDate(locale: Locale, iso: string | null | undefined, style
   if (!iso) return "";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat(locale, style === "long" ? { dateStyle: "long" } : { dateStyle: "medium" }).format(date);
+  // Fixed UTC time zone: identical output on server and client (no hydration mismatch).
+  return new Intl.DateTimeFormat(locale, { dateStyle: style === "long" ? "long" : "medium", timeZone: "UTC" }).format(date);
 }
 
 export function formatNumber(locale: Locale, value: number): string {

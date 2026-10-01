@@ -21,6 +21,13 @@ export const es: Dictionary = {
     menu: "Menú",
     skip: "Ir al contenido",
   },
+  navShort: {
+    home: "Inicio",
+    ask: "Preguntar",
+    insights: "Claves",
+    check: "Chequeo",
+    plan: "Plan",
+  },
   common: {
     loading: "Cargando…",
     retry: "Reintentar",

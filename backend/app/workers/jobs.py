@@ -161,6 +161,13 @@ class JobManager:
 
         return progress, should_cancel
 
+    def discard(self, job_id: str) -> None:
+        with self.db.session() as session:
+            job = session.get(JobRow, job_id)
+            if job is not None:
+                session.delete(job)
+        JOBS.labels(kind="ingest", status="noop").inc()
+
     def finish(self, job_id: str, *, status: str, stats: dict[str, Any] | None = None, error: str | None = None) -> None:
         with self.db.session() as session:
             job = session.get(JobRow, job_id)
