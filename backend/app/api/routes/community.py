@@ -9,6 +9,11 @@ from app.community.service import CommunityError, CommunityService
 from app.container import Container
 from app.db.models import CommunityMemberRow
 from app.schemas.community import (
+    Appeal,
+    AppealCreate,
+    AppealDecision,
+    AppealQueueItem,
+    AppealResult,
     BlockedMember,
     CommunityMeta,
     Member,
@@ -17,6 +22,7 @@ from app.schemas.community import (
     MemberSession,
     MemberStatusUpdate,
     MemberUpdate,
+    ModeratedPost,
     ModerationDecision,
     Post,
     PostCreate,
@@ -28,6 +34,8 @@ from app.schemas.community import (
     ReactionResult,
     ReplyCreate,
     ReportCreate,
+    SurveyCreate,
+    SurveyStatus,
 )
 
 
@@ -230,6 +238,40 @@ def unblock(block_id: str, member: CommunityMemberRow = Depends(current_member),
     return Response(status_code=204)
 
 
+@router.get("/members/me/moderation", response_model=list[ModeratedPost])
+def my_moderation(member: CommunityMemberRow = Depends(current_member),
+                  community: CommunityService = Depends(community_dep)) -> list[ModeratedPost]:
+    """The member's own held or removed posts: why, the decision, and any appeal."""
+    return community.my_moderation(member)
+
+
+@router.post("/posts/{post_id}/appeal", response_model=AppealResult, status_code=201)
+def appeal(post_id: str, body: AppealCreate, x_country: str | None = Header(default=None),
+           member: CommunityMemberRow = Depends(current_member),
+           community: CommunityService = Depends(community_dep)) -> AppealResult:
+    try:
+        return community.appeal(member, post_id, body.text, _country(x_country))
+    except CommunityError as exc:
+        _raise(exc)
+        raise
+
+
+@router.get("/survey", response_model=SurveyStatus)
+def survey_status(member: CommunityMemberRow = Depends(current_member),
+                  community: CommunityService = Depends(community_dep)) -> SurveyStatus:
+    return community.survey_status(member)
+
+
+@router.post("/survey", response_model=SurveyStatus, status_code=201)
+def answer_survey(body: SurveyCreate, member: CommunityMemberRow = Depends(current_member),
+                  community: CommunityService = Depends(community_dep)) -> SurveyStatus:
+    try:
+        return community.answer_survey(member, body.answer)
+    except CommunityError as exc:
+        _raise(exc)
+        raise
+
+
 # ── moderation (admin key) ──────────────────────────────────────────────────────────────────────────────────
 admin_router = APIRouter(prefix="/admin/community", tags=["admin"],
                          dependencies=[Depends(require_admin)])
@@ -254,6 +296,22 @@ def member_status(member_id: str, body: MemberStatusUpdate,
                   community: CommunityService = Depends(community_dep)) -> Member:
     try:
         return community.set_member_status(member_id, body.status)
+    except CommunityError as exc:
+        _raise(exc)
+        raise
+
+
+@admin_router.get("/appeals", response_model=list[AppealQueueItem])
+def appeals(status_: str | None = Query("open", alias="status", pattern="^(open|upheld|overturned)$"),
+            limit: int = Query(100, ge=1, le=500), community: CommunityService = Depends(community_dep)):
+    return community.appeals(status_, limit)
+
+
+@admin_router.post("/appeals/{appeal_id}", response_model=Appeal)
+def decide_appeal(appeal_id: str, body: AppealDecision,
+                  community: CommunityService = Depends(community_dep)) -> Appeal:
+    try:
+        return community.decide_appeal(appeal_id, body.action, body.response)
     except CommunityError as exc:
         _raise(exc)
         raise

@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
-from app.api.routes import admin, community, public
+from app.api.routes import admin, community, public, sync
 from app.container import Container, get_container, set_container
 from app.core.logging import configure_logging, request_id_var
 from app.core.metrics import HTTP_LATENCY, HTTP_REQUESTS
@@ -51,6 +51,8 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         if owns_container:
             if c.llm is not None:
                 await c.llm.aclose()
+            if c.llm_canary is not None:
+                await c.llm_canary.aclose()
             c.close()
 
     app = FastAPI(
@@ -70,7 +72,7 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization", "X-Admin-Key", "X-Member-Token", "X-Country", "X-Request-ID",
                        "Accept-Language", "If-None-Match"],
-        expose_headers=["X-Request-ID", "ETag", "Retry-After"],
+        expose_headers=["X-Request-ID", "ETag", "Retry-After", "X-Sync-Version"],
         max_age=600,
     )
 
@@ -143,6 +145,7 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.include_router(admin.router, prefix=settings.api_prefix)
     app.include_router(community.router, prefix=settings.api_prefix)
     app.include_router(community.admin_router, prefix=settings.api_prefix)
+    app.include_router(sync.router, prefix=settings.api_prefix)
     return app
 
 

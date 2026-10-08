@@ -13,21 +13,27 @@ from sqlalchemy import and_, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.community import transparency
 from app.community.moderation import CommunityConfig, CommunityModerator, Screening, handle_key
 from app.core.language import detect_language
 from app.core.metrics import COMMUNITY_POSTS, SAFETY_TRIGGERS
 from app.db.base import Database
 from app.db.models import (
+    CommunityAppealRow,
     CommunityBlockRow,
     CommunityMemberRow,
     CommunityPostRow,
     CommunityReactionRow,
     CommunityReportRow,
+    CommunitySurveyRow,
     InsightRow,
 )
 from app.schemas.api import RelatedInsight
 from app.schemas.community import (
     ActivityItem,
+    Appeal,
+    AppealQueueItem,
+    AppealResult,
     Author,
     BlockedMember,
     CircleInfo,
@@ -38,6 +44,7 @@ from app.schemas.community import (
     MemberMe,
     MemberSession,
     MemberUpdate,
+    ModeratedPost,
     ModerationOutcome,
     Post,
     PostCreate,
@@ -48,6 +55,7 @@ from app.schemas.community import (
     ReactionResult,
     ReplyCreate,
     ReportCreate,
+    SurveyStatus,
 )
 from app.settings import Settings
 
@@ -188,6 +196,10 @@ class CommunityService:
             reports = session.scalars(select(CommunityReportRow)
                                       .where(CommunityReportRow.member_id == member.id)).all()
             blocks = self.blocks(member)
+            appeals = session.scalars(select(CommunityAppealRow).where(CommunityAppealRow.member_id == member.id)
+                                      .order_by(CommunityAppealRow.created_at)).all()
+            survey = session.scalars(select(CommunitySurveyRow).where(CommunitySurveyRow.member_id == member.id)
+                                     .order_by(CommunitySurveyRow.created_at)).all()
         return {
             "exported_at": _now().isoformat(),
             "member": self._member(member).model_dump(mode="json"),
@@ -199,6 +211,8 @@ class CommunityService:
             "reports": [{"post_id": r.post_id, "reason": r.reason, "created_at": _aware(r.created_at).isoformat()}
                         for r in reports],
             "blocked_members": [b.handle for b in blocks],
+            "appeals": [self._appeal(a).model_dump(mode="json") for a in appeals],
+            "survey_answers": [{"answer": r.answer, "created_at": _aware(r.created_at).isoformat()} for r in survey],
             "not_stored": "No name, email address, IP address or device identifier is stored.",
         }
 
@@ -246,6 +260,7 @@ class CommunityService:
         )
         with self.db.session() as session:
             session.add(row)
+            self._ledger_submission(session, row, screening)
         self._count(row, screening)
         return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
 
@@ -269,6 +284,7 @@ class CommunityService:
         )
         with self.db.session() as session:
             session.add(row)
+            self._ledger_submission(session, row, screening)
             session.flush()
             self._refresh_reply_count(session, post_id)
         self._count(row, screening)
@@ -399,6 +415,7 @@ class CommunityService:
                 return  # idempotent
             session.add(CommunityReportRow(id=_new_id("r"), post_id=post_id, member_id=member.id,
                                            reason=body.reason, note=body.note))
+            transparency.record(session, "reported", body.reason, post.language)
             session.flush()
             post.report_count = int(session.scalar(select(func.count()).select_from(CommunityReportRow).where(
                 CommunityReportRow.post_id == post_id, CommunityReportRow.status == "open")) or 0)
@@ -409,6 +426,7 @@ class CommunityService:
                 post.status = "held"
                 post.flags = [*post.flags, "reported"]
                 mod["auto"] = "reported"
+                transparency.record(session, "auto_hidden", None, post.language)
             post.moderation = mod
             if post.parent_id:
                 session.flush()
@@ -468,15 +486,22 @@ class CommunityService:
                     CommunityReportRow.post_id.in_([r.id for r in rows] or [""]), CommunityReportRow.status == "open")):
                 reports.setdefault(rep.post_id, []).append(
                     {"reason": rep.reason, "note": rep.note, "created_at": _aware(rep.created_at).isoformat()})
+            appeals = {a.post_id: self._appeal(a) for a in session.scalars(select(CommunityAppealRow).where(
+                CommunityAppealRow.post_id.in_([r.id for r in rows] or [""]), CommunityAppealRow.status == "open"))}
             posts = self._posts(session, rows, None)
             return [QueueItem(post=p, member_id=r.member_id, flags=r.flags, moderation=r.moderation or {},
-                              reports=reports.get(r.id, [])) for p, r in zip(posts, rows, strict=True)]
+                              reports=reports.get(r.id, []), appeal=appeals.get(r.id))
+                    for p, r in zip(posts, rows, strict=True)]
 
-    def decide(self, post_id: str, action: str, note: str | None) -> Post:
+    def decide(self, post_id: str, action: str, note: str | None, *, ledger: bool = True) -> Post:
         with self.db.session() as session:
             post = session.get(CommunityPostRow, post_id)
             if post is None or post.status == "deleted":
                 raise CommunityError(404, "post_not_found")
+            if ledger:  # appeal outcomes are counted as appeals, not as first decisions
+                transparency.record(session, "approved" if action == "approve" else "removed",
+                                    (post.moderation or {}).get("auto") or "reported", post.language,
+                                    transparency.hours_since(post.created_at))
             post.status = "published" if action == "approve" else "removed"
             post.moderation = {**(post.moderation or {}), "decision": action, "note": note,
                                "decided_at": _now().isoformat()}
@@ -494,6 +519,7 @@ class CommunityService:
                     author.strikes += 1
                     if author.strikes >= self.settings.community_strikes_to_suspend and author.status == "active":
                         author.status = "suspended"
+                        transparency.record(session, "suspended", "strikes")
             session.flush()
             if post.parent_id:
                 self._refresh_reply_count(session, post.parent_id)
@@ -504,6 +530,8 @@ class CommunityService:
             row = session.get(CommunityMemberRow, member_id)
             if row is None:
                 raise CommunityError(404, "member_not_found")
+            if status != "active" and row.status == "active":
+                transparency.record(session, "suspended", "manual")
             row.status = status
             if status == "active":
                 row.strikes = 0
@@ -524,9 +552,182 @@ class CommunityService:
                 "posts_7d": count(CommunityPostRow, CommunityPostRow.created_at >= week),
                 "open_reports": count(CommunityReportRow, CommunityReportRow.status == "open"),
                 "suspended_members": count(CommunityMemberRow, CommunityMemberRow.status != "active"),
+                "open_appeals": count(CommunityAppealRow, CommunityAppealRow.status == "open"),
+                "health": {**transparency.health(session), "answered_within_24h": self._answered_share(session)},
+                "felt_supported_90d": self._survey_summary(session),
             }
 
+    # ── appeals (authors see why; the community lead decides) ─────────────────────
+    def my_moderation(self, member: CommunityMemberRow, limit: int = 50) -> list[ModeratedPost]:
+        """The member's own held or removed posts, with the reason and any appeal."""
+        with self.db.session() as session:
+            rows = session.scalars(select(CommunityPostRow).where(
+                CommunityPostRow.member_id == member.id, CommunityPostRow.status.in_(("held", "removed")))
+                .order_by(CommunityPostRow.created_at.desc()).limit(limit)).all()
+            appeals = {a.post_id: a for a in session.scalars(select(CommunityAppealRow).where(
+                CommunityAppealRow.post_id.in_([r.id for r in rows] or [""])))}
+            posts = self._posts(session, rows, member)
+        out = []
+        for post, row in zip(posts, rows, strict=True):
+            mod = row.moderation or {}
+            decided = mod.get("decided_at")
+            appeal = appeals.get(row.id)
+            out.append(ModeratedPost(
+                post=post, reason=mod.get("auto"), decision=mod.get("decision") if row.status == "removed" else None,
+                decided_at=datetime.fromisoformat(decided) if decided and row.status == "removed" else None,
+                can_appeal=appeal is None, appeal=self._appeal(appeal) if appeal else None))
+        return out
+
+    def appeal(self, member: CommunityMemberRow, post_id: str, text: str, country: str | None = None) -> AppealResult:
+        """One appeal per post. Suspended members can appeal. The text is private to moderators but is still
+        screened: contact details are refused, and someone in crisis gets help immediately."""
+        text = text.strip()
+        screening = self.moderator.screen(text, member.language, country)
+        if screening.action == "reject":
+            raise CommunityError(422, screening.reason or "rejected")
+        with self.db.session() as session:
+            post = session.get(CommunityPostRow, post_id)
+            if post is None or post.member_id != member.id or post.status not in ("held", "removed"):
+                raise CommunityError(404, "post_not_found")
+            if session.scalar(select(CommunityAppealRow).where(CommunityAppealRow.post_id == post_id)) is not None:
+                raise CommunityError(409, "already_appealed")
+            row = CommunityAppealRow(id=_new_id("a"), post_id=post_id, member_id=member.id, text=text,
+                                     post_status=post.status, priority=screening.priority)
+            session.add(row)
+            transparency.record(session, "appeal", post.status, post.language)
+            try:
+                session.flush()
+            except IntegrityError as exc:  # concurrent duplicate
+                raise CommunityError(409, "already_appealed") from exc
+            return AppealResult(appeal=self._appeal(row), safety=screening.safety)
+
+    def appeals(self, status: str | None = "open", limit: int = 100) -> list[AppealQueueItem]:
+        with self.db.session() as session:
+            stmt = select(CommunityAppealRow)
+            if status:
+                stmt = stmt.where(CommunityAppealRow.status == status)
+            rows = session.scalars(stmt.order_by(CommunityAppealRow.priority.desc(),
+                                                 CommunityAppealRow.created_at).limit(limit)).all()
+            posts = {p.id: p for p in session.scalars(select(CommunityPostRow).where(
+                CommunityPostRow.id.in_([a.post_id for a in rows] or [""])))}
+            rendered = {p.id: p for p in self._posts(session, list(posts.values()), None)}
+            return [AppealQueueItem(appeal=self._appeal(a), post=rendered[a.post_id],
+                                    member_id=posts[a.post_id].member_id, moderation=posts[a.post_id].moderation or {},
+                                    priority=a.priority) for a in rows if a.post_id in rendered]
+
+    def decide_appeal(self, appeal_id: str, action: str, response: str | None) -> Appeal:
+        """Overturn → the post is published and a strike from its removal is refunded (an automatic suspension
+        that no longer meets the threshold is lifted). Uphold → a still-held post is removed; a removed one stays."""
+        with self.db.session() as session:
+            appeal = session.get(CommunityAppealRow, appeal_id)
+            if appeal is None:
+                raise CommunityError(404, "appeal_not_found")
+            if appeal.status != "open":
+                raise CommunityError(409, "appeal_already_decided")
+            post = session.get(CommunityPostRow, appeal.post_id)
+            post_status, post_id, author_id = (post.status if post else None), appeal.post_id, appeal.member_id
+            hours = transparency.hours_since(appeal.created_at)
+        if post_status not in ("held", "removed"):
+            raise CommunityError(409, "post_changed")
+        if action == "overturn":
+            self.decide(post_id, "approve", f"appeal overturned: {response or ''}".strip(), ledger=False)
+            if post_status == "removed":
+                self._refund_strike(author_id)
+        elif post_status == "held":
+            self.decide(post_id, "remove", f"appeal upheld: {response or ''}".strip(), ledger=False)
+        with self.db.session() as session:
+            appeal = session.get(CommunityAppealRow, appeal_id)
+            assert appeal is not None
+            appeal.status = "overturned" if action == "overturn" else "upheld"
+            appeal.response, appeal.decided_at = response, _now()
+            transparency.record(session, f"appeal_{appeal.status}", appeal.post_status, None, hours)
+            session.flush()
+            return self._appeal(appeal)
+
+    def _refund_strike(self, member_id: str) -> None:
+        with self.db.session() as session:
+            author = session.get(CommunityMemberRow, member_id)
+            if author is None or author.strikes <= 0:
+                return
+            was_at_threshold = author.strikes >= self.settings.community_strikes_to_suspend
+            author.strikes -= 1
+            if author.status == "suspended" and was_at_threshold \
+                    and author.strikes < self.settings.community_strikes_to_suspend:
+                author.status = "active"
+
+    @staticmethod
+    def _appeal(row: CommunityAppealRow) -> Appeal:
+        return Appeal(id=row.id, post_id=row.post_id, text=row.text, post_status=row.post_status,  # type: ignore[arg-type]
+                      status=row.status, response=row.response,  # type: ignore[arg-type]
+                      created_at=_aware(row.created_at) or _now(), decided_at=_aware(row.decided_at))
+
+    # ── "I felt supported" (opt-in, at most monthly) ──────────────────────────────
+    def survey_status(self, member: CommunityMemberRow) -> SurveyStatus:
+        with self.db.session() as session:
+            last = session.scalar(select(func.max(CommunitySurveyRow.created_at))
+                                  .where(CommunitySurveyRow.member_id == member.id))
+        last = _aware(last)
+        joined = _aware(member.created_at) or _now()
+        due = (_now() - joined >= timedelta(days=self.settings.community_survey_min_days)
+               and (last is None or _now() - last >= timedelta(days=self.settings.community_survey_interval_days)))
+        return SurveyStatus(due=due, last_answered_at=last)
+
+    def answer_survey(self, member: CommunityMemberRow, answer: str) -> SurveyStatus:
+        if not self.survey_status(member).due:
+            raise CommunityError(409, "survey_not_due")
+        with self.db.session() as session:
+            session.add(CommunitySurveyRow(member_id=member.id, answer=answer, journey=member.journey,
+                                           language=member.language))
+            transparency.record(session, "survey", answer, member.language)
+        return self.survey_status(member)
+
+    @staticmethod
+    def _survey_summary(session: Session, days: int = 90) -> dict[str, Any]:
+        rows = dict(session.execute(select(CommunitySurveyRow.answer, func.count()).where(
+            CommunitySurveyRow.created_at >= _now() - timedelta(days=days)).group_by(CommunitySurveyRow.answer)).all())
+        total = sum(rows.values())
+        return {"responses": total, **{k: (round(rows.get(k, 0) / total, 3) if total else None)
+                                       for k in ("yes", "somewhat", "no")}}
+
+    @staticmethod
+    def _answered_share(session: Session, days: int = 30) -> float | None:
+        """Share of opening posts (older than 24 h, from the last `days` days) that received a reaction or a
+        published reply from someone else within 24 hours."""
+        now = _now()
+        roots = session.scalars(select(CommunityPostRow).where(
+            CommunityPostRow.parent_id.is_(None), CommunityPostRow.status == "published",
+            CommunityPostRow.created_at >= now - timedelta(days=days),
+            CommunityPostRow.created_at <= now - timedelta(hours=24)).limit(2000)).all()
+        if not roots:
+            return None
+        answered = 0
+        for root in roots:
+            created = _aware(root.created_at)
+            window = (CommunityPostRow.created_at <= created + timedelta(hours=24))
+            replied = session.scalar(select(func.count()).select_from(CommunityPostRow).where(
+                CommunityPostRow.parent_id == root.id, CommunityPostRow.status == "published",
+                CommunityPostRow.member_id != root.member_id, window))
+            reacted = 0 if replied else session.scalar(select(func.count()).select_from(CommunityReactionRow).where(
+                CommunityReactionRow.post_id == root.id, CommunityReactionRow.member_id != root.member_id,
+                CommunityReactionRow.created_at <= created + timedelta(hours=24)))
+            answered += 1 if replied or reacted else 0
+        return round(answered / len(roots), 3)
+
+    # ── public transparency report ────────────────────────────────────────────────
+    def transparency(self, quarter: str | None = None) -> dict[str, Any]:
+        try:
+            with self.db.session() as session:
+                return transparency.TransparencyReport(self.settings.transparency_min_cell).build(session, quarter)
+        except ValueError as exc:
+            raise CommunityError(422, "bad_quarter") from exc
+
     # ── helpers ───────────────────────────────────────────────────────────────────
+    @staticmethod
+    def _ledger_submission(session: Session, row: CommunityPostRow, screening: Screening) -> None:
+        transparency.record(session, "submitted", None, row.language)
+        if row.status == "held":
+            transparency.record(session, "held", screening.reason or "held", row.language)
+
     def _screen(self, text: str, lang: str, country: str | None) -> Screening:
         """Screen + metrics. Rejections raise; holds and notes are returned for the caller to store."""
         screening = self.moderator.screen(text, lang, country)
@@ -534,6 +735,8 @@ class CommunityService:
             SAFETY_TRIGGERS.labels(rule=rule, language=lang, surface="community").inc()
         if screening.action == "reject":
             COMMUNITY_POSTS.labels(outcome="rejected", reason=screening.reason or "rejected").inc()
+            with self.db.session() as session:
+                transparency.record(session, "rejected", screening.reason or "rejected", lang)
             raise CommunityError(422, screening.reason or "rejected")
         return screening
 

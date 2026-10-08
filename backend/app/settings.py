@@ -101,6 +101,10 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = 120.0
     llm_context_tokens: int = 8192
     llm_max_retries: int = 2
+    # Canary (docs/OPERATIONS.md "Releasing a new fine-tuned model"): a share of chat answers uses a candidate model
+    # (e.g. a new LoRA adapter on the same vLLM server). Off unless both are set. Insights always use LLM_MODEL.
+    llm_canary_model: str | None = None
+    llm_canary_percent: float = Field(default=0.0, ge=0.0, le=100.0)
 
     # ── Retrieval ────────────────────────────────────────────────────────────
     chunk_size_tokens: int = 300
@@ -126,6 +130,7 @@ class Settings(BaseSettings):
     insight_min_sources: int = 2
     insight_evidence_k: int = 10
     auto_build_insights: bool = True
+    insight_review_required: bool = False  # rebuilt insights wait for clinical sign-off before replacing the public one
 
     # ── Jobs, scheduling & caching ───────────────────────────────────────────
     queue_backend: Literal["inline", "rq"] = "inline"
@@ -159,6 +164,15 @@ class Settings(BaseSettings):
     community_reports_per_day: int = 20
     community_reactions_per_hour: int = 300
     community_strikes_to_suspend: int = 3     # removed posts before automatic suspension
+    community_survey_interval_days: int = 30  # "I felt supported" is asked at most this often (opt-in)
+    community_survey_min_days: int = 7        # ... and only after the member has been here this long
+    transparency_min_cell: int = 5            # counts below this are shown as "fewer than N" in public reports
+
+    # ── End-to-end-encrypted sync of plan and profile (optional for each person) ───────────────────────────
+    device_sync_enabled: bool = True
+    device_sync_max_bytes: int = 256 * 1024   # ciphertext size limit per person
+    device_sync_writes_per_minute: int = 10   # per sync id (clients debounce their writes)
+    device_sync_retention_days: int = 400     # blobs untouched for this long are deleted
 
     # ── Retention (docs/BUILD_SPEC.md §10.1) ──────────────────────────────────
     community_removed_retention_days: int = 90

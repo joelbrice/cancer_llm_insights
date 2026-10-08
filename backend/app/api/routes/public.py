@@ -169,6 +169,19 @@ def chunk(chunk_id: str, c: Container = Depends(container_dep)) -> dict:
     return {"chunk": passage.model_dump(), "document": document.model_dump(mode="json")}
 
 
+@router.get("/transparency", tags=["community"])
+def transparency(request: Request, quarter: str | None = Query(None, pattern=r"^\d{4}-[Qq][1-4]$"),
+                 c: Container = Depends(container_dep)) -> Response:
+    """Quarterly community moderation report: aggregate counts only, small numbers suppressed. Public."""
+    from app.community.service import CommunityError
+
+    try:
+        report = c.community.transparency(quarter)
+    except CommunityError as exc:
+        raise HTTPException(exc.status, exc.code) from exc
+    return cached_json(request, report, max_age=600)
+
+
 @router.post("/feedback", status_code=201, tags=["feedback"], dependencies=[Depends(rate_limit("api"))])
 def feedback(body: FeedbackCreate, c: Container = Depends(container_dep)) -> JSONResponse:
     with c.db.session() as session:

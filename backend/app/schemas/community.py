@@ -181,12 +181,70 @@ class BlockedMember(BaseModel):
     created_at: datetime
 
 
+AppealStatus = Literal["open", "upheld", "overturned"]
+SurveyAnswer = Literal["yes", "somewhat", "no"]
+
+
+class AppealCreate(BaseModel):
+    text: str = Field(min_length=10, max_length=1000)
+
+
+class Appeal(BaseModel):
+    id: str
+    post_id: str
+    text: str
+    post_status: Literal["held", "removed"]
+    status: AppealStatus
+    response: str | None = None  # the community lead's answer, written for the author
+    created_at: datetime
+    decided_at: datetime | None = None
+
+
+class AppealResult(BaseModel):
+    appeal: Appeal
+    safety: SafetyAssessment | None = None  # crisis / urgent guidance when the appeal text needs it
+
+
+class ModeratedPost(BaseModel):
+    """One of the member's own posts that is held or was removed, with the reason and any appeal."""
+
+    post: Post
+    reason: str | None  # screening rule or "reported"
+    decision: Literal["approve", "remove"] | None = None
+    decided_at: datetime | None = None
+    can_appeal: bool
+    appeal: Appeal | None = None
+
+
+class AppealDecision(BaseModel):
+    action: Literal["uphold", "overturn"]
+    response: str | None = Field(default=None, max_length=1000)
+
+
+class AppealQueueItem(BaseModel):
+    appeal: Appeal
+    post: Post
+    member_id: str | None
+    moderation: dict
+    priority: int
+
+
+class SurveyStatus(BaseModel):
+    due: bool
+    last_answered_at: datetime | None = None
+
+
+class SurveyCreate(BaseModel):
+    answer: SurveyAnswer
+
+
 class QueueItem(BaseModel):
     post: Post
     member_id: str | None
     flags: list[str]
     moderation: dict
     reports: list[dict]
+    appeal: Appeal | None = None
 
 
 MemberActivity.model_rebuild()

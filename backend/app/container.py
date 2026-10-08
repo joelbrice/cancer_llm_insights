@@ -12,7 +12,7 @@ from app.db.base import Database
 from app.evidence.grading import EvidenceGrader
 from app.evidence.verification import ClaimVerifier
 from app.llm.extractive import ExtractiveComposer
-from app.llm.providers import LLMProvider, build_llm
+from app.llm.providers import LLMProvider, build_canary, build_llm
 from app.retrieval.embeddings import Embedder, build_embedder
 from app.retrieval.reranker import Reranker, build_reranker
 from app.retrieval.retriever import HybridRetriever
@@ -83,6 +83,10 @@ class Container:
         return build_llm(self.settings)
 
     @cached_property
+    def llm_canary(self) -> LLMProvider | None:
+        return build_canary(self.settings)
+
+    @cached_property
     def composer(self) -> ExtractiveComposer:
         return ExtractiveComposer(self.embedder)
 
@@ -113,7 +117,7 @@ class Container:
         from app.services.chat import ChatService
 
         return ChatService(self.settings, self.db, self.retriever, self.store, self.verifier, self.grader,
-                           self.guardrails, self.llm, self.composer, self.insights)
+                           self.guardrails, self.llm, self.composer, self.insights, canary=self.llm_canary)
 
     @cached_property
     def platform(self):
@@ -140,6 +144,12 @@ class Container:
 
         return CommunityService(self.settings, self.db, CommunityModerator(CommunityConfig(), self.guardrails),
                                 self.insights)
+
+    @cached_property
+    def device_sync(self):
+        from app.services.device_sync import DeviceSyncService
+
+        return DeviceSyncService(self.settings, self.db)
 
     @cached_property
     def jobs(self):

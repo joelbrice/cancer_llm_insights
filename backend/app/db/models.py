@@ -280,3 +280,95 @@ class CommunityBlockRow(Base):
     member_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
     blocked_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class CommunityAppealRow(Base):
+    """An author's appeal against a held or removed post (one per post). Reviewed by the community lead."""
+
+    __tablename__ = "community_appeals"
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    post_id: Mapped[str] = mapped_column(ForeignKey("community_posts.id", ondelete="CASCADE"), unique=True)
+    member_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
+    text: Mapped[str] = mapped_column(Text)
+    post_status: Mapped[str] = mapped_column(String(16))  # held | removed — what was appealed
+    status: Mapped[str] = mapped_column(String(16), default="open", index=True)  # open | upheld | overturned
+    response: Mapped[str | None] = mapped_column(Text)  # written for the author
+    priority: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CommunityEventRow(Base):
+    """Anonymous moderation ledger for the quarterly transparency report. No member, post or text is referenced,
+    so it is not personal data and survives the retention purge of the posts themselves."""
+
+    __tablename__ = "community_events"
+    __table_args__ = (Index("ix_community_events_kind_at", "kind", "created_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    kind: Mapped[str] = mapped_column(String(32))  # see app.community.transparency.EVENT_KINDS
+    reason: Mapped[str | None] = mapped_column(String(32))
+    language: Mapped[str | None] = mapped_column(String(8))
+    value: Mapped[float | None] = mapped_column(Float)  # e.g. hours from submission to decision
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class CommunitySurveyRow(Base):
+    """Opt-in "I felt supported" answer. Linked to the member only to ask at most once a month; erasure unlinks."""
+
+    __tablename__ = "community_survey"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    member_id: Mapped[str | None] = mapped_column(ForeignKey("community_members.id", ondelete="SET NULL"),
+                                                  index=True)
+    answer: Mapped[str] = mapped_column(String(16))  # yes | somewhat | no
+    journey: Mapped[str | None] = mapped_column(String(24))
+    language: Mapped[str] = mapped_column(String(8))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+
+
+# ── Clinical review of insights (INSIGHT_REVIEW_REQUIRED) ────────────────────────────────────────────────────
+class InsightDraftRow(Base):
+    """A rebuilt insight waiting for clinical review. The public insight keeps its last approved content until a
+    reviewer approves the draft."""
+
+    __tablename__ = "insight_drafts"
+
+    id: Mapped[str] = mapped_column(String(120), primary_key=True)  # = insight id
+    topic_id: Mapped[str] = mapped_column(String(100))
+    language: Mapped[str] = mapped_column(String(8))
+    payload: Mapped[dict] = mapped_column(default=dict)  # InsightRow column values
+    source_fingerprint: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending | rejected
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class InsightReviewRow(Base):
+    """Audit trail of clinical review decisions (who, when, which version and evidence fingerprint)."""
+
+    __tablename__ = "insight_reviews"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    insight_id: Mapped[str] = mapped_column(String(120), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    source_fingerprint: Mapped[str] = mapped_column(String(64))
+    decision: Mapped[str] = mapped_column(String(16))  # approved | rejected
+    reviewer: Mapped[str] = mapped_column(String(120))
+    note: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+# ── End-to-end-encrypted sync (opaque to the server) ─────────────────────────────────────────────────────────
+class SyncBlobRow(Base):
+    """Ciphertext of a person's plan and profile. The key never leaves their devices; the server cannot read it."""
+
+    __tablename__ = "sync_blobs"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)  # SHA-256 derived from the sync code
+    auth_hash: Mapped[str] = mapped_column(String(64))  # SHA-256 of the write secret derived from the code
+    ciphertext: Mapped[str] = mapped_column(Text)  # base64url(nonce ‖ ciphertext ‖ tag)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    size: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)

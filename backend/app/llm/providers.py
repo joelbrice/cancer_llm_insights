@@ -57,9 +57,9 @@ class LLMProvider(ABC):
 class OpenAICompatibleProvider(LLMProvider):
     name = "openai_compatible"
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, settings: Settings, model: str | None = None) -> None:
         self.settings = settings
-        self.model = settings.llm_model
+        self.model = model or settings.llm_model
         headers = {"Content-Type": "application/json"}
         if settings.llm_api_key:
             headers["Authorization"] = f"Bearer {settings.llm_api_key.get_secret_value()}"
@@ -191,4 +191,12 @@ def parse_json_object(text: str) -> dict[str, Any]:
 def build_llm(settings: Settings) -> LLMProvider | None:
     if settings.llm_provider == "openai_compatible":
         return OpenAICompatibleProvider(settings)
+    return None
+
+
+def build_canary(settings: Settings) -> LLMProvider | None:
+    """Candidate model for a share of chat traffic (same server, e.g. a new LoRA adapter). Off by default."""
+    if (settings.llm_provider == "openai_compatible" and settings.llm_canary_model
+            and settings.llm_canary_percent > 0 and settings.llm_canary_model != settings.llm_model):
+        return OpenAICompatibleProvider(settings, model=settings.llm_canary_model)
     return None

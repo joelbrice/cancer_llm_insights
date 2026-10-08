@@ -25,7 +25,7 @@ from sqlalchemy import func, select
 
 from app.core.text import fold_accents
 from app.db.base import Database
-from app.db.models import InsightRow
+from app.db.models import InsightDraftRow, InsightReviewRow, InsightRow
 from app.evidence.grading import EvidenceGrader, GradedSource
 from app.evidence.taxonomy import AUDIENCES, LEVEL_ORDER, EvidenceLevel, level_rank
 from app.evidence.verification import ClaimVerifier
@@ -183,6 +183,9 @@ class InsightService:
             existing = session.get(InsightRow, insight_id)
             if existing and existing.source_fingerprint == fingerprint and not force:
                 return "unchanged"
+            draft = session.get(InsightDraftRow, insight_id) if self.settings.insight_review_required else None
+            if draft is not None and draft.source_fingerprint == fingerprint and not force:
+                return "unchanged"  # already waiting for (or refused by) a reviewer
 
         n_docs = len({e.source.document_id for e in evidence})
         if n_docs < self.settings.insight_min_sources:
@@ -275,23 +278,42 @@ class InsightService:
             item["citations"] = [renumber[n] for n in item["citations"] if n in renumber]
         limitations = list(content.get("limitations") or [])
         limitations += [r.text for r in assessment.rationale if r.code in LIMITATION_CODES and r.text not in limitations]
+        values: dict[str, Any] = {
+            "category": topic.category, "audience": topic.audience, "cancer_types": topic.cancer_types,
+            "title": (content.get("title") or topic.text("title", lang))[:500],
+            "question": topic.text("question", lang), "summary": content.get("summary", ""),
+            "key_points": points, "recommendations": recs, "limitations": limitations[:6],
+            "citations": [c.model_dump() for c in citations], "evidence": assessment.model_dump(),
+            "evidence_level": assessment.level, "evidence_score": assessment.score, "status": status,
+            "source_fingerprint": fingerprint, "model": model, "prompt_version": PROMPT_VERSION,
+        }
         with self.db.session() as session:
-            row = session.get(InsightRow, insight_id)
-            if row is None:
-                row = InsightRow(id=insight_id, topic_id=topic.id, language=lang, version=0)
-                session.add(row)
-            row.category, row.audience, row.cancer_types = topic.category, topic.audience, topic.cancer_types
-            row.title = (content.get("title") or topic.text("title", lang))[:500]
-            row.question = topic.text("question", lang)
-            row.summary = content.get("summary", "")
-            row.key_points, row.recommendations, row.limitations = points, recs, limitations[:6]
-            row.citations = [c.model_dump() for c in citations]
-            row.evidence = assessment.model_dump()
-            row.evidence_level, row.evidence_score = assessment.level, assessment.score
-            row.status, row.source_fingerprint = status, fingerprint
-            row.model, row.prompt_version = model, PROMPT_VERSION
-            row.version = (row.version or 0) + 1
-            row.generated_at = datetime.now(UTC)
+            if self.settings.insight_review_required and status == "published":
+                # clinical sign-off first: the public insight keeps its last approved content meanwhile
+                draft = session.get(InsightDraftRow, insight_id)
+                if draft is None:
+                    draft = InsightDraftRow(id=insight_id, topic_id=topic.id, language=lang)
+                    session.add(draft)
+                draft.payload = {**values, "generated_at": datetime.now(UTC).isoformat()}
+                draft.source_fingerprint, draft.status, draft.created_at = fingerprint, "pending", datetime.now(UTC)
+                return
+            draft = session.get(InsightDraftRow, insight_id)
+            if draft is not None:  # superseded (e.g. the evidence no longer suffices): never publish a stale draft
+                session.delete(draft)
+            self._apply(session, insight_id, topic.id, lang, values)
+
+    @staticmethod
+    def _apply(session, insight_id: str, topic_id: str, lang: str, values: dict[str, Any]) -> InsightRow:
+        row = session.get(InsightRow, insight_id)
+        if row is None:
+            row = InsightRow(id=insight_id, topic_id=topic_id, language=lang, version=0)
+            session.add(row)
+        for key, value in values.items():
+            if key != "generated_at":
+                setattr(row, key, value)
+        row.version = (row.version or 0) + 1
+        row.generated_at = datetime.now(UTC)
+        return row
 
     # ── reads ────────────────────────────────────────────────────────────────
     def _audience(self, row: InsightRow) -> list[str]:
@@ -319,7 +341,7 @@ class InsightService:
              min_level: str | None = None, q: str | None = None, cancer_type: str | None = None,
              include_insufficient: bool = False, page: int = 1, page_size: int = 24) -> InsightList:
         with self.db.session() as session:
-            stmt = select(InsightRow).where(InsightRow.language == language)
+            stmt = select(InsightRow).where(InsightRow.language == language, InsightRow.status != "needs_review")
             if not include_insufficient:
                 stmt = stmt.where(InsightRow.status == "published")
             if category:
@@ -340,21 +362,85 @@ class InsightService:
         return InsightList(items=[self._summary(r) for r in rows[start: start + page_size]], total=total, page=page,
                            page_size=page_size)
 
-    def get(self, insight_id: str) -> Insight | None:
+    def get(self, insight_id: str, include_withdrawn: bool = False) -> Insight | None:
         with self.db.session() as session:
             row = session.get(InsightRow, insight_id)
-            if row is None:
+            if row is None or (row.status == "needs_review" and not include_withdrawn):
                 return None
-            summary = self._summary(row)
-            return Insight(
-                **summary.model_dump(),
-                key_points=[InsightPoint(**p) for p in row.key_points],
-                recommendations=[InsightPoint(**p) for p in row.recommendations],
-                limitations=row.limitations, citations=[Citation(**c) for c in row.citations],
-                evidence=EvidenceAssessment(**row.evidence) if row.evidence else self.grader.assess([], row.language),
-                model=row.model, prompt_version=row.prompt_version, version=row.version,
-                generated_at=row.generated_at,
-            )
+            reviewed = session.scalar(select(func.max(InsightReviewRow.created_at)).where(
+                InsightReviewRow.insight_id == insight_id, InsightReviewRow.decision == "approved",
+                InsightReviewRow.source_fingerprint == row.source_fingerprint))
+            return self._render(row, reviewed_at=reviewed)
+
+    def _render(self, row: InsightRow, reviewed_at: datetime | None = None) -> Insight:
+        summary = self._summary(row)
+        return Insight(
+            **summary.model_dump(),
+            key_points=[InsightPoint(**p) for p in row.key_points],
+            recommendations=[InsightPoint(**p) for p in row.recommendations],
+            limitations=row.limitations, citations=[Citation(**c) for c in row.citations],
+            evidence=EvidenceAssessment(**row.evidence) if row.evidence else self.grader.assess([], row.language),
+            model=row.model, prompt_version=row.prompt_version, version=row.version,
+            generated_at=row.generated_at, reviewed_at=reviewed_at,
+        )
+
+    # ── clinical review (docs/BUILD_SPEC.md §8, §16) ─────────────────────────
+    def review_items(self, state: str = "pending") -> list[dict[str, Any]]:
+        """pending: rebuilt insights waiting for sign-off · rejected: drafts a reviewer refused ·
+        unreviewed: public insights without an approval for their current evidence · withdrawn: taken down."""
+        out: list[dict[str, Any]] = []
+        with self.db.session() as session:
+            if state in ("pending", "rejected"):
+                for draft in session.scalars(select(InsightDraftRow).where(InsightDraftRow.status == state)
+                                             .order_by(InsightDraftRow.created_at)):
+                    current = session.get(InsightRow, draft.id)
+                    out.append({"insight": self._render(self._draft_row(draft, current)).model_dump(mode="json"),
+                                "state": state, "submitted_at": draft.created_at,
+                                "has_public_version": current is not None and current.status == "published"})
+                return out
+            approved = {(i, f) for i, f in session.execute(select(
+                InsightReviewRow.insight_id, InsightReviewRow.source_fingerprint).where(
+                InsightReviewRow.decision == "approved"))}
+            status = "needs_review" if state == "withdrawn" else "published"
+            for row in session.scalars(select(InsightRow).where(InsightRow.status == status)
+                                       .order_by(InsightRow.topic_id, InsightRow.language)):
+                if state == "withdrawn" or (row.id, row.source_fingerprint) not in approved:
+                    out.append({"insight": self._render(row).model_dump(mode="json"), "state": state,
+                                "submitted_at": row.generated_at, "has_public_version": state != "withdrawn"})
+        return out
+
+    def review(self, insight_id: str, decision: str, reviewer: str, note: str | None = None) -> dict[str, Any]:
+        """approve: publish the pending draft (or sign off / restore the current version) ·
+        reject: refuse the pending draft (or withdraw the public insight until it is rebuilt and approved)."""
+        with self.db.session() as session:
+            draft = session.get(InsightDraftRow, insight_id)
+            row = session.get(InsightRow, insight_id)
+            if draft is not None and draft.status == "pending":
+                if decision == "approved":
+                    row = self._apply(session, insight_id, draft.topic_id, draft.language, draft.payload)
+                    session.delete(draft)
+                else:
+                    draft.status = "rejected"
+                fingerprint, version = draft.source_fingerprint, (row.version if row is not None else 0)
+            elif row is not None:
+                if decision == "approved" and row.status == "needs_review":
+                    row.status = "published"  # restore
+                elif decision == "rejected" and row.status == "published":
+                    row.status = "needs_review"  # withdraw
+                fingerprint, version = row.source_fingerprint, row.version
+            else:
+                raise KeyError(insight_id)
+            session.add(InsightReviewRow(insight_id=insight_id, version=version, source_fingerprint=fingerprint,
+                                         decision=decision, reviewer=reviewer, note=note))
+            return {"id": insight_id, "decision": decision, "version": version,
+                    "status": row.status if row is not None else "pending"}
+
+    @staticmethod
+    def _draft_row(draft: InsightDraftRow, current: InsightRow | None) -> InsightRow:
+        values = {k: v for k, v in draft.payload.items() if k != "generated_at"}
+        generated = datetime.fromisoformat(draft.payload.get("generated_at") or datetime.now(UTC).isoformat())
+        return InsightRow(id=draft.id, topic_id=draft.topic_id, language=draft.language, **values,
+                          version=(current.version if current else 0) + 1, generated_at=generated, updated_at=generated)
 
     def topic_statuses(self, language: str) -> list[TopicStatus]:
         with self.db.session() as session:

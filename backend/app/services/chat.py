@@ -11,6 +11,7 @@ Event stream (Server-Sent Events):
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import logging
 import time
 import uuid
@@ -23,6 +24,9 @@ from app.core.metrics import (
     CHAT_REQUESTS,
     CHAT_STAGE_SECONDS,
     GROUNDED_RATIO,
+    LLM_VARIANT_ANSWERS,
+    LLM_VARIANT_GROUNDED,
+    LLM_VARIANT_UNSUPPORTED,
     SAFETY_TRIGGERS,
     UNSUPPORTED_CLAIMS,
 )
@@ -60,7 +64,7 @@ def filters_from(request_filters, profile) -> SearchFilters:
 class ChatService:
     def __init__(self, settings: Settings, db: Database, retriever: HybridRetriever, store: VectorStore,
                  verifier: ClaimVerifier, grader: EvidenceGrader, guardrails: Guardrails, llm: LLMProvider | None,
-                 composer: ExtractiveComposer, insights: InsightService) -> None:
+                 composer: ExtractiveComposer, insights: InsightService, canary: LLMProvider | None = None) -> None:
         self.settings = settings
         self.db = db
         self.retriever = retriever
@@ -71,10 +75,19 @@ class ChatService:
         self.llm = llm
         self.composer = composer
         self.insights = insights
+        self.canary = canary
 
     @property
     def model_name(self) -> str:
         return self.llm.model if self.llm else self.composer.name
+
+    def _route(self, rid: str) -> tuple[LLMProvider | None, str]:
+        """Stable model, or the canary for LLM_CANARY_PERCENT % of requests (bucketed on the request id)."""
+        if self.canary is not None and self.llm is not None:
+            bucket = int(hashlib.sha256(rid.encode()).hexdigest()[:8], 16) % 10_000 / 100
+            if bucket < self.settings.llm_canary_percent:
+                return self.canary, "canary"
+        return self.llm, "stable"
 
     async def answer(self, request: ChatRequest) -> ChatResponse:
         final: dict[str, Any] | None = None
@@ -87,6 +100,8 @@ class ChatService:
     async def stream(self, request: ChatRequest) -> AsyncIterator[Event]:
         s = self.settings
         rid = uuid.uuid4().hex[:16]
+        llm, variant = self._route(rid)
+        model_name = llm.model if llm else self.composer.name
         timings: dict[str, float] = {}
         t0 = time.perf_counter()
         history = request.messages[-s.max_history_messages:]
@@ -101,12 +116,12 @@ class ChatService:
         safety = self.guardrails.check_input(question, lang, country)
         for rule in safety.flags:
             SAFETY_TRIGGERS.labels(rule=rule, language=lang, surface="chat").inc()
-        yield "meta", {"id": rid, "language": lang, "model": self.model_name, "safety": safety.model_dump()}
+        yield "meta", {"id": rid, "language": lang, "model": model_name, "safety": safety.model_dump()}
 
         def finish(answer: str, **extra: Any) -> Event:
             timings["total"] = round((time.perf_counter() - t0) * 1000, 1)
             body = {"id": rid, "answer": answer, "language": lang, "safety": safety.model_dump(),
-                    "disclaimer": t("disclaimer", lang), "model": self.model_name, "timings_ms": timings, **extra}
+                    "disclaimer": t("disclaimer", lang), "model": model_name, "timings_ms": timings, **extra}
             CHAT_REQUESTS.labels(language=lang, safety=safety.level,
                                  outcome="abstained" if body.get("abstained") else "answered").inc()
             return "final", ChatResponse(**body).model_dump(mode="json")  # complete payload, defaults filled
@@ -145,12 +160,12 @@ class ChatService:
         preliminary = self.grader.assess([GradedSource(e.source) for e in evidence], lang)
         t_g = time.perf_counter()
         parts: list[str] = []
-        used_model = self.model_name
+        used_model = model_name
         generated = False  # safety notices travel in `meta`/`final.safety` and render as a banner, not as answer text
-        if self.llm is not None:
+        if llm is not None:
             messages = self._messages(history, question, lang, evidence, preliminary.label, safety, profile)
             try:
-                async for piece in self.llm.stream(messages):
+                async for piece in llm.stream(messages):
                     parts.append(piece)
                     generated = True
                     yield "delta", {"text": piece}
@@ -168,8 +183,9 @@ class ChatService:
             parts.append(text)
             yield "delta", {"text": text}
         answer = "".join(parts).strip()
-        mode = "llm" if generated else ("extractive_fallback" if self.llm is not None else "extractive")
+        mode = "llm" if generated else ("extractive_fallback" if llm is not None else "extractive")
         CHAT_ANSWERS.labels(language=lang, mode=mode).inc()
+        LLM_VARIANT_ANSWERS.labels(variant=variant, mode=mode).inc()
         timings["generation"] = round((time.perf_counter() - t_g) * 1000, 1)
         CHAT_STAGE_SECONDS.labels(stage="generation").observe(timings["generation"] / 1000)
 
@@ -186,9 +202,11 @@ class ChatService:
             consistency=consistency, partial_support=any(c.label == "partial" for c in verification.claims),
         )
         GROUNDED_RATIO.observe(verification.grounded_ratio)
+        LLM_VARIANT_GROUNDED.labels(variant=variant).observe(verification.grounded_ratio)
         unsupported = sum(1 for c in verification.claims if c.label == "unsupported")
         if unsupported:
             UNSUPPORTED_CLAIMS.inc(unsupported)
+            LLM_VARIANT_UNSUPPORTED.labels(variant=variant).inc(unsupported)
         related = await asyncio.to_thread(self.insights.related, query, lang)
         timings["verification"] = round((time.perf_counter() - t_v) * 1000, 1)
 

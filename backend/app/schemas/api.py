@@ -130,6 +130,7 @@ class Insight(InsightSummary):
     prompt_version: str
     version: int
     generated_at: datetime
+    reviewed_at: datetime | None = None  # clinical sign-off of this version's evidence, when recorded
 
 
 class InsightList(BaseModel):
@@ -273,6 +274,12 @@ class SourceUpdate(BaseModel):
 class IngestRequest(BaseModel):
     source_ids: list[str] | None = None
     mode: Literal["incremental", "full"] = "incremental"
+
+
+class InsightReviewCreate(BaseModel):
+    decision: Literal["approved", "rejected"]
+    reviewer: str = Field(min_length=2, max_length=120)  # name and role, e.g. "Dr A. Example, oncologist"
+    note: str | None = Field(default=None, max_length=2000)
 
 
 class InsightBuildRequest(BaseModel):

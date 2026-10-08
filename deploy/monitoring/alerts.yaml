@@ -48,6 +48,27 @@ spec:
           labels: { severity: warning, team: ai }
           annotations:
             summary: Many statements fail verification — possible model regression (roll back the adapter if recent).
+    - name: stepwell.canary
+      rules:
+        - alert: CanaryGroundingWorse
+          expr: |
+            (sum(rate(llm_variant_grounded_ratio_sum{variant="canary"}[1h]))
+               / clamp_min(sum(rate(llm_variant_grounded_ratio_count{variant="canary"}[1h])), 1e-9))
+            < (sum(rate(llm_variant_grounded_ratio_sum{variant="stable"}[1h]))
+               / clamp_min(sum(rate(llm_variant_grounded_ratio_count{variant="stable"}[1h])), 1e-9)) - 0.03
+            and sum(increase(llm_variant_grounded_ratio_count{variant="canary"}[1h])) > 20
+          for: 30m
+          labels: { severity: critical, team: ai }
+          annotations:
+            summary: The canary model's answers are less grounded than the stable model's — set LLM_CANARY_PERCENT=0.
+        - alert: CanaryFallbackHigh
+          expr: |
+            sum(rate(llm_variant_answers_total{variant="canary",mode="extractive_fallback"}[1h]))
+              / clamp_min(sum(rate(llm_variant_answers_total{variant="canary"}[1h])), 1e-9) > 0.1
+          for: 15m
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: More than 10 % of canary answers fall back to extractive mode — the candidate adapter is failing.
     - name: stepwell.service
       rules:
         - alert: ApiErrorRateHigh

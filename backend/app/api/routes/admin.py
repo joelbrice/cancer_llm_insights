@@ -15,6 +15,7 @@ from app.schemas.api import (
     ExportRequest,
     IngestRequest,
     InsightBuildRequest,
+    InsightReviewCreate,
     Job,
     SourceCreate,
     SourceUpdate,
@@ -97,6 +98,21 @@ def ingest(body: IngestRequest, c: Container = Depends(container_dep)) -> Job:
 @router.post("/insights/rebuild", response_model=Job, status_code=202)
 def rebuild_insights(body: InsightBuildRequest, c: Container = Depends(container_dep)) -> Job:
     return _job(c.jobs.submit("insights", body.model_dump(), triggered_by="admin"))
+
+
+@router.get("/insights/review")
+def insight_reviews(state: str = Query("pending", pattern="^(pending|rejected|unreviewed|withdrawn)$"),
+                    c: Container = Depends(container_dep)) -> list[dict]:
+    """Clinical review queue. With INSIGHT_REVIEW_REQUIRED=true, rebuilt insights wait here as drafts."""
+    return c.insights.review_items(state)
+
+
+@router.post("/insights/{insight_id}/review")
+def review_insight(insight_id: str, body: InsightReviewCreate, c: Container = Depends(container_dep)) -> dict:
+    try:
+        return c.insights.review(insight_id, body.decision, body.reviewer, body.note)
+    except KeyError as exc:
+        raise HTTPException(404, "insight not found") from exc
 
 
 @router.post("/evaluate", response_model=Job, status_code=202)

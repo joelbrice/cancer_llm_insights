@@ -75,7 +75,9 @@ class PlatformService:
             documents=docs, chunks=chunks, insights=self.c.insights.count_published(),
             index_version=self.index_version(), sources=source_out,
             llm={"provider": s.llm_provider, "model": llm.model if llm else "extractive",
-                 "available": llm_available if llm else True, "grounding": "claim-level verification"},
+                 "available": llm_available if llm else True, "grounding": "claim-level verification",
+                 **({"canary": {"model": self.c.llm_canary.model, "percent": s.llm_canary_percent}}
+                    if self.c.llm_canary else {})},
             embeddings={"provider": s.embedding_provider, "model": self.c.embedder.name, "dim": self.c.embedder.dim,
                         "multilingual": self.c.embedder.semantic},
             vector_store={"backend": self.c.store.name, "healthy": store_ok, "vectors": self.c.store.count()},

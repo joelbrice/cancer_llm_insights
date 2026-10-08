@@ -23,5 +23,12 @@ GROUNDED_RATIO = Histogram("chat_grounded_ratio", "Share of verified statements 
                            buckets=(0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0))
 UNSUPPORTED_CLAIMS = Counter("chat_unsupported_claims_total", "Statements flagged as unsupported by their source")
 SAFETY_TRIGGERS = Counter("safety_triggers_total", "Safety rules triggered", ["rule", "language", "surface"])
+# Model canary (docs/OPERATIONS.md): the same answer-quality signals split by variant (stable | canary)
+LLM_VARIANT_ANSWERS = Counter("llm_variant_answers_total", "Answers by model variant and generation mode",
+                              ["variant", "mode"])
+LLM_VARIANT_GROUNDED = Histogram("llm_variant_grounded_ratio", "Share of verified statements per answer, by variant",
+                                 ["variant"], buckets=(0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0))
+LLM_VARIANT_UNSUPPORTED = Counter("llm_variant_unsupported_claims_total", "Unsupported statements, by variant",
+                                  ["variant"])
 COMMUNITY_POSTS = Counter("community_posts_total", "Community posts and replies by screening outcome",
                           ["outcome", "reason"])  # published|held|rejected

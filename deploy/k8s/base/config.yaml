@@ -18,6 +18,10 @@ data:
   EMBEDDING_MODEL: intfloat/multilingual-e5-base
   LLM_PROVIDER: openai_compatible
   LLM_MODEL: cancer-insights-llama
+  LLM_CANARY_MODEL: ""           # e.g. the new LoRA adapter name during a release (docs/OPERATIONS.md)
+  LLM_CANARY_PERCENT: "0"
+  INSIGHT_REVIEW_REQUIRED: "false" # set "true" so rebuilt insights wait for clinical sign-off (recommended)
+  DEVICE_SYNC_ENABLED: "true"
   SYNC_INTERVAL_SECONDS: "300"
 ---
 # Where the evidence library lives. In Kubernetes, link buckets (S3/GCS/Azure) — not local folders.
