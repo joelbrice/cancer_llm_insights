@@ -8,7 +8,8 @@
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "test": "echo \"web: covered by typecheck, build and e2e smoke\""
+    "test": "echo \"web: covered by typecheck, build and e2e smoke\"",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@stepwell/shared": "workspace:*",
@@ -18,6 +19,8 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
+    "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.0.0",
     "@types/react": "~19.2.2",

@@ -50,7 +50,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       </section>
       <p className="text-sm text-ink-3">
         {brandName()} · {t("about.version", { version: status.data?.version ?? "1.0.0" })} · {t("about.openSource")}{" "}
-        <a className="text-brand hover:underline" href={BRAND.repository} rel="noopener noreferrer" target="_blank">
+        <a className="text-brand underline underline-offset-2" href={BRAND.repository} rel="noopener noreferrer" target="_blank">
           GitHub
         </a>
       </p>

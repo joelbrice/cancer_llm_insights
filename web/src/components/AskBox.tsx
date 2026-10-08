@@ -35,7 +35,7 @@ export function AskBox() {
         autoComplete="off"
         enterKeyHint="send"
       />
-      <button type="submit" className="btn btn-primary !min-h-11" disabled={!q.trim()}>
+      <button type="submit" className="btn btn-primary !min-h-11" disabled={!q.trim()} aria-label={t("home.askCta")}>
         <Icon name="send" size={18} />
         <span className="hidden sm:inline">{t("home.askCta")}</span>
       </button>

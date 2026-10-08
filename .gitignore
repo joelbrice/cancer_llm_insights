@@ -74,3 +74,7 @@ ml/**/eval_report*
 
 # Kubernetes secrets
 deploy/k8s/overlays/*/secrets.env
+
+# Playwright
+web/test-results/
+web/playwright-report/

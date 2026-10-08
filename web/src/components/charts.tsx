@@ -61,13 +61,12 @@ export function HBarChart({ data, title, valueFormat = (v) => String(v) }: { dat
             <span className="truncate text-right text-sm text-ink-2" title={d.label}>
               {d.label}
             </span>
+            {/* Values are printed beside each bar and the table below carries the data for assistive tech, so the
+                visual bars are pointer-only (focusable content must not live inside aria-hidden). */}
             <div
               className="group relative flex h-7 cursor-default items-center rounded-md outline-none"
-              tabIndex={0}
               onPointerEnter={(e) => show(e.currentTarget, d)}
               onPointerLeave={() => setTip(null)}
-              onFocus={(e) => show(e.currentTarget, d)}
-              onBlur={() => setTip(null)}
             >
               <div className="absolute inset-y-0 left-0 w-px" style={{ background: "var(--axis)" }} />
               <div
@@ -147,10 +146,10 @@ export function YearStrip({ data, title }: { data: YearDatum[]; title: string })
       <figcaption id={titleId} className="mb-2 text-sm font-semibold text-ink-2">
         {title}
       </figcaption>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="block max-w-full" role="presentation">
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="block max-w-full" role="group" aria-labelledby={titleId}>
         <line x1={8} x2={W - 8} y1={baseline} y2={baseline} stroke="var(--axis)" strokeWidth={1} />
         {ticks.map((tick) => (
-          <g key={tick}>
+          <g key={tick} aria-hidden="true">
             <line x1={x(tick)} x2={x(tick)} y1={baseline} y2={baseline + 4} stroke="var(--axis)" strokeWidth={1} />
             <text x={x(tick)} y={H - 4} textAnchor="middle" fontSize={11} fill="var(--ink-3)" style={{ fontVariantNumeric: "tabular-nums" }}>
               {tick}
@@ -164,6 +163,7 @@ export function YearStrip({ data, title }: { data: YearDatum[]; title: string })
           return (
             <g
               key={d.id}
+              role="img"
               tabIndex={0}
               className="cursor-default outline-none [&:focus_.dot]:brightness-125"
               onPointerEnter={(e) => show(e.currentTarget, d)}
@@ -178,13 +178,6 @@ export function YearStrip({ data, title }: { data: YearDatum[]; title: string })
           );
         })}
       </svg>
-      <ul className="sr-only">
-        {data.map((d) => (
-          <li key={d.id}>
-            {d.year}: {d.label}
-          </li>
-        ))}
-      </ul>
       <Tooltip tip={tip} />
     </figure>
   );

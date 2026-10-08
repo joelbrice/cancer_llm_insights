@@ -102,7 +102,7 @@ export function JoinCommunity({ meta, onToken }: { meta: CommunityMeta; onToken:
                 autoComplete="off"
                 aria-describedby="c-handle-help"
               />
-              <button type="button" className="btn btn-ghost shrink-0" onClick={() => setHandle(suggestHandle(lang))}>
+              <button type="button" className="btn btn-ghost shrink-0" onClick={() => setHandle(suggestHandle(lang))} aria-label={t("community.suggest")}>
                 <Icon name="refresh" size={18} />
                 <span className="hidden sm:inline">{t("community.suggest")}</span>
               </button>
