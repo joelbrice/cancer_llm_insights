@@ -52,7 +52,7 @@ export default function ThreadScreen() {
 
   return (
     <Screen>
-      <PostCard post={thread.post} token={token} reactions={meta.reactions} onChange={update} onDeleted={() => router.back()} threadLink={false} />
+      <PostCard post={thread.post} token={token} reactions={meta.reactions} onChange={update} onDeleted={() => router.back()} onBlocked={() => router.back()} threadLink={false} />
       <View style={{ gap: space(3), borderLeftWidth: 2, borderLeftColor: colors.border, paddingLeft: space(3) }}>
         {thread.replies.map((reply) => (
           <PostCard
@@ -62,6 +62,7 @@ export default function ThreadScreen() {
             reactions={meta.reactions}
             onChange={update}
             onDeleted={(rid) => setThread((th) => (th ? { ...th, replies: th.replies.filter((r) => r.id !== rid) } : th))}
+            onBlocked={(handle) => setThread((th) => (th ? { ...th, replies: th.replies.filter((r) => r.author?.handle !== handle) } : th))}
             threadLink={false}
           />
         ))}

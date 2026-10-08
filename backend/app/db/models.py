@@ -268,3 +268,15 @@ class CommunityReportRow(Base):
     status: Mapped[str] = mapped_column(String(16), default="open")  # open | resolved
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CommunityBlockRow(Base):
+    """Member-to-member block. Mutual invisibility: neither sees the other's posts; the blocked member is not told."""
+
+    __tablename__ = "community_blocks"
+    __table_args__ = (UniqueConstraint("member_id", "blocked_id", name="uq_block"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    member_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
+    blocked_id: Mapped[str] = mapped_column(ForeignKey("community_members.id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

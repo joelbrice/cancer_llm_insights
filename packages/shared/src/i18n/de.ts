@@ -420,6 +420,15 @@ export const de: Dictionary = {
     statHeld: "Warten auf Prüfung",
     statReports: "Offene Meldungen",
   },
+  welcome: {
+    title: "Willkommen bei {app}",
+    intro: "Bevor Sie beginnen, ein paar wichtige Punkte:",
+    evidence: "Alles hier stammt aus Forschung und Leitlinien, und jede Aussage zeigt ihre Quelle und wie stark die Evidenz ist.",
+    notAdvice: "Dies sind Informationen zur Aufklärung, keine ärztliche Beratung. Sie stellen keine Diagnose und ersetzen nicht Ihr Behandlungsteam.",
+    emergency: "Im Notfall, oder wenn Sie daran denken, sich etwas anzutun, rufen Sie jetzt die örtliche Notrufnummer an.",
+    privacy: "Ihr Profil, Ihr Plan und Ihr Lebensstil-Check bleiben auf diesem Gerät. Kein Konto nötig.",
+    accept: "Verstanden",
+  },
   community: {
     title: "Gemeinschaft",
     subtitle: "Ein kleiner, freundlicher Ort, um einander zu ermutigen – vor, während und nach Krebs.",
@@ -491,6 +500,12 @@ export const de: Dictionary = {
     careTeamNote: "Entscheidungen über Behandlungen, Medikamente oder Nahrungsergänzungsmittel gehören zu Ihrem Behandlungsteam. Mitglieder teilen Erfahrungen, keine ärztlichen Ratschläge.",
     researchSays: "Was die Forschung sagt",
     report: "Melden",
+    noBlocks: "Sie haben niemanden blockiert.",
+    unblock: "Blockierung aufheben",
+    blockedMembers: "Blockierte Mitglieder",
+    blocked: "Blockiert. Sie sehen gegenseitig keine Beiträge mehr.",
+    blockConfirm: "Sie sehen gegenseitig keine Beiträge oder Antworten mehr. Die Person wird nicht benachrichtigt.",
+    block: "Dieses Mitglied blockieren",
     reportTitle: "Warum melden Sie diesen Beitrag?",
     reportSent: "Danke. Ein Moderator wird ihn prüfen.",
     reportReasons: {

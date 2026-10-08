@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { WelcomeNotice } from "@/components/WelcomeNotice";
 import { SettingsProvider, useSettings } from "@/lib/settings";
 
 void SplashScreen.preventAutoHideAsync();
@@ -36,6 +37,7 @@ function Navigator() {
         <Stack.Screen name="community/[id]" options={{ title: t("community.title") }} />
         <Stack.Screen name="guidelines" options={{ title: t("community.guidelinesTitle") }} />
       </Stack>
+      <WelcomeNotice />
     </>
   );
 }

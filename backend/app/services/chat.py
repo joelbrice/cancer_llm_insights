@@ -18,7 +18,14 @@ from collections.abc import AsyncIterator
 from typing import Any
 
 from app.core.language import detect_language
-from app.core.metrics import CHAT_REQUESTS, CHAT_STAGE_SECONDS
+from app.core.metrics import (
+    CHAT_ANSWERS,
+    CHAT_REQUESTS,
+    CHAT_STAGE_SECONDS,
+    GROUNDED_RATIO,
+    SAFETY_TRIGGERS,
+    UNSUPPORTED_CLAIMS,
+)
 from app.core.pii import scrub
 from app.db.base import Database
 from app.db.models import ChatTraceRow
@@ -92,6 +99,8 @@ class ChatService:
         country = profile.country if profile else None
 
         safety = self.guardrails.check_input(question, lang, country)
+        for rule in safety.flags:
+            SAFETY_TRIGGERS.labels(rule=rule, language=lang, surface="chat").inc()
         yield "meta", {"id": rid, "language": lang, "model": self.model_name, "safety": safety.model_dump()}
 
         def finish(answer: str, **extra: Any) -> Event:
@@ -159,6 +168,8 @@ class ChatService:
             parts.append(text)
             yield "delta", {"text": text}
         answer = "".join(parts).strip()
+        mode = "llm" if generated else ("extractive_fallback" if self.llm is not None else "extractive")
+        CHAT_ANSWERS.labels(language=lang, mode=mode).inc()
         timings["generation"] = round((time.perf_counter() - t_g) * 1000, 1)
         CHAT_STAGE_SECONDS.labels(stage="generation").observe(timings["generation"] / 1000)
 
@@ -174,6 +185,10 @@ class ChatService:
             [GradedSource(src, support_by_doc.get(doc_id)) for doc_id, src in cited_sources.items()], lang,
             consistency=consistency, partial_support=any(c.label == "partial" for c in verification.claims),
         )
+        GROUNDED_RATIO.observe(verification.grounded_ratio)
+        unsupported = sum(1 for c in verification.claims if c.label == "unsupported")
+        if unsupported:
+            UNSUPPORTED_CLAIMS.inc(unsupported)
         related = await asyncio.to_thread(self.insights.related, query, lang)
         timings["verification"] = round((time.perf_counter() - t_v) * 1000, 1)
 

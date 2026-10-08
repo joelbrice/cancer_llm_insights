@@ -60,12 +60,14 @@ export function ModerationNotice({ outcome }: { outcome: ModerationOutcome }) {
   );
 }
 
-export function PostCard({ post, token, reactions, onChange, onDeleted, threadLink = true }: {
+export function PostCard({ post, token, reactions, onChange, onDeleted, onBlocked, threadLink = true }: {
   post: Post;
   token: string;
   reactions: ReactionKind[];
   onChange: (post: Post) => void;
   onDeleted: (id: string) => void;
+  /** Called after the author was blocked: hide everything they wrote. */
+  onBlocked?: (handle: string) => void;
   threadLink?: boolean;
 }) {
   const { t, api, locale, colors, scheme } = useSettings();
@@ -92,6 +94,19 @@ export function PostCard({ post, token, reactions, onChange, onDeleted, threadLi
       setMessage(communityMessage(t, e));
     }
   };
+  const block = () =>
+    Alert.alert(t("community.block"), t("community.blockConfirm"), [
+      { text: t("common.cancel"), style: "cancel" },
+      {
+        text: t("community.block"),
+        style: "destructive",
+        onPress: () =>
+          void api.community.blockAuthor(token, post.id).then(
+            (r) => onBlocked?.(r.handle),
+            (e) => setMessage(communityMessage(t, e)),
+          ),
+      },
+    ]);
   const remove = () =>
     Alert.alert(t("community.deleteConfirm"), undefined, [
       { text: t("common.cancel"), style: "cancel" },
@@ -188,9 +203,16 @@ export function PostCard({ post, token, reactions, onChange, onDeleted, threadLi
               <Ionicons name="trash-outline" size={18} color={colors.ink2} />
             </Pressable>
           ) : post.status === "published" ? (
-            <Pressable onPress={() => setReporting(true)} accessibilityRole="button" accessibilityLabel={t("community.report")} hitSlop={10}>
-              <Ionicons name="flag-outline" size={18} color={colors.ink2} />
-            </Pressable>
+            <>
+              <Pressable onPress={() => setReporting(true)} accessibilityRole="button" accessibilityLabel={t("community.report")} hitSlop={10}>
+                <Ionicons name="flag-outline" size={18} color={colors.ink2} />
+              </Pressable>
+              {post.author ? (
+                <Pressable onPress={block} accessibilityRole="button" accessibilityLabel={t("community.block")} hitSlop={10}>
+                  <Ionicons name="ban-outline" size={18} color={colors.ink2} />
+                </Pressable>
+              ) : null}
+            </>
           ) : null}
         </View>
       ) : null}

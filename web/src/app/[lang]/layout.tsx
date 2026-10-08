@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { BottomNav, Header, ServiceWorker, THEME_SCRIPT } from "@/components/Shell";
+import { WelcomeNotice } from "@/components/WelcomeNotice";
 import { href, resolveLocale } from "@/lib/i18n";
 import { I18nProvider } from "@/lib/i18n-client";
 
@@ -46,10 +47,10 @@ export default async function RootLayout({ children, params }: { children: React
   const t = createTranslator(lang);
   return (
     <html lang={lang} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
       <body className="min-h-dvh">
+        {/* Applies the saved theme before first paint. Kept in <body>: a hand-written <head> collides with the
+            metadata Next.js streams into the head and causes intermittent hydration mismatches. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <I18nProvider locale={lang}>
           <a href="#main" className="skip-link">
             {t("nav.skip")}
@@ -74,6 +75,7 @@ export default async function RootLayout({ children, params }: { children: React
           </footer>
           <BottomNav />
           <ServiceWorker />
+          <WelcomeNotice />
         </I18nProvider>
       </body>
     </html>

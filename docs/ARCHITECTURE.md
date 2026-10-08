@@ -34,7 +34,7 @@
 | Generation | `backend/app/llm/` | Versioned prompts; OpenAI-compatible provider (JSON schema, then JSON object, then text); extractive composer |
 | Safety | `backend/app/safety/`, `resources/safety.yaml` | Multilingual input rules (crisis, emergency, urgent, boundaries); output rules; crisis lines by country; prompt-injection defence |
 | Insights | `services/insights.py`, `resources/insight_topics.yaml` | 43 topics; anchor precision gate; minimum sources; per-language generation; versioning; journeys taken from the taxonomy |
-| Community | `backend/app/community/`, `resources/community.yaml` | Members (hashed keys); circles and weekly prompts; posts, replies and reactions; screening; reports; moderation; strikes; export and erasure; evidence links |
+| Community | `backend/app/community/`, `resources/community.yaml` | Members (hashed keys); circles and weekly prompts; posts, replies and reactions; screening; reports; mutual blocking; moderation; strikes; export and erasure; evidence links |
 | Jobs | `backend/app/workers/` | DB-backed jobs; inline thread pool or RQ; heartbeat, cancel and stale recovery; leader-elected scheduler (sync + daily retention) |
 | Evaluation and fine-tuning data | `services/evaluation.py`, `services/sft_export.py` | Golden-set metrics; RAFT export with the production prompt |
 | Model pipeline | `ml/` | Data checks, clinical review gate, QLoRA, merge, serving, release gates |

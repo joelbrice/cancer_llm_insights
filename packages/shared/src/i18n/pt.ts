@@ -419,6 +419,15 @@ export const pt: Dictionary = {
     statHeld: "A aguardar",
     statReports: "Denúncias abertas",
   },
+  welcome: {
+    title: "Bem-vindo ao {app}",
+    intro: "Antes de começar, algumas coisas importantes:",
+    evidence: "Tudo o que encontra aqui vem da investigação e de diretrizes, e cada afirmação mostra a sua fonte e a força da evidência.",
+    notAdvice: "É informação educativa, não aconselhamento médico. Não faz diagnósticos nem substitui a sua equipa de saúde.",
+    emergency: "Numa emergência, ou se estiver a pensar em fazer mal a si próprio, ligue agora para o número de emergência local.",
+    privacy: "O seu perfil, plano e avaliação ficam neste dispositivo. Não é necessária conta.",
+    accept: "Compreendi",
+  },
   community: {
     title: "Comunidade",
     subtitle: "Um espaço pequeno e acolhedor para nos encorajarmos — antes, durante e depois do cancro.",
@@ -490,6 +499,12 @@ export const pt: Dictionary = {
     careTeamNote: "As decisões sobre tratamentos, medicamentos ou suplementos cabem à sua equipa de saúde. Os membros partilham experiências, não aconselhamento médico.",
     researchSays: "O que diz a investigação",
     report: "Denunciar",
+    noBlocks: "Não bloqueou ninguém.",
+    unblock: "Desbloquear",
+    blockedMembers: "Membros bloqueados",
+    blocked: "Bloqueado. Não verão as publicações um do outro.",
+    blockConfirm: "Deixarão de ver as publicações e respostas um do outro. A pessoa não será avisada.",
+    block: "Bloquear este membro",
     reportTitle: "Porque está a denunciar esta publicação?",
     reportSent: "Obrigado. Um moderador vai analisá-la.",
     reportReasons: {

@@ -163,3 +163,13 @@ def test_streamed_final_event_is_always_complete(built_client):
         for key in ("citations", "related_insights", "output_flags", "evidence", "verification", "timings_ms", "retrieved"):
             assert key in final, key
         assert final["abstained"] is True
+
+
+def test_quality_and_safety_metrics_are_exported(built_client):
+    """Alert rules (deploy/monitoring/alerts.yaml) depend on these series."""
+    built_client.post("/api/v1/chat", json={"messages": [{"role": "user", "content": "I have crushing chest pain and can't breathe"}]})
+    built_client.post("/api/v1/chat", json={"messages": [{"role": "user", "content": "Does physical activity lower the risk of colon cancer?"}]})
+    text = built_client.get("/metrics").text
+    assert 'safety_triggers_total{language="en",rule="medical_emergency",surface="chat"}' in text
+    assert 'chat_answers_total{language="en",mode="extractive"}' in text
+    assert "chat_grounded_ratio_count" in text

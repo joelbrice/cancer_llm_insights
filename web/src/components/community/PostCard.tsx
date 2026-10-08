@@ -39,6 +39,7 @@ export function PostCard({
   reactions,
   onChange,
   onDeleted,
+  onBlocked,
   showThreadLink = true,
 }: {
   post: Post;
@@ -46,6 +47,8 @@ export function PostCard({
   reactions: ReactionKind[];
   onChange: (post: Post) => void;
   onDeleted: (id: string) => void;
+  /** Called after the author was blocked: hide everything they wrote. */
+  onBlocked?: (handle: string) => void;
   showThreadLink?: boolean;
 }) {
   const t = useT();
@@ -77,6 +80,16 @@ export function PostCard({
     try {
       await browserApi().community.report(token, post.id, reason);
       setMessage(t("community.reportSent"));
+    } catch (error) {
+      setMessage(communityError(t, error));
+    }
+  };
+
+  const block = async () => {
+    if (!window.confirm(`${t("community.block")}?\n\n${t("community.blockConfirm")}`)) return;
+    try {
+      const result = await browserApi().community.blockAuthor(token, post.id);
+      onBlocked?.(result.handle);
     } catch (error) {
       setMessage(communityError(t, error));
     }
@@ -208,9 +221,16 @@ export function PostCard({
                 </button>
               </>
             ) : post.status === "published" ? (
-              <button type="button" className="btn btn-ghost !min-h-9 !px-2" onClick={() => reportDialog.current?.showModal()} aria-label={t("community.report")}>
-                <Icon name="flag" size={16} />
-              </button>
+              <>
+                <button type="button" className="btn btn-ghost !min-h-9 !px-2" onClick={() => reportDialog.current?.showModal()} aria-label={t("community.report")} title={t("community.report")}>
+                  <Icon name="flag" size={16} />
+                </button>
+                {post.author ? (
+                  <button type="button" className="btn btn-ghost !min-h-9 !px-2" onClick={() => void block()} aria-label={t("community.block")} title={t("community.block")}>
+                    <Icon name="ban" size={16} />
+                  </button>
+                ) : null}
+              </>
             ) : null}
           </span>
         </footer>

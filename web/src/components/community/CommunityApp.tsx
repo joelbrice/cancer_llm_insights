@@ -197,7 +197,17 @@ export function CommunityApp() {
               <ul className="space-y-3">
                 {posts.map((post) => (
                   <li key={post.id}>
-                    <PostCard post={post} token={token} reactions={meta.reactions} onChange={update} onDeleted={(id) => setPosts((list) => list.filter((p) => p.id !== id))} />
+                    <PostCard
+                      post={post}
+                      token={token}
+                      reactions={meta.reactions}
+                      onChange={update}
+                      onDeleted={(id) => setPosts((list) => list.filter((p) => p.id !== id))}
+                      onBlocked={(handle) => {
+                        setPosts((list) => list.filter((p) => p.author?.handle !== handle));
+                        setNotice(t("community.blocked"));
+                      }}
+                    />
                   </li>
                 ))}
               </ul>

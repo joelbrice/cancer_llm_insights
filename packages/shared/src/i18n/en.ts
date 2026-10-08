@@ -416,6 +416,15 @@ export const en = {
     statHeld: "Waiting for review",
     statReports: "Open reports",
   },
+  welcome: {
+    title: "Welcome to {app}",
+    intro: "Before you start, a few things that matter:",
+    evidence: "Everything here comes from research and guidelines, and every statement shows its source and how strong the evidence is.",
+    notAdvice: "This is educational information, not medical advice. It does not diagnose or replace your care team.",
+    emergency: "In an emergency, or if you are thinking of harming yourself, call your local emergency number now.",
+    privacy: "Your profile, plan and lifestyle check stay on this device. No account is needed.",
+    accept: "I understand",
+  },
   community: {
     title: "Community",
     subtitle: "A small, kind space to encourage each other — before, during and after cancer.",
@@ -487,6 +496,12 @@ export const en = {
     careTeamNote: "Decisions about treatment, medicines or supplements belong with your care team. Members share experiences, not medical advice.",
     researchSays: "What the research says",
     report: "Report",
+    noBlocks: "You haven't blocked anyone.",
+    unblock: "Unblock",
+    blockedMembers: "Blocked members",
+    blocked: "Blocked. You won't see each other's posts.",
+    blockConfirm: "You will no longer see each other's posts or replies. They won't be told.",
+    block: "Block this member",
     reportTitle: "Why are you reporting this post?",
     reportSent: "Thank you. A moderator will review it.",
     reportReasons: {

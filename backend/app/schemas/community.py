@@ -175,6 +175,12 @@ class MemberStatusUpdate(BaseModel):
     status: Literal["active", "suspended", "banned"]
 
 
+class BlockedMember(BaseModel):
+    id: str
+    handle: str
+    created_at: datetime
+
+
 class QueueItem(BaseModel):
     post: Post
     member_id: str | None

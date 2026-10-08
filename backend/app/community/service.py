@@ -15,8 +15,10 @@ from sqlalchemy.orm import Session
 
 from app.community.moderation import CommunityConfig, CommunityModerator, Screening, handle_key
 from app.core.language import detect_language
+from app.core.metrics import COMMUNITY_POSTS, SAFETY_TRIGGERS
 from app.db.base import Database
 from app.db.models import (
+    CommunityBlockRow,
     CommunityMemberRow,
     CommunityPostRow,
     CommunityReactionRow,
@@ -27,6 +29,7 @@ from app.schemas.api import RelatedInsight
 from app.schemas.community import (
     ActivityItem,
     Author,
+    BlockedMember,
     CircleInfo,
     CommunityMeta,
     Member,
@@ -184,6 +187,7 @@ class CommunityService:
                                         .where(CommunityReactionRow.member_id == member.id)).all()
             reports = session.scalars(select(CommunityReportRow)
                                       .where(CommunityReportRow.member_id == member.id)).all()
+            blocks = self.blocks(member)
         return {
             "exported_at": _now().isoformat(),
             "member": self._member(member).model_dump(mode="json"),
@@ -194,6 +198,7 @@ class CommunityService:
                           for r in reactions],
             "reports": [{"post_id": r.post_id, "reason": r.reason, "created_at": _aware(r.created_at).isoformat()}
                         for r in reports],
+            "blocked_members": [b.handle for b in blocks],
             "not_stored": "No name, email address, IP address or device identifier is stored.",
         }
 
@@ -227,10 +232,7 @@ class CommunityService:
             raise CommunityError(422, "unknown_circle")
         self._rate_check(member, replies=False)
         lang = self._detect(body.body, body.language or member.language)
-        screening = self.moderator.screen(body.body, lang, country)
-        if screening.action == "reject":
-            raise CommunityError(422, screening.reason or "rejected")
-        screening = self._first_posts_rule(member, screening)
+        screening = self._first_posts_rule(member, self._screen(body.body, lang, country))
         audience = self.config.circles[body.circle]["audience"]
         related = None
         if screening.action == "publish":
@@ -244,6 +246,7 @@ class CommunityService:
         )
         with self.db.session() as session:
             session.add(row)
+        self._count(row, screening)
         return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
 
     def reply(self, member: CommunityMemberRow, post_id: str, body: ReplyCreate,
@@ -251,15 +254,13 @@ class CommunityService:
         self._require_active(member)
         with self.db.session() as session:
             parent = session.get(CommunityPostRow, post_id)
-            if parent is None or parent.parent_id is not None or parent.status != "published":
+            if parent is None or parent.parent_id is not None or parent.status != "published" \
+                    or parent.member_id in self._hidden_authors(session, member.id):
                 raise CommunityError(404, "post_not_found")
             circle = parent.circle
         self._rate_check(member, replies=True)
         lang = self._detect(body.body, body.language or member.language)
-        screening = self.moderator.screen(body.body, lang, country)
-        if screening.action == "reject":
-            raise CommunityError(422, screening.reason or "rejected")
-        screening = self._first_posts_rule(member, screening)
+        screening = self._first_posts_rule(member, self._screen(body.body, lang, country))
         row = CommunityPostRow(
             id=_new_id("p"), member_id=member.id, parent_id=post_id, circle=circle, kind="reply", language=lang,
             body=body.body.strip(), status="published" if screening.action == "publish" else "held",
@@ -270,6 +271,7 @@ class CommunityService:
             session.add(row)
             session.flush()
             self._refresh_reply_count(session, post_id)
+        self._count(row, screening)
         return PostResult(post=self._post(row, member), moderation=self._outcome(row, screening))
 
     def edit(self, member: CommunityMemberRow, post_id: str, text: str, country: str | None = None) -> PostResult:
@@ -281,9 +283,7 @@ class CommunityService:
             limit = 1000 if row.parent_id else 2000
             if len(text) > limit:
                 raise CommunityError(422, "too_long")
-            screening = self.moderator.screen(text, row.language, country)
-            if screening.action == "reject":
-                raise CommunityError(422, screening.reason or "rejected")
+            screening = self._screen(text, row.language, country)
             if row.status == "held" and screening.action == "publish":
                 screening = Screening("hold", reason=row.moderation.get("auto"), flags=row.flags)  # still pending
             row.body, row.edited_at = text.strip(), _now()
@@ -328,6 +328,9 @@ class CommunityService:
                 stmt = stmt.where(CommunityPostRow.kind == kind)
             if language:
                 stmt = stmt.where(CommunityPostRow.language == language)
+            hidden = self._hidden_authors(session, member.id)
+            if hidden:
+                stmt = stmt.where(or_(CommunityPostRow.member_id.is_(None), CommunityPostRow.member_id.not_in(hidden)))
             if cursor:
                 stamp, post_id = _decode_cursor(cursor)
                 stmt = stmt.where(or_(CommunityPostRow.created_at < stamp,
@@ -341,11 +344,13 @@ class CommunityService:
     def thread(self, member: CommunityMemberRow, post_id: str) -> PostThread:
         with self.db.session() as session:
             root = session.get(CommunityPostRow, post_id)
-            if root is None or root.parent_id is not None or not self._visible(root, member, thread=True):
+            hidden = self._hidden_authors(session, member.id)
+            if root is None or root.parent_id is not None or not self._visible(root, member, thread=True) \
+                    or root.member_id in hidden:
                 raise CommunityError(404, "post_not_found")
             replies = session.scalars(select(CommunityPostRow).where(CommunityPostRow.parent_id == post_id)
                                       .order_by(CommunityPostRow.created_at, CommunityPostRow.id)).all()
-            replies = [r for r in replies if self._visible(r, member)]
+            replies = [r for r in replies if self._visible(r, member) and r.member_id not in hidden]
             posts = self._posts(session, [root, *replies], member)
         return PostThread(post=posts[0], replies=posts[1:])
 
@@ -408,6 +413,45 @@ class CommunityService:
             if post.parent_id:
                 session.flush()
                 self._refresh_reply_count(session, post.parent_id)
+
+    # ── blocking (App Store 1.2 / Play UGC policy) ────────────────────────────────
+    def block_author(self, member: CommunityMemberRow, post_id: str) -> BlockedMember:
+        with self.db.session() as session:
+            post = session.get(CommunityPostRow, post_id)
+            if post is None or post.member_id is None:
+                raise CommunityError(404, "post_not_found")
+            if post.member_id == member.id:
+                raise CommunityError(422, "cannot_block_self")
+            row = session.scalar(select(CommunityBlockRow).where(
+                CommunityBlockRow.member_id == member.id, CommunityBlockRow.blocked_id == post.member_id))
+            if row is None:
+                row = CommunityBlockRow(member_id=member.id, blocked_id=post.member_id)
+                session.add(row)
+                session.flush()
+            blocked = session.get(CommunityMemberRow, post.member_id)
+            return BlockedMember(id=str(row.id), handle=blocked.handle if blocked else "",
+                                 created_at=_aware(row.created_at) or _now())
+
+    def blocks(self, member: CommunityMemberRow) -> list[BlockedMember]:
+        with self.db.session() as session:
+            rows = session.execute(select(CommunityBlockRow, CommunityMemberRow.handle).join(
+                CommunityMemberRow, CommunityMemberRow.id == CommunityBlockRow.blocked_id).where(
+                CommunityBlockRow.member_id == member.id).order_by(CommunityBlockRow.created_at.desc())).all()
+        return [BlockedMember(id=str(b.id), handle=handle, created_at=_aware(b.created_at) or _now()) for b, handle in rows]
+
+    def unblock(self, member: CommunityMemberRow, block_id: str) -> None:
+        with self.db.session() as session:
+            row = session.get(CommunityBlockRow, int(block_id)) if block_id.isdigit() else None
+            if row is None or row.member_id != member.id:
+                raise CommunityError(404, "block_not_found")
+            session.delete(row)
+
+    @staticmethod
+    def _hidden_authors(session: Session, member_id: str) -> set[str]:
+        """Members whose content this member must not see: those they blocked and those who blocked them."""
+        out = set(session.scalars(select(CommunityBlockRow.blocked_id).where(CommunityBlockRow.member_id == member_id)))
+        out |= set(session.scalars(select(CommunityBlockRow.member_id).where(CommunityBlockRow.blocked_id == member_id)))
+        return out
 
     # ── moderation (admin) ────────────────────────────────────────────────────────
     def queue(self, limit: int = 100) -> list[QueueItem]:
@@ -483,6 +527,20 @@ class CommunityService:
             }
 
     # ── helpers ───────────────────────────────────────────────────────────────────
+    def _screen(self, text: str, lang: str, country: str | None) -> Screening:
+        """Screen + metrics. Rejections raise; holds and notes are returned for the caller to store."""
+        screening = self.moderator.screen(text, lang, country)
+        for rule in screening.flags:
+            SAFETY_TRIGGERS.labels(rule=rule, language=lang, surface="community").inc()
+        if screening.action == "reject":
+            COMMUNITY_POSTS.labels(outcome="rejected", reason=screening.reason or "rejected").inc()
+            raise CommunityError(422, screening.reason or "rejected")
+        return screening
+
+    @staticmethod
+    def _count(row: CommunityPostRow, screening: Screening) -> None:
+        COMMUNITY_POSTS.labels(outcome=row.status, reason=screening.reason or "none").inc()
+
     def _language(self, lang: str | None) -> str:
         code = (lang or "").split("-")[0].lower()
         return code if code in self.settings.supported_languages else self.settings.default_language
@@ -551,6 +609,9 @@ class CommunityService:
                 CommunityPostRow, CommunityPostRow.id == CommunityReactionRow.post_id).where(
                 CommunityReactionRow.post_id.in_(my_posts), CommunityReactionRow.member_id != member.id)
                 .order_by(CommunityReactionRow.created_at.desc()).limit(50)).all()
+            hidden = self._hidden_authors(session, member.id)
+            replies = [r for r in replies if r.member_id not in hidden]
+            reactions = [(rx, p) for rx, p in reactions if rx.member_id not in hidden]
             handles = self._handles(session, {r.member_id for r in replies if r.member_id}
                                     | {rx.member_id for rx, _ in reactions})
         items = [ActivityItem(type="reply", post_id=r.id, root_id=r.parent_id or r.id,

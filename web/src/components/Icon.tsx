@@ -48,6 +48,7 @@ const PATHS = {
   key: "M14.5 9.5a5 5 0 1 0-1.9 3.9L14 15h2v2h2v2h3v-3l-6.4-6.4a5 5 0 0 0-.1-.1ZM8 9h.01",
   edit: "M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z",
   steps: "M3 20h5v-5h5v-5h5V5h3",
+  ban: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM4.9 4.9l14.2 14.2",
 } as const;
 
 export type IconName = keyof typeof PATHS;

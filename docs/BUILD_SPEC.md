@@ -402,11 +402,15 @@ The following are monitored:
 - latency, and the share of answers served in fallback mode;
 - user feedback.
 
-Prometheus metrics and dashboards cover these. Alerts fire when:
+Prometheus metrics (`chat_answers_total{mode}`, `chat_grounded_ratio`, `chat_unsupported_claims_total`,
+`safety_triggers_total{rule,language,surface}`, `community_posts_total{outcome,reason}`) and dashboards cover
+these. The rules live in `deploy/monitoring/alerts.yaml`. Alerts fire when:
 
 - the grounded ratio drops below 0.9 (7-day mean);
 - the fallback share exceeds 20 %;
-- safety-trigger rates change by more than 50 % week on week, which may indicate drift or abuse.
+- safety-trigger rates change by more than 50 % week on week, which may indicate drift or abuse;
+- a community post is held for crisis or emergency (pages the moderation rota);
+- the API error rate exceeds 1 %, p95 generation exceeds 10 s, or background jobs keep failing.
 
 ---
 
@@ -479,6 +483,12 @@ Unmoderated online groups can also spread misinformation and distress. Stepwell'
 - **Members-only reading**: pages and API responses are `noindex` and `no-store` and excluded in `robots.txt`.
 - **No private messages**. This is a deliberate safety decision that removes grooming, scams and solicitation
   vectors.
+- **Blocking**: any member can block another from a post. Blocking is mutual and invisible:
+  - neither member sees the other's posts, replies or activity;
+  - neither can reply in the other's threads;
+  - the blocked member is not told.
+
+  Blocks are listed in the account panel, can be undone, and are included in the data export.
 
 ### 9.3 Membership
 
@@ -666,12 +676,14 @@ Usability tests include people with low vision, older adults and people with lim
   - no tracking;
   - no data sold;
   - deletion available in the app.
-- [ ] Medical disclaimer in the description and on first launch. Apple guideline 1.4.1 (health apps) — no
-  diagnostic claims.
+- [ ] Medical disclaimer in the description and on first launch. The first-launch notice is implemented on web
+  and mobile: evidence and sources, not medical advice, emergencies, privacy; acknowledged once per device.
+  Apple guideline 1.4.1 (health apps) — no diagnostic claims.
 - [ ] User-generated content requirements (Apple 1.2, Google UGC policy):
-  - reporting;
-  - blocking content: a reported post auto-hides at the threshold;
-  - moderation;
+  - filtering before display (§9.4);
+  - reporting, with auto-hide at the threshold;
+  - **blocking abusive members** (§9.2);
+  - moderation within the targets;
   - published guidelines;
   - contact information.
 - [ ] Age rating 17+/18+ because of the community, with the age gate in the app.

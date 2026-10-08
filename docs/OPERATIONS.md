@@ -23,6 +23,7 @@ state.
 | Health / readiness | `GET /healthz` (process) · `GET /readyz` (database + vector store) |
 | Configuration | `docker compose exec api cancer-insights doctor` |
 | Metrics | `GET /metrics` (Prometheus; cluster-internal) |
+| Alerts | `deploy/monitoring/alerts.yaml`: crisis posts waiting, grounded ratio, fallback share, unsupported claims, safety-rate shifts, API errors, latency, failing jobs, empty library |
 | Jobs | Admin console → Jobs, or `GET /api/v1/admin/jobs` |
 | Quality | Admin console → **Run evaluation** (golden sets in `data/eval/`) |
 

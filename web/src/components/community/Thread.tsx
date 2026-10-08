@@ -72,7 +72,15 @@ export function CommunityThread({ id }: { id: string }) {
       <Link href={`/${lang}/community`} className="text-sm font-semibold text-brand hover:underline">
         ← {t("community.title")}
       </Link>
-      <PostCard post={thread.post} token={token} reactions={meta.reactions} onChange={update} onDeleted={() => window.history.back()} showThreadLink={false} />
+      <PostCard
+        post={thread.post}
+        token={token}
+        reactions={meta.reactions}
+        onChange={update}
+        onDeleted={() => window.history.back()}
+        onBlocked={() => window.history.back()}
+        showThreadLink={false}
+      />
       <ol className="space-y-3 border-l-2 border-line pl-3 md:pl-5" aria-label={t("community.replies", { n: thread.replies.length })}>
         {thread.replies.map((reply) => (
           <li key={reply.id}>
@@ -82,6 +90,7 @@ export function CommunityThread({ id }: { id: string }) {
               reactions={meta.reactions}
               onChange={update}
               onDeleted={(rid) => setThread((th) => (th ? { ...th, replies: th.replies.filter((r) => r.id !== rid) } : th))}
+              onBlocked={(handle) => setThread((th) => (th ? { ...th, replies: th.replies.filter((r) => r.author?.handle !== handle) } : th))}
               showThreadLink={false}
             />
           </li>

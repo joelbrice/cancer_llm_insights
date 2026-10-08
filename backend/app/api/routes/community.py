@@ -9,6 +9,7 @@ from app.community.service import CommunityError, CommunityService
 from app.container import Container
 from app.db.models import CommunityMemberRow
 from app.schemas.community import (
+    BlockedMember,
     CommunityMeta,
     Member,
     MemberCreate,
@@ -201,6 +202,32 @@ def report(post_id: str, body: ReportCreate, member: CommunityMemberRow = Depend
     except CommunityError as exc:
         _raise(exc)
     return {"ok": True}
+
+
+@router.post("/posts/{post_id}/block-author", response_model=BlockedMember, status_code=201)
+def block_author(post_id: str, member: CommunityMemberRow = Depends(current_member),
+                 community: CommunityService = Depends(community_dep)) -> BlockedMember:
+    try:
+        return community.block_author(member, post_id)
+    except CommunityError as exc:
+        _raise(exc)
+        raise
+
+
+@router.get("/members/me/blocks", response_model=list[BlockedMember])
+def blocks(member: CommunityMemberRow = Depends(current_member),
+           community: CommunityService = Depends(community_dep)) -> list[BlockedMember]:
+    return community.blocks(member)
+
+
+@router.delete("/members/me/blocks/{block_id}", status_code=204)
+def unblock(block_id: str, member: CommunityMemberRow = Depends(current_member),
+            community: CommunityService = Depends(community_dep)) -> Response:
+    try:
+        community.unblock(member, block_id)
+    except CommunityError as exc:
+        _raise(exc)
+    return Response(status_code=204)
 
 
 # ── moderation (admin key) ──────────────────────────────────────────────────────────────────────────────────

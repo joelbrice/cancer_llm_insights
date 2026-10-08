@@ -42,6 +42,7 @@ packages/shared/  TypeScript client, types, i18n, evidence/lifestyle/plan/commun
 ml/               Llama fine-tuning: RAFT data checks, clinical review gate, QLoRA, serving, release gates
 data/             The reserved evidence folder + sources.yaml (the link to local data or online buckets)
 deploy/k8s/       Kubernetes (kustomize): API, workers, web, HPA, PDB, network policies, ingress
+deploy/monitoring/ Prometheus alert rules (safety, answer quality, service health)
 docs/             BUILD_SPEC.md · ARCHITECTURE.md · OPERATIONS.md
 ```
 

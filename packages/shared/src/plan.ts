@@ -78,4 +78,6 @@ export const STORAGE_KEYS = {
   conversation: "stepwell.conversation.v1",
   /** Community member token (pseudonymous; deleting it signs this device out of the community). */
   communityToken: "stepwell.community.v1",
+  /** Set once the first-launch notice (not medical advice, emergencies, privacy) has been acknowledged. */
+  welcome: "stepwell.welcome.v1",
 } as const;

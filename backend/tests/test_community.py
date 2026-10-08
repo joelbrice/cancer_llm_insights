@@ -72,7 +72,9 @@ def test_handle_key_is_case_and_accent_insensitive():
 def test_meta_is_public_and_localised(client):
     meta = client.get(f"{API}/meta", params={"lang": "fr"}).json()
     assert [c["id"] for c in meta["circles"]] == ["prevention", "in_treatment", "after_treatment", "caregivers"]
-    assert meta["circles"][1]["title"] == "Pendant les traitements" and meta["circles"][1]["prompt"].endswith("?")
+    assert meta["circles"][1]["title"] == "Pendant les traitements"
+    rotation = CommunityConfig().circles["in_treatment"]["prompts"]["fr"]
+    assert meta["circles"][1]["prompt"] in rotation  # rotates every ISO week
     assert meta["reactions"] == ["support", "strength", "thanks", "inspired"] and meta["min_age"] == 18
 
 
@@ -242,3 +244,34 @@ def test_retention_purges_old_removed_posts_and_feedback(client, container):
     assert not due(container.db)
     with container.db.session() as s:
         assert s.get(CommunityPostRow, gone) is None and s.get(CommunityPostRow, keep) is not None
+
+
+def test_blocking_hides_members_from_each_other(client):
+    """App Store 1.2 / Play UGC: users can block abusive members. Mutual invisibility; the blocked member isn't told."""
+    ana, troll, other = join(client, "Ana Blocks"), join(client, "Rude Person"), join(client, "Kind Third")
+    ana_post = post(client, ana, "Back on my bike today!", circle="after_treatment").json()["post"]["id"]
+    troll_post = post(client, troll, "Something unpleasant but not caught by filters", circle="after_treatment").json()["post"]["id"]
+    client.post(f"{API}/posts/{ana_post}/replies", json={"body": "A snide reply here"}, headers=troll)
+    client.put(f"{API}/posts/{ana_post}/reactions/support", headers=troll)
+    assert client.post(f"{API}/posts/{ana_post}/block-author", headers=ana).status_code == 422  # not yourself
+
+    blocked = client.post(f"{API}/posts/{troll_post}/block-author", headers=ana)
+    assert blocked.status_code == 201 and blocked.json()["handle"] == "Rude Person"
+    assert client.post(f"{API}/posts/{troll_post}/block-author", headers=ana).json()["id"] == blocked.json()["id"]
+
+    ana_feed = [p["id"] for p in client.get(f"{API}/posts", headers=ana).json()["items"]]
+    assert troll_post not in ana_feed and ana_post in ana_feed
+    assert client.get(f"{API}/posts/{ana_post}", headers=ana).json()["replies"] == []
+    assert client.get(f"{API}/members/me", headers=ana).json()["activity"]["recent"] == []
+    # mutual: the blocked member no longer sees or replies to Ana's posts
+    assert ana_post not in [p["id"] for p in client.get(f"{API}/posts", headers=troll).json()["items"]]
+    assert client.post(f"{API}/posts/{ana_post}/replies", json={"body": "again"}, headers=troll).status_code == 404
+    # everyone else still sees both
+    assert {ana_post, troll_post} <= {p["id"] for p in client.get(f"{API}/posts", headers=other).json()["items"]}
+
+    listed = client.get(f"{API}/members/me/blocks", headers=ana).json()
+    assert [b["handle"] for b in listed] == ["Rude Person"]
+    assert client.get(f"{API}/members/me/export", headers=ana).json()["blocked_members"] == ["Rude Person"]
+    assert client.delete(f"{API}/members/me/blocks/{listed[0]['id']}", headers=troll).status_code == 404
+    assert client.delete(f"{API}/members/me/blocks/{listed[0]['id']}", headers=ana).status_code == 204
+    assert troll_post in [p["id"] for p in client.get(f"{API}/posts", headers=ana).json()["items"]]

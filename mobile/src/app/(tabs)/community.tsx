@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import type { CommunityMeta, MemberMe, ModerationOutcome, Post } from "@stepwell/shared";
+import type { BlockedMember, CommunityMeta, MemberMe, ModerationOutcome, Post } from "@stepwell/shared";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -14,12 +14,34 @@ import { space } from "@/lib/theme";
 function Account({ me, token, onSignedOut }: { me: MemberMe; token: string; onSignedOut: (message?: string) => void }) {
   const { t, api, colors } = useSettings();
   const [copied, setCopied] = useState(false);
+  const [blocks, setBlocks] = useState<BlockedMember[] | null>(null);
+  const toggleBlocks = () =>
+    blocks ? setBlocks(null) : void api.community.blocks(token).then(setBlocks, () => setBlocks([]));
   return (
     <Card>
       <Txt variant="label">{t("community.account")}</Txt>
       <Txt variant="small">{t("community.signedInAs", { handle: me.member.handle })}</Txt>
       <Txt variant="muted">{t("community.accessKeyHelp")}</Txt>
       <Button variant="ghost" icon={copied ? "checkmark" : "key-outline"} label={copied ? t("common.copied") : t("community.copyKey")} onPress={() => void Clipboard.setStringAsync(token).then(() => setCopied(true))} />
+      <Button variant="ghost" icon="ban-outline" label={t("community.blockedMembers")} onPress={toggleBlocks} />
+      {blocks ? (
+        blocks.length ? (
+          blocks.map((b) => (
+            <View key={b.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 8 }}>
+              <Txt variant="small">{b.handle}</Txt>
+              <Pressable
+                onPress={() => void api.community.unblock(token, b.id).then(() => setBlocks((list) => (list ?? []).filter((x) => x.id !== b.id)))}
+                accessibilityRole="button"
+                hitSlop={8}
+              >
+                <Txt style={{ color: colors.brand, fontWeight: "600", fontSize: 14 }}>{t("community.unblock")}</Txt>
+              </Pressable>
+            </View>
+          ))
+        ) : (
+          <Txt variant="muted">{t("community.noBlocks")}</Txt>
+        )
+      ) : null}
       <Button
         variant="ghost"
         icon="download-outline"
@@ -177,6 +199,10 @@ export default function Community() {
               reactions={meta.reactions}
               onChange={(p) => setPosts((list) => list.map((x) => (x.id === p.id ? p : x)))}
               onDeleted={(id) => setPosts((list) => list.filter((x) => x.id !== id))}
+              onBlocked={(handle) => {
+                setPosts((list) => list.filter((x) => x.author?.handle !== handle));
+                setNotice(t("community.blocked"));
+              }}
             />
           ))}
           {!posts.length && !loading ? (

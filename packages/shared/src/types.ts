@@ -562,3 +562,9 @@ export interface QueueItem {
   moderation: { auto?: string | null; priority?: number; decision?: string; note?: string | null };
   reports: { reason: ReportReason; note: string | null; created_at: string }[];
 }
+
+export interface BlockedMember {
+  id: string;
+  handle: string;
+  created_at: string;
+}

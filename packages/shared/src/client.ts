@@ -1,6 +1,7 @@
 import { readSse } from "./sse";
 import type {
   AdminSource,
+  BlockedMember,
   CommunityMeta,
   FeedQuery,
   Member,
@@ -218,6 +219,11 @@ export class StepwellClient {
     remove: (token: string, id: string) => this.request<void>("DELETE", `/community/posts/${encodeURIComponent(id)}`, undefined, { headers: member(token) }),
     react: (token: string, id: string, kind: ReactionKind, on: boolean) =>
       this.request<ReactionResult>(on ? "PUT" : "DELETE", `/community/posts/${encodeURIComponent(id)}/reactions/${kind}`, undefined, { headers: member(token) }),
+    blockAuthor: (token: string, postId: string) =>
+      this.request<BlockedMember>("POST", `/community/posts/${encodeURIComponent(postId)}/block-author`, undefined, { headers: member(token) }),
+    blocks: (token: string) => this.request<BlockedMember[]>("GET", "/community/members/me/blocks", undefined, { headers: member(token) }),
+    unblock: (token: string, blockId: string) =>
+      this.request<void>("DELETE", `/community/members/me/blocks/${encodeURIComponent(blockId)}`, undefined, { headers: member(token) }),
     report: (token: string, id: string, reason: ReportReason, note?: string) =>
       this.request<{ ok: boolean }>("POST", `/community/posts/${encodeURIComponent(id)}/reports`, { reason, note }, { headers: member(token) }),
   };
