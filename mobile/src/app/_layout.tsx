@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { SyncAgent } from "@/components/personal";
 import { WelcomeNotice } from "@/components/WelcomeNotice";
 import { SettingsProvider, useSettings } from "@/lib/settings";
 
@@ -36,8 +37,11 @@ function Navigator() {
         <Stack.Screen name="check" options={{ title: t("check.title") }} />
         <Stack.Screen name="community/[id]" options={{ title: t("community.title") }} />
         <Stack.Screen name="guidelines" options={{ title: t("community.guidelinesTitle") }} />
+        <Stack.Screen name="appointment" options={{ title: t("nav.appointment") }} />
+        <Stack.Screen name="transparency" options={{ title: t("transparency.title") }} />
       </Stack>
       <WelcomeNotice />
+      <SyncAgent />
     </>
   );
 }

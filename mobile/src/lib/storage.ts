@@ -29,6 +29,12 @@ export async function removeKeys(keys: string[]): Promise<void> {
   }
 }
 
+/** Subscribe to writes of any stored key (used by background sync). Returns the unsubscribe function. */
+export function onStoredChange(fn: (key: string) => void): () => void {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
+
 /** Persisted state shared by every screen that uses the same key (on-device only). */
 export function useStored<T>(key: string, fallback: T): [T, (next: T | ((prev: T) => T)) => void, boolean] {
   const [value, setValue] = useState<T>(fallback);

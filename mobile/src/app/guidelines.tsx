@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { View } from "react-native";
 
-import { Card, Screen, Txt, type IconName } from "@/components/ui";
+import { Button, Card, Screen, Txt, type IconName } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
 import { space } from "@/lib/theme";
 
@@ -33,6 +34,7 @@ export default function Guidelines() {
         </Card>
       ))}
       <Txt variant="muted">{t("community.membersOnly")}</Txt>
+      <Button variant="ghost" icon="stats-chart-outline" label={t("community.transparencyLink")} onPress={() => router.push("/transparency")} />
     </Screen>
   );
 }

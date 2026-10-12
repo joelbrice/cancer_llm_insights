@@ -42,6 +42,18 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 96
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#0f6e64"
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Stepwell counts your steps on this phone to show them next to your plan. Your steps never leave your device."
+        }
       ]
     ],
     "experiments": {

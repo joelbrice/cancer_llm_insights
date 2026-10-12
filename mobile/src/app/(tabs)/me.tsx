@@ -1,25 +1,30 @@
 import { Ionicons } from "@expo/vector-icons";
-import { brandName, LOCALE_NAMES, LOCALES, STORAGE_KEYS } from "@stepwell/shared";
+import { brandName, deleteRemoteCopy, LOCALE_NAMES, LOCALES, STORAGE_KEYS, type SyncState } from "@stepwell/shared";
 import Constants from "expo-constants";
 import { router, type Href } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, TextInput, View } from "react-native";
 
+import { OfflineCard } from "@/components/personal";
 import { Button, Card, Chip, Disclaimer, Screen, Txt, type IconName } from "@/components/ui";
+import { offlinePackKeys } from "@/lib/offline";
+import { cancelWeeklyReminder } from "@/lib/reminders";
 import { API_URL_KEY, useSettings } from "@/lib/settings";
-import { removeKeys } from "@/lib/storage";
+import { readJSON, removeKeys } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
 
 export default function Me() {
-  const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors } = useSettings();
+  const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors, api } = useSettings();
   const [url, setUrl] = useState(apiUrl);
   const links: { href: Href; icon: IconName; label: string }[] = [
     { href: "/plan", icon: "checkbox-outline", label: t("nav.plan") },
     { href: "/check", icon: "clipboard-outline", label: t("nav.check") },
+    { href: "/appointment", icon: "help-circle-outline", label: t("nav.appointment") },
     { href: "/profile", icon: "person-circle-outline", label: t("nav.profile") },
     { href: "/library", icon: "library-outline", label: t("library.title") },
     { href: "/methodology", icon: "school-outline", label: t("nav.methodology") },
     { href: "/guidelines", icon: "shield-checkmark-outline", label: t("nav.guidelines") },
+    { href: "/transparency", icon: "stats-chart-outline", label: t("nav.transparency") },
   ];
   const clearAll = () =>
     Alert.alert(t("profile.clear"), undefined, [
@@ -28,7 +33,12 @@ export default function Me() {
         text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
-          await removeKeys([STORAGE_KEYS.profile, STORAGE_KEYS.plan, STORAGE_KEYS.check, STORAGE_KEYS.conversation, STORAGE_KEYS.locale, STORAGE_KEYS.theme, STORAGE_KEYS.communityToken, API_URL_KEY]);
+          // the encrypted sync copy and a scheduled reminder are this person's data too
+          const sync = await readJSON<SyncState | null>(STORAGE_KEYS.sync, null);
+          if (sync) await deleteRemoteCopy(api, sync.code).catch(() => undefined);
+          await cancelWeeklyReminder();
+          await removeKeys([STORAGE_KEYS.profile, STORAGE_KEYS.plan, STORAGE_KEYS.check, STORAGE_KEYS.conversation, STORAGE_KEYS.locale, STORAGE_KEYS.theme, STORAGE_KEYS.communityToken, API_URL_KEY,
+            STORAGE_KEYS.appointment, STORAGE_KEYS.reminder, STORAGE_KEYS.sync, STORAGE_KEYS.steps, STORAGE_KEYS.surveySnooze, ...offlinePackKeys()]);
           Alert.alert(t("profile.cleared"));
         },
       },
@@ -50,6 +60,8 @@ export default function Me() {
           </Pressable>
         ))}
       </Card>
+
+      <OfflineCard />
 
       <Card>
         <Txt variant="label">{t("common.language")}</Txt>

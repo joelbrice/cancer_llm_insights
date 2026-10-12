@@ -2,6 +2,7 @@ import { AUDIENCES, STORAGE_KEYS, type Profile } from "@stepwell/shared";
 import { useEffect, useState } from "react";
 import { TextInput, View } from "react-native";
 
+import { SyncCard } from "@/components/personal";
 import { Button, Card, Chip, Loading, Screen, Txt } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
 import { useStored } from "@/lib/storage";
@@ -90,6 +91,7 @@ export default function ProfileScreen() {
           setOk(false);
         }}
       />
+      <SyncCard />
     </Screen>
   );
 }

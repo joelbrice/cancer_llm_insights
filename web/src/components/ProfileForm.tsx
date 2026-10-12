@@ -1,10 +1,11 @@
 "use client";
 
-import { AUDIENCES, STORAGE_KEYS, type Profile } from "@stepwell/shared";
+import { AUDIENCES, deleteRemoteCopy, STORAGE_KEYS, type Profile, type SyncState } from "@stepwell/shared";
 import { useState } from "react";
 
 import { useT } from "@/lib/i18n-client";
-import { removeLocal, useLocalState } from "@/lib/storage";
+import { browserApi } from "@/lib/browser-api";
+import { readLocal, removeLocal, useLocalState } from "@/lib/storage";
 
 import { Icon } from "./Icon";
 
@@ -111,6 +112,8 @@ export function ProfileForm() {
           type="button"
           className="btn btn-ghost"
           onClick={() => {
+            const sync = readLocal<SyncState | null>(STORAGE_KEYS.sync, null); // the encrypted copy is their data too
+            if (sync) void deleteRemoteCopy(browserApi(), sync.code).catch(() => undefined);
             for (const key of Object.values(STORAGE_KEYS)) removeLocal(key);
             setProfile({});
             setMessage(t("profile.cleared"));

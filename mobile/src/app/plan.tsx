@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 
+import { ReminderCard, StepsCard } from "@/components/personal";
 import { Button, Card, EvidenceBadge, Loading, Screen, Txt } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
 import { communityMessage, useCommunityToken } from "@/lib/community";
@@ -91,6 +92,8 @@ export default function Plan() {
           </Card>
         );
       })}
+      <ReminderCard />
+      <StepsCard />
     </Screen>
   );
 }

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, Pressable, ScrollView, Share, View } from "react-native";
 
 import { Composer, JoinCommunity, ModerationNotice, PostCard } from "@/components/community";
+import { MyModeration, SurveyCard } from "@/components/communityExtras";
 import { Button, Card, Chip, ErrorNote, Loading, Screen, Txt } from "@/components/ui";
 import { communityMessage, isAuthError, useCommunityToken } from "@/lib/community";
 import { useSettings } from "@/lib/settings";
@@ -191,6 +192,7 @@ export default function Community() {
             />
           ) : null}
           {outcome ? <ModerationNotice outcome={outcome} /> : null}
+          {me ? <SurveyCard token={token} /> : null}
           {posts.map((post) => (
             <PostCard
               key={post.id}
@@ -214,6 +216,8 @@ export default function Community() {
           {error ? <Txt style={{ color: colors.critical }}>{error}</Txt> : null}
           {cursor ? <Button variant="ghost" label={t("community.loadMore")} onPress={() => void load(false)} disabled={loading} /> : null}
           {me ? <Account me={me} token={token} onSignedOut={signOut} /> : null}
+          {me ? <MyModeration token={token} /> : null}
+          <Button variant="ghost" icon="stats-chart-outline" label={t("community.transparencyLink")} onPress={() => router.push("/transparency")} />
           <Txt variant="muted">{t("community.g5")}</Txt>
         </>
       )}

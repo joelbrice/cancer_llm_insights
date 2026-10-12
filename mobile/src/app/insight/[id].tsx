@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   addToPlan,
   formatDate,
+  insightSpeech,
   planItemId,
   sortedDesigns,
   splitCitations,
@@ -9,13 +10,19 @@ import {
   translateDynamic,
   type Insight,
   type InsightPoint,
+  type Locale,
+  type OfflinePack,
   type PlanItem,
 } from "@stepwell/shared";
 import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import { Share, Text, View } from "react-native";
 
 import { Feedback } from "@/components/Feedback";
+import { AddQuestionButton, OfflineBanner } from "@/components/personal";
+import { ReadAloud } from "@/components/ReadAloud";
 import { Button, Card, Chip, CitationCard, Disclaimer, ErrorNote, EvidenceBadge, EvidenceMeter, Loading, Screen, Txt } from "@/components/ui";
+import { readOfflinePack } from "@/lib/offline";
 import { useSettings } from "@/lib/settings";
 import { useStored } from "@/lib/storage";
 import { levelColor, space } from "@/lib/theme";
@@ -62,14 +69,25 @@ function DesignBars({ insight }: { insight: Insight }) {
   );
 }
 
+/** The saved offline copy of an insight, used only when the live one cannot be loaded. */
+function useOfflineInsight(id: string, locale: Locale, wanted: boolean): { insight: Insight; savedAt: string } | null {
+  const [pack, setPack] = useState<OfflinePack | null>(null);
+  useEffect(() => {
+    if (wanted) void readOfflinePack((id.split(".").pop() as Locale) || locale).then(setPack);
+  }, [id, locale, wanted]);
+  const insight = pack?.insights[id];
+  return insight && pack ? { insight, savedAt: pack.saved_at } : null;
+}
+
 export default function InsightScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, api, locale, colors } = useSettings();
   const res = useApi(() => api.insight(String(id)), [api, id]);
   const [plan, setPlan, planLoaded] = useStored<PlanItem[]>(STORAGE_KEYS.plan, []);
+  const offline = useOfflineInsight(String(id), locale, !res.loading && !res.data);
   if (res.loading && !res.data) return <Loading />;
-  if (!res.data) return <ErrorNote message={res.error ?? t("common.error")} onRetry={res.reload} />;
-  const insight = res.data;
+  if (!res.data && !offline) return <ErrorNote message={res.error ?? t("common.error")} onRetry={res.reload} />;
+  const insight = res.data ?? offline!.insight;
   const ev = insight.evidence;
   const summary = splitCitations(insight.summary).map((s) => s.text).join("");
   return (
@@ -92,6 +110,7 @@ export default function InsightScreen() {
           ),
         }}
       />
+      {!res.data && offline ? <OfflineBanner savedAt={offline.savedAt} /> : null}
       <Txt variant="title">{insight.title}</Txt>
       <Txt variant="small">{insight.question}</Txt>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
@@ -100,7 +119,14 @@ export default function InsightScreen() {
         {insight.audience.map((a) => (
           <Chip key={a} label={t(`audiences.${a}`)} />
         ))}
+        {insight.reviewed_at ? <Chip icon="shield-checkmark-outline" label={t("insights.reviewed", { date: formatDate(locale, insight.reviewed_at) })} /> : null}
       </View>
+      {insight.status === "published" ? (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          <ReadAloud text={insightSpeech(insight, t)} />
+          <AddQuestionButton title={insight.title} />
+        </View>
+      ) : null}
       {summary ? <Txt style={{ fontSize: 17, lineHeight: 26 }}>{summary}</Txt> : null}
 
       {insight.key_points.length ? (
