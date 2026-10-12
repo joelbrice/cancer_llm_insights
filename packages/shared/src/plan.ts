@@ -80,4 +80,14 @@ export const STORAGE_KEYS = {
   communityToken: "stepwell.community.v1",
   /** Set once the first-launch notice (not medical advice, emergencies, privacy) has been acknowledged. */
   welcome: "stepwell.welcome.v1",
+  /** Questions to bring to an appointment (see appointment.ts). */
+  appointment: "stepwell.appointment.v1",
+  /** Weekly check-in reminder preferences (see reminders.ts). */
+  reminder: "stepwell.reminder.v1",
+  /** Encrypted device sync: the sync code and last synced snapshot (see sync.ts). Never leaves the device. */
+  sync: "stepwell.sync.v1",
+  /** Opt-in step count display (mobile). */
+  steps: "stepwell.steps.v1",
+  /** "Not now" for the "I felt supported" question: ISO date until which it is not asked again. */
+  surveySnooze: "stepwell.survey.snooze.v1",
 } as const;

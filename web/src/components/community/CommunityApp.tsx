@@ -1,18 +1,21 @@
 "use client";
 
-import type { CommunityMeta, MemberMe, ModerationOutcome, Post } from "@stepwell/shared";
+import { STORAGE_KEYS, type CommunityMeta, type MemberMe, type ModerationOutcome, type Post, type Profile } from "@stepwell/shared";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { browserApi } from "@/lib/browser-api";
 import { communityError, isAuthError, useCommunityToken } from "@/lib/community";
 import { useLocale, useT } from "@/lib/i18n-client";
+import { readLocal } from "@/lib/storage";
 
 import { Icon, type IconName } from "../Icon";
 import { AccountPanel } from "./Account";
 import { Composer, ModerationNotice, type ComposerHandle } from "./Composer";
 import { JoinCommunity } from "./Join";
+import { MyModeration } from "./MyModeration";
 import { PostCard } from "./PostCard";
+import { SurveyCard } from "./SurveyCard";
 
 export const CIRCLE_ICON: Record<string, IconName> = { leaf: "leaf", heart: "heart", sunrise: "sunrise", people: "users" };
 
@@ -192,6 +195,7 @@ export function CommunityApp() {
               />
             ) : null}
             {outcome ? <ModerationNotice outcome={outcome} /> : null}
+            {me ? <SurveyCard token={token} /> : null}
 
             {posts.length ? (
               <ul className="space-y-3">
@@ -254,6 +258,10 @@ export function CommunityApp() {
           </Link>
         </section>
         {token && me ? <AccountPanel me={me} token={token} onSignedOut={signOut} /> : null}
+        {token && me ? <MyModeration token={token} country={readLocal<Profile>(STORAGE_KEYS.profile, {}).country ?? null} /> : null}
+        <Link href={`/${lang}/transparency`} className="block text-sm font-semibold text-brand underline underline-offset-2">
+          {t("community.transparencyLink")}
+        </Link>
       </aside>
     </div>
   );

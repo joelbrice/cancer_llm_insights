@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/blocks";
 import { Icon } from "@/components/Icon";
 import { ProfileForm } from "@/components/ProfileForm";
+import { SyncCard } from "@/components/SyncCard";
 import { resolveLocale } from "@/lib/i18n";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -20,6 +21,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ lang: 
         {t("profile.privacy")}
       </p>
       <ProfileForm />
+      <SyncCard />
     </div>
   );
 }

@@ -1,6 +1,15 @@
 "use client";
 
-import { addToPlan, planItemId, STORAGE_KEYS, type PlanItem } from "@stepwell/shared";
+import {
+  addCustomQuestion,
+  addToPlan,
+  EMPTY_APPOINTMENT,
+  planItemId,
+  STORAGE_KEYS,
+  type AppointmentState,
+  type PlanItem,
+} from "@stepwell/shared";
+import Link from "next/link";
 import { useState } from "react";
 
 import { browserApi } from "@/lib/browser-api";
@@ -51,5 +60,30 @@ export function FeedbackButtons({ insightId }: { insightId: string }) {
         {t("ask.notHelpful")}
       </button>
     </div>
+  );
+}
+
+/** Adds "What does the research on <title> mean for me?" to the person's appointment questions. */
+export function AddQuestionButton({ title }: { title: string }) {
+  const t = useT();
+  const lang = useLocale();
+  const [state, setState, loaded] = useLocalState<AppointmentState>(STORAGE_KEYS.appointment, EMPTY_APPOINTMENT);
+  const text = t("insights.aboutTopicQuestion", { title });
+  const added = state.custom.some((c) => c.text === text && state.selected.includes(c.id));
+  if (added) {
+    return (
+      <span role="status" className="inline-flex">
+        <Link href={`/${lang}/appointment`} className="btn btn-ghost !min-h-10 !px-3 text-sm">
+          <Icon name="check" size={16} />
+          {t("insights.questionAdded")}
+        </Link>
+      </span>
+    );
+  }
+  return (
+    <button type="button" className="btn btn-ghost !min-h-10 !px-3 text-sm" disabled={!loaded} onClick={() => setState((prev) => addCustomQuestion(prev, text))}>
+      <Icon name="help" size={16} />
+      {t("insights.addQuestion")}
+    </button>
   );
 }

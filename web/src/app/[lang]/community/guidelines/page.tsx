@@ -40,6 +40,11 @@ export default async function GuidelinesPage({ params }: { params: Promise<{ lan
         ))}
       </ol>
       <p className="mt-6 text-sm text-ink-2">{t("community.membersOnly")}</p>
+      <p className="mt-2 text-sm">
+        <Link href={href(lang, "/transparency")} className="font-semibold text-brand underline underline-offset-2">
+          {t("community.transparencyLink")}
+        </Link>
+      </p>
       <Link href={href(lang, "/community")} className="btn btn-primary mt-4">
         {t("home.communityCta")}
       </Link>

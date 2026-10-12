@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PageHeader } from "@/components/blocks";
 import { PlanView } from "@/components/PlanView";
+import { ReminderCard } from "@/components/ReminderCard";
 import { resolveLocale } from "@/lib/i18n";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -15,6 +16,7 @@ export default async function PlanPage({ params }: { params: Promise<{ lang: str
     <div className="mx-auto max-w-3xl">
       <PageHeader title={t("plan.title")} subtitle={t("plan.subtitle")} />
       <PlanView />
+      <ReminderCard />
     </div>
   );
 }

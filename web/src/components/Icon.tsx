@@ -49,6 +49,17 @@ const PATHS = {
   edit: "M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z",
   steps: "M3 20h5v-5h5v-5h5V5h3",
   ban: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM4.9 4.9l14.2 14.2",
+  volume: "M11 5 6 9H2v6h4l5 4V5ZM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14",
+  pause: "M7 5h3v14H7zM14 5h3v14h-3z",
+  calendar: "M4 6h16v15H4zM4 10h16M8 3v4M16 3v4",
+  bell: "M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",
+  printer: "M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z",
+  share: "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.6 13.5l6.8 4M15.4 6.5l-6.8 4",
+  arrowUp: "M12 19V5m0 0-6 6m6-6 6 6",
+  arrowDown: "M12 5v14m0 0-6-6m6 6 6-6",
+  cloud: "M7 18a5 5 0 0 1-.9-9.9A6 6 0 0 1 17.7 9 4.5 4.5 0 0 1 17.5 18H7Z",
+  help: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-2.5-13a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14m0 3h.01",
+  scale: "M12 3v18M5 21h14M6 7h12M6 7l-3 7a3 3 0 0 0 6 0L6 7Zm12 0-3 7a3 3 0 0 0 6 0l-3-7Z",
 } as const;
 
 export type IconName = keyof typeof PATHS;

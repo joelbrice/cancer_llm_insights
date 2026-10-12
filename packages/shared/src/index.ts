@@ -1,3 +1,4 @@
+export * from "./appointment";
 export * from "./brand";
 export * from "./client";
 export * from "./community";
@@ -5,6 +6,10 @@ export * from "./evidence";
 export * from "./i18n";
 export * from "./journeys";
 export * from "./lifestyle";
+export * from "./offline";
 export * from "./plan";
+export * from "./reminders";
+export * from "./speech";
 export * from "./sse";
+export * from "./sync";
 export type * from "./types";

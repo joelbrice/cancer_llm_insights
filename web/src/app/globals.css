@@ -353,3 +353,14 @@ dialog::backdrop {
     color: #000;
   }
 }
+
+/* Printable lists (appointment questions): shown only on paper. */
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+}

@@ -237,6 +237,8 @@ export interface Insight extends InsightSummary {
   prompt_version: string;
   version: number;
   generated_at: string;
+  /** Clinical sign-off of this version's evidence, when recorded. */
+  reviewed_at?: string | null;
 }
 
 export interface Paged<T> {
@@ -561,6 +563,129 @@ export interface QueueItem {
   flags: string[];
   moderation: { auto?: string | null; priority?: number; decision?: string; note?: string | null };
   reports: { reason: ReportReason; note: string | null; created_at: string }[];
+  appeal?: Appeal | null;
+}
+
+// ── Appeals, survey, transparency ─────────────────────────────────────────────────────────────────────────
+export type AppealStatus = "open" | "upheld" | "overturned";
+
+export interface Appeal {
+  id: string;
+  post_id: string;
+  text: string;
+  post_status: "held" | "removed";
+  status: AppealStatus;
+  /** The community lead's answer, written for the author. */
+  response: string | null;
+  created_at: string;
+  decided_at: string | null;
+}
+
+export interface AppealResult {
+  appeal: Appeal;
+  safety: SafetyAssessment | null;
+}
+
+export interface ModeratedPost {
+  post: Post;
+  reason: string | null;
+  decision: "approve" | "remove" | null;
+  decided_at: string | null;
+  can_appeal: boolean;
+  appeal: Appeal | null;
+}
+
+export interface AppealQueueItem {
+  appeal: Appeal;
+  post: Post;
+  member_id: string | null;
+  moderation: QueueItem["moderation"];
+  priority: number;
+}
+
+export type SurveyAnswer = "yes" | "somewhat" | "no";
+
+export interface SurveyStatus {
+  due: boolean;
+  last_answered_at: string | null;
+}
+
+export interface FeltSupported {
+  responses: number;
+  yes: number | null;
+  somewhat: number | null;
+  no: number | null;
+}
+
+export interface CommunityStats {
+  members: number;
+  members_active_7d: number;
+  posts_published: number;
+  posts_held: number;
+  posts_removed: number;
+  posts_7d: number;
+  open_reports: number;
+  suspended_members: number;
+  open_appeals?: number;
+  health?: {
+    window_days: number;
+    submitted: number;
+    held_share: number | null;
+    reports_per_100_posts: number | null;
+    median_hours_to_decision: number | null;
+    appeals: number;
+    answered_within_24h: number | null;
+  };
+  felt_supported_90d?: FeltSupported;
+}
+
+/** Counts below `min_cell` are null ("fewer than N"). */
+export type Cell = number | null;
+
+export interface TransparencyReport {
+  quarter: string;
+  start: string;
+  end: string;
+  complete: boolean;
+  generated_at: string;
+  min_cell: number;
+  available: string[];
+  posts: { submitted: Cell; held_for_review: Cell; returned_to_author: Cell; hidden_after_reports: Cell };
+  held_by_reason: Record<string, Cell>;
+  returned_by_reason: Record<string, Cell>;
+  reports_by_reason: Record<string, Cell>;
+  decisions: {
+    approved: Cell;
+    removed: Cell;
+    removed_by_reason: Record<string, Cell>;
+    median_hours_to_decision: number | null;
+    median_hours_safety_items: number | null;
+  };
+  appeals: { received: Cell; overturned: Cell; upheld: Cell };
+  suspensions: Cell;
+  felt_supported: (FeltSupported & { yes: number; somewhat: number; no: number }) | null;
+}
+
+// ── Clinical review of insights ───────────────────────────────────────────────────────────────────────────
+export type InsightReviewState = "pending" | "rejected" | "unreviewed" | "withdrawn";
+
+export interface InsightReviewItem {
+  insight: Insight;
+  state: InsightReviewState;
+  submitted_at: string;
+  has_public_version: boolean;
+}
+
+// ── Encrypted device sync ─────────────────────────────────────────────────────────────────────────────────
+export interface SyncMeta {
+  enabled: boolean;
+  max_bytes: number;
+}
+
+export interface SyncBlob {
+  ciphertext: string;
+  version: number;
+  updated_at: string;
 }
 
 export interface BlockedMember {

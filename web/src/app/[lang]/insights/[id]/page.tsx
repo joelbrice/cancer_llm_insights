@@ -1,5 +1,6 @@
 import {
   formatDate,
+  insightSpeech,
   sortedDesigns,
   splitCitations,
   translateDynamic,
@@ -15,8 +16,9 @@ import { Fragment } from "react";
 import { ApiDown, Disclaimer } from "@/components/blocks";
 import { HBarChart, YearStrip } from "@/components/charts";
 import { CitationCard, EvidenceBadge, EvidenceMeter } from "@/components/evidence";
-import { FeedbackButtons, PlanButton } from "@/components/InsightActions";
+import { AddQuestionButton, FeedbackButtons, PlanButton } from "@/components/InsightActions";
 import { Icon } from "@/components/Icon";
+import { ReadAloud } from "@/components/ReadAloud";
 import { api, load } from "@/lib/api";
 import { href, resolveLocale } from "@/lib/i18n";
 
@@ -101,7 +103,19 @@ export default async function InsightPage({ params }: Props) {
                 {t(`audiences.${a}`)}
               </span>
             ))}
+            {insight.reviewed_at ? (
+              <span className="chip">
+                <Icon name="shield" size={14} />
+                {t("insights.reviewed", { date: formatDate(lang, insight.reviewed_at) })}
+              </span>
+            ) : null}
           </div>
+          {insight.status === "published" ? (
+            <div className="mt-4 flex flex-wrap gap-2">
+              <ReadAloud text={insightSpeech(insight, t)} lang={lang} />
+              <AddQuestionButton title={insight.title} />
+            </div>
+          ) : null}
         </header>
 
         {insight.summary ? (

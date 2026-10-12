@@ -1,30 +1,14 @@
-import { expect, test, type Page } from "./fixtures";
-
-async function join(page: Page, handle: string) {
-  await page.goto("/en/community", { waitUntil: "networkidle" });
-  const nickname = page.getByLabel("Nickname");
-  await expect(async () => {
-    await nickname.fill(handle);
-    await expect(nickname).toHaveValue(handle, { timeout: 1000 });
-  }).toPass();
-  for (const box of await page.getByRole("checkbox").all()) await box.check();
-  await expect(page.getByRole("button", { name: "Join", exact: true })).toBeEnabled();
-  await page.getByRole("button", { name: "Join", exact: true }).click();
-  await expect(page.getByPlaceholder(/Share a small win/)).toBeVisible();
-}
-
-const unique = () => Math.random().toString(36).slice(2, 7);
+import { expect, test } from "./fixtures";
+import { join, postText, unique } from "./helpers";
 
 test("join, post, get rejected for contact details, then encouraged by another member", async ({ page, browser, errors }) => {
   const me = `Calm Oak ${unique()}`;
   const text = `First walk around the park since treatment ended! (${unique()})`;
   await join(page, me);
-  await page.getByPlaceholder(/Share a small win/).fill(text);
-  await page.getByRole("button", { name: "Post", exact: true }).click();
+  await postText(page, text);
   await expect(page.getByText(text)).toBeVisible();
 
-  await page.getByPlaceholder(/Share a small win/).fill("Call me on +44 7700 900123");
-  await page.getByRole("button", { name: "Post", exact: true }).click();
+  await postText(page, "Call me on +44 7700 900123");
   await expect(page.getByRole("alert").filter({ hasText: "remove phone numbers" })).toBeVisible();
 
   const ctx = await browser.newContext();
@@ -45,8 +29,7 @@ test("join, post, get rejected for contact details, then encouraged by another m
 
 test("crisis posts are held with immediate help for the author", async ({ page }) => {
   await join(page, `Quiet Brook ${unique()}`);
-  await page.getByPlaceholder(/Share a small win/).fill("I want to end my life, I can't do this anymore");
-  await page.getByRole("button", { name: "Post", exact: true }).click();
+  await postText(page, "I want to end my life, I can't do this anymore");
   await expect(page.getByText("Your post is waiting for review")).toBeVisible();
   await expect(page.getByRole("alert").filter({ hasText: "Where to get help now" })).toBeVisible();
 });

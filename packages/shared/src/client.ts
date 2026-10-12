@@ -1,7 +1,19 @@
 import { readSse } from "./sse";
 import type {
   AdminSource,
+  Appeal,
+  AppealQueueItem,
+  AppealResult,
   BlockedMember,
+  CommunityStats,
+  InsightReviewItem,
+  InsightReviewState,
+  ModeratedPost,
+  SurveyAnswer,
+  SurveyStatus,
+  SyncBlob,
+  SyncMeta,
+  TransparencyReport,
   CommunityMeta,
   FeedQuery,
   Member,
@@ -226,6 +238,37 @@ export class StepwellClient {
       this.request<void>("DELETE", `/community/members/me/blocks/${encodeURIComponent(blockId)}`, undefined, { headers: member(token) }),
     report: (token: string, id: string, reason: ReportReason, note?: string) =>
       this.request<{ ok: boolean }>("POST", `/community/posts/${encodeURIComponent(id)}/reports`, { reason, note }, { headers: member(token) }),
+    /** The member's own held or removed posts, with the reason and any appeal. */
+    myModeration: (token: string, signal?: AbortSignal) =>
+      this.request<ModeratedPost[]>("GET", "/community/members/me/moderation", undefined, { signal, headers: member(token) }),
+    appeal: (token: string, postId: string, text: string, country?: string | null) =>
+      this.request<AppealResult>("POST", `/community/posts/${encodeURIComponent(postId)}/appeal`, { text }, { headers: member(token, country) }),
+    survey: (token: string, signal?: AbortSignal) =>
+      this.request<SurveyStatus>("GET", "/community/survey", undefined, { signal, headers: member(token) }),
+    answerSurvey: (token: string, answer: SurveyAnswer) =>
+      this.request<SurveyStatus>("POST", "/community/survey", { answer }, { headers: member(token) }),
+  };
+
+  /** Public quarterly community moderation report (aggregates only). */
+  transparency(quarter?: string, signal?: AbortSignal) {
+    return this.request<TransparencyReport>("GET", `/transparency${qs({ quarter })}`, undefined, { signal });
+  }
+
+  // ── end-to-end-encrypted device sync (ciphertext only; see sync.ts) ─────────
+  readonly sync = {
+    meta: (signal?: AbortSignal) => this.request<SyncMeta>("GET", "/sync", undefined, { signal }),
+    /** Resolves null when nothing is stored for this id (or the secret does not match). */
+    get: async (id: string, auth: string, signal?: AbortSignal): Promise<SyncBlob | null> => {
+      try {
+        return await this.request<SyncBlob>("GET", `/sync/${encodeURIComponent(id)}`, undefined, { signal, headers: bearer(auth) });
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) return null;
+        throw e;
+      }
+    },
+    put: (id: string, auth: string, ciphertext: string, version: number) =>
+      this.request<SyncBlob>("PUT", `/sync/${encodeURIComponent(id)}`, { ciphertext, version }, { headers: bearer(auth) }),
+    remove: (id: string, auth: string) => this.request<void>("DELETE", `/sync/${encodeURIComponent(id)}`, undefined, { headers: bearer(auth) }),
   };
 
   // ── admin ─────────────────────────────────────────────────────────────────
@@ -254,8 +297,21 @@ export class StepwellClient {
       this.request<Post>("POST", `/admin/community/posts/${encodeURIComponent(id)}/moderate`, { action, note }, { admin: true }),
     memberStatus: (id: string, status: "active" | "suspended" | "banned") =>
       this.request<Member>("POST", `/admin/community/members/${encodeURIComponent(id)}/status`, { status }, { admin: true }),
-    communityStats: () => this.request<Record<string, number>>("GET", "/admin/community/stats", undefined, { admin: true }),
+    communityStats: () => this.request<CommunityStats>("GET", "/admin/community/stats", undefined, { admin: true }),
+    appeals: (status: Appeal["status"] = "open", limit = 100) =>
+      this.request<AppealQueueItem[]>("GET", `/admin/community/appeals${qs({ status, limit })}`, undefined, { admin: true }),
+    decideAppeal: (id: string, action: "uphold" | "overturn", response?: string) =>
+      this.request<Appeal>("POST", `/admin/community/appeals/${encodeURIComponent(id)}`, { action, response }, { admin: true }),
+    insightReviews: (state: InsightReviewState = "pending") =>
+      this.request<InsightReviewItem[]>("GET", `/admin/insights/review${qs({ state })}`, undefined, { admin: true }),
+    reviewInsight: (id: string, decision: "approved" | "rejected", reviewer: string, note?: string) =>
+      this.request<{ id: string; decision: string; version: number; status: string }>(
+        "POST", `/admin/insights/${encodeURIComponent(id)}/review`, { decision, reviewer, note }, { admin: true }),
   };
+}
+
+function bearer(auth: string): Record<string, string> {
+  return { Authorization: `Bearer ${auth}` };
 }
 
 function member(token: string, country?: string | null): Record<string, string> {

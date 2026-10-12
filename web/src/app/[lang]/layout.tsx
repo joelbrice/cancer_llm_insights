@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { BottomNav, Header, ServiceWorker, THEME_SCRIPT } from "@/components/Shell";
+import { SyncAgent } from "@/components/SyncAgent";
 import { WelcomeNotice } from "@/components/WelcomeNotice";
 import { href, resolveLocale } from "@/lib/i18n";
 import { I18nProvider } from "@/lib/i18n-client";
@@ -68,6 +69,7 @@ export default async function RootLayout({ children, params }: { children: React
               <nav aria-label="Footer" className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
                 <Link className="hover:underline" href={href(lang, "/methodology")}>{t("nav.methodology")}</Link>
                 <Link className="hover:underline" href={href(lang, "/library")}>{t("nav.library")}</Link>
+                <Link className="hover:underline" href={href(lang, "/transparency")}>{t("nav.transparency")}</Link>
                 <Link className="hover:underline" href={href(lang, "/about")}>{t("nav.about")}</Link>
                 <Link className="hover:underline" href={href(lang, "/admin")}>{t("nav.admin")}</Link>
               </nav>
@@ -76,6 +78,7 @@ export default async function RootLayout({ children, params }: { children: React
           <BottomNav />
           <ServiceWorker />
           <WelcomeNotice />
+          <SyncAgent />
         </I18nProvider>
       </body>
     </html>

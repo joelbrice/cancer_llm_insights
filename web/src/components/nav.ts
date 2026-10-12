@@ -2,7 +2,9 @@ import type { IconName } from "./Icon";
 
 export interface NavItem {
   path: string;
-  key: "home" | "ask" | "insights" | "community" | "library" | "check" | "plan" | "methodology" | "profile" | "admin" | "about";
+  key:
+    | "home" | "ask" | "insights" | "community" | "library" | "check" | "plan" | "appointment" | "methodology" | "profile"
+    | "admin" | "about";
   icon: IconName;
 }
 
@@ -18,6 +20,7 @@ export const PRIMARY_NAV: NavItem[] = [
 export const SECONDARY_NAV: NavItem[] = [
   { path: "/check", key: "check", icon: "clipboard" },
   { path: "/library", key: "library", icon: "layers" },
+  { path: "/appointment", key: "appointment", icon: "help" },
   { path: "/methodology", key: "methodology", icon: "shield" },
   { path: "/profile", key: "profile", icon: "user" },
   { path: "/admin", key: "admin", icon: "database" },
