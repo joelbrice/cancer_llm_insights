@@ -23,7 +23,7 @@ import numpy as np
 import yaml
 from sqlalchemy import func, select
 
-from app.core.text import fold_accents
+from app.core.text import fold_accents, normalize_arabic
 from app.db.base import Database
 from app.db.models import InsightDraftRow, InsightReviewRow, InsightRow
 from app.evidence.grading import EvidenceGrader, GradedSource
@@ -59,6 +59,25 @@ def _anchor_pattern(terms: list[str]) -> re.Pattern[str]:
     return re.compile(r"\b(?:" + "|".join(re.escape(fold_accents(t).lower()) for t in terms) + ")")
 
 
+# Languages added after 1.0. Their titles/questions/anchors are kept apart from the base ones so that topic vectors and
+# anchor matching for the original five languages stay exactly as they were.
+BASE_LANGUAGES = ("en", "fr", "es", "pt", "de")
+_AR_CLITICS = r"(?:[وفبكل]?ال|لل|[وفبكل])?"  # و/ف/ب/ك/ل + the definite article attach to the word
+
+
+def _fold(text: str, lang: str | None) -> str:
+    folded = fold_accents(text).lower()
+    return normalize_arabic(folded) if lang == "ar" else folded
+
+
+def _scoped_pattern(base: list[str], extra: list[str], lang: str) -> re.Pattern[str]:
+    """Base terms plus a language's own terms (Arabic terms may carry clitic prefixes)."""
+    plain = "|".join(re.escape(fold_accents(t).lower()) for t in base)
+    local = "|".join(re.escape(_fold(t, lang)) for t in extra)
+    prefix = _AR_CLITICS if lang == "ar" else ""
+    return re.compile(r"\b(?:" + plain + ("|" + prefix + "(?:" + local + ")" if local else "") + ")")
+
+
 @dataclass(slots=True)
 class Topic:
     id: str
@@ -71,13 +90,22 @@ class Topic:
     queries: list[str]
     guidance: str
     anchors: list[re.Pattern[str]] = field(default_factory=list)
+    anchors_i18n: dict[str, list[re.Pattern[str]]] = field(default_factory=dict)
+
+    def anchor_patterns(self, lang: str | None) -> list[re.Pattern[str]]:
+        return self.anchors_i18n.get(lang or "", self.anchors)
+
+    def matches_text(self, text: str, lang: str | None) -> bool:
+        patterns = self.anchor_patterns(lang)
+        haystack = _fold(text, lang)
+        return all(pattern.search(haystack) for pattern in patterns)
 
     def matches(self, evidence: EvidenceChunk) -> bool:
         """Precision gate: the passage (or its document title/section) must mention every anchor group."""
         if not self.anchors:
             return True
-        haystack = fold_accents(f"{evidence.source.title} {evidence.section or ''} {evidence.text}").lower()
-        return all(pattern.search(haystack) for pattern in self.anchors)
+        return self.matches_text(f"{evidence.source.title} {evidence.section or ''} {evidence.text}",
+                                 evidence.source.language)
 
     def text(self, field_name: str, lang: str) -> str:
         values: dict[str, str] = getattr(self, field_name)
@@ -119,7 +147,10 @@ class InsightService:
             Topic(id=t_["id"], category=t_["category"], audience=list(t_.get("audience") or []),
                   cancer_types=list(t_.get("cancer_types") or []), priority=int(t_.get("priority", 2)),
                   title=t_["title"], question=t_["question"], queries=list(t_.get("queries") or []),
-                  guidance=t_.get("guidance", ""), anchors=[_anchor_pattern(g) for g in t_.get("anchors") or []])
+                  guidance=t_.get("guidance", ""), anchors=[_anchor_pattern(g) for g in t_.get("anchors") or []],
+                  anchors_i18n={lang: [_scoped_pattern(base, extra, lang)
+                                       for base, extra in zip(t_.get("anchors") or [], groups, strict=True)]
+                                for lang, groups in (t_.get("anchors_i18n") or {}).items()})
             for t_ in raw["topics"]
         ]
 
@@ -127,10 +158,24 @@ class InsightService:
     def _topic_index(self) -> dict[str, Topic]:
         return {topic.id: topic for topic in self.topics}
 
+    @staticmethod
+    def _topic_text(topic: Topic, lang: str | None = None) -> str:
+        keep = (*BASE_LANGUAGES, lang)
+        return " ".join([*(v for k, v in topic.title.items() if k in keep),
+                         *(v for k, v in topic.question.items() if k in keep), *topic.queries])
+
     @cached_property
     def _topic_vectors(self) -> np.ndarray:
-        texts = [" ".join([*t_.title.values(), *t_.question.values(), *t_.queries]) for t_ in self.topics]
-        return self.embedder.embed_documents(texts)
+        return self.embedder.embed_documents([self._topic_text(t_) for t_ in self.topics])
+
+    def _vectors_for(self, lang: str) -> np.ndarray:
+        """Base vectors for the original languages; added languages also embed their own title and question."""
+        if lang in BASE_LANGUAGES:
+            return self._topic_vectors
+        cache = self.__dict__.setdefault("_lang_vectors", {})
+        if lang not in cache:
+            cache[lang] = self.embedder.embed_documents([self._topic_text(t_, lang) for t_ in self.topics])
+        return cache[lang]
 
     # ── generation ───────────────────────────────────────────────────────────
     def build_all(self, topic_ids: list[str] | None = None, languages: list[str] | None = None, force: bool = False,
@@ -459,7 +504,7 @@ class InsightService:
         if not self.topics:
             return []
         q = self.embedder.embed_query(text)
-        sims = self._topic_vectors @ q
+        sims = self._vectors_for(language) @ q
         order = np.argsort(-sims)[: k * 3]
         ids = [f"{self.topics[i].id}.{language}" for i in order if sims[i] > 0.05]
         if not ids:
@@ -473,8 +518,7 @@ class InsightService:
     def match_text(self, text: str, language: str, audience: str | None = None) -> RelatedInsight | None:
         """Published insight whose topic anchors all occur in a free text (used to link community posts to
         "what the research says"). Precision over recall: no anchors, no link."""
-        haystack = fold_accents(text).lower()
-        candidates = [t_ for t_ in self.topics if t_.anchors and all(p.search(haystack) for p in t_.anchors)]
+        candidates = [t_ for t_ in self.topics if t_.anchors and t_.matches_text(text, language)]
         if not candidates:
             return None
         candidates.sort(key=lambda t_: (audience not in t_.audience if audience else False, t_.priority,

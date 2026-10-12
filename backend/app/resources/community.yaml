@@ -8,70 +8,86 @@ circles:
   - id: prevention
     icon: leaf
     audience: prevention
-    title: {en: "Healthy habits", fr: "Bonnes habitudes", es: "Hábitos saludables", pt: "Hábitos saudáveis", de: "Gesunde Gewohnheiten"}
+    title: {en: "Healthy habits", fr: "Bonnes habitudes", es: "Hábitos saludables", pt: "Hábitos saudáveis", de: "Gesunde Gewohnheiten", it: "Abitudini sane", ar: "عادات صحية"}
     description:
       en: "Small, steady steps to lower your risk — cheered on together."
       fr: "De petits pas réguliers pour réduire votre risque — encouragés ensemble."
       es: "Pequeños pasos constantes para reducir tu riesgo, con el ánimo de todos."
       pt: "Pequenos passos constantes para reduzir o seu risco — com o incentivo de todos."
       de: "Kleine, stetige Schritte, um Ihr Risiko zu senken — gemeinsam angefeuert."
+      it: "Piccoli passi costanti per ridurre il rischio, con l'incoraggiamento di tutti."
+      ar: "خطوات صغيرة وثابتة لتقليل الخطر، بتشجيع من الجميع."
     prompts:
       en: ["What is one small swap you made this week?", "Share a walk, ride or dance you enjoyed this week.", "Which vegetable, fruit or whole grain did you try lately?", "What helps you keep going when motivation dips?"]
       fr: ["Quel petit changement avez-vous fait cette semaine ?", "Partagez une marche, une sortie à vélo ou une danse que vous avez appréciée.", "Quel légume, fruit ou céréale complète avez-vous essayé récemment ?", "Qu'est-ce qui vous aide à continuer quand la motivation baisse ?"]
       es: ["¿Qué pequeño cambio hiciste esta semana?", "Comparte un paseo, una salida en bici o un baile que disfrutaste esta semana.", "¿Qué verdura, fruta o cereal integral probaste últimamente?", "¿Qué te ayuda a seguir cuando baja la motivación?"]
       pt: ["Que pequena mudança fez esta semana?", "Partilhe uma caminhada, um passeio de bicicleta ou uma dança de que gostou esta semana.", "Que legume, fruta ou cereal integral experimentou recentemente?", "O que o ajuda a continuar quando a motivação diminui?"]
       de: ["Welche kleine Veränderung haben Sie diese Woche geschafft?", "Teilen Sie einen Spaziergang, eine Radtour oder einen Tanz, den Sie diese Woche genossen haben.", "Welches Gemüse, Obst oder Vollkornprodukt haben Sie zuletzt probiert?", "Was hilft Ihnen dranzubleiben, wenn die Motivation sinkt?"]
+      it: ["Qual è un piccolo cambiamento che hai fatto questa settimana?", "Racconta una passeggiata, un giro in bici o un ballo che ti è piaciuto questa settimana.", "Quale verdura, frutto o cereale integrale hai provato di recente?", "Cosa ti aiuta ad andare avanti quando la motivazione cala?"]
+      ar: ["ما التغيير الصغير الذي أجريته هذا الأسبوع؟", "شارك نزهة مشي أو جولة بالدراجة أو رقصة استمتعت بها هذا الأسبوع.", "ما الخضار أو الفاكهة أو الحبوب الكاملة التي جربتها مؤخرًا؟", "ما الذي يساعدك على الاستمرار عندما يتراجع حماسك؟"]
 
   - id: in_treatment
     icon: heart
     audience: in_treatment
-    title: {en: "Through treatment", fr: "Pendant les traitements", es: "Durante el tratamiento", pt: "Durante o tratamento", de: "Während der Behandlung"}
+    title: {en: "Through treatment", fr: "Pendant les traitements", es: "Durante el tratamiento", pt: "Durante o tratamento", de: "Während der Behandlung", it: "Durante le cure", ar: "خلال العلاج"}
     description:
       en: "For the days that are hard and the ones that go better. You are not alone."
       fr: "Pour les jours difficiles et ceux qui vont mieux. Vous n'êtes pas seul·e."
       es: "Para los días difíciles y los que van mejor. No estás solo."
       pt: "Para os dias difíceis e para os que correm melhor. Não está sozinho."
       de: "Für die schweren Tage und die besseren. Sie sind nicht allein."
+      it: "Per i giorni difficili e per quelli che vanno meglio. Qui nessuno è solo."
+      ar: "للأيام الصعبة وللأيام الأفضل. لست وحدك."
     prompts:
       en: ["What helped you get through a tough day this week?", "Share a small thing that brought you comfort.", "What do you wish someone had told you before treatment started?", "Which gentle activity felt possible for you this week?"]
       fr: ["Qu'est-ce qui vous a aidé·e à traverser une journée difficile cette semaine ?", "Partagez une petite chose qui vous a réconforté·e.", "Qu'auriez-vous aimé savoir avant le début des traitements ?", "Quelle activité douce vous a semblé possible cette semaine ?"]
       es: ["¿Qué te ayudó a superar un día difícil esta semana?", "Comparte algo pequeño que te haya reconfortado.", "¿Qué te habría gustado saber antes de empezar el tratamiento?", "¿Qué actividad suave te resultó posible esta semana?"]
       pt: ["O que o ajudou a ultrapassar um dia difícil esta semana?", "Partilhe uma pequena coisa que lhe trouxe conforto.", "O que gostaria que lhe tivessem dito antes de começar o tratamento?", "Que atividade suave lhe pareceu possível esta semana?"]
       de: ["Was hat Ihnen diese Woche durch einen schweren Tag geholfen?", "Teilen Sie eine kleine Sache, die Ihnen Trost gegeben hat.", "Was hätten Sie gern vor Beginn der Behandlung gewusst?", "Welche sanfte Aktivität war diese Woche für Sie möglich?"]
+      it: ["Cosa ti ha aiutato a superare una giornata difficile questa settimana?", "Condividi una piccola cosa che ti ha dato conforto.", "Cosa avresti voluto sapere prima di iniziare le cure?", "Quale attività leggera ti è sembrata possibile questa settimana?"]
+      ar: ["ما الذي ساعدك على تجاوز يوم صعب هذا الأسبوع؟", "شارك شيئًا صغيرًا منحك بعض الراحة.", "ما الذي تمنيت لو عرفته قبل بدء العلاج؟", "ما النشاط الخفيف الذي شعرت أنه ممكن لك هذا الأسبوع؟"]
 
   - id: after_treatment
     icon: sunrise
     audience: after_treatment
-    title: {en: "Life after treatment", fr: "La vie après les traitements", es: "La vida después del tratamiento", pt: "A vida depois do tratamento", de: "Leben nach der Behandlung"}
+    title: {en: "Life after treatment", fr: "La vie après les traitements", es: "La vida después del tratamiento", pt: "A vida depois do tratamento", de: "Leben nach der Behandlung", it: "La vita dopo le cure", ar: "الحياة بعد العلاج"}
     description:
       en: "Rebuilding energy, confidence and routines — one step at a time."
       fr: "Retrouver l'énergie, la confiance et ses habitudes — un pas après l'autre."
       es: "Recuperar energía, confianza y rutinas, paso a paso."
       pt: "Recuperar energia, confiança e rotinas — um passo de cada vez."
       de: "Energie, Zuversicht und Alltag zurückgewinnen — Schritt für Schritt."
+      it: "Ritrovare energia, fiducia e abitudini, un passo alla volta."
+      ar: "استعادة الطاقة والثقة والروتين اليومي، خطوة بخطوة."
     prompts:
       en: ["What is something you enjoyed doing again recently?", "How are you rebuilding your energy?", "Share a moment this week when you felt proud of yourself.", "What helps you when worries about the future show up?"]
       fr: ["Qu'avez-vous eu plaisir à refaire récemment ?", "Comment retrouvez-vous de l'énergie ?", "Partagez un moment de la semaine où vous avez été fier·ère de vous.", "Qu'est-ce qui vous aide quand les inquiétudes pour l'avenir reviennent ?"]
       es: ["¿Qué has disfrutado volver a hacer recientemente?", "¿Cómo estás recuperando tu energía?", "Comparte un momento de esta semana en el que te sentiste orgulloso de ti.", "¿Qué te ayuda cuando aparecen las preocupaciones por el futuro?"]
       pt: ["O que voltou a fazer recentemente com prazer?", "Como está a recuperar a sua energia?", "Partilhe um momento desta semana em que se sentiu orgulhoso de si.", "O que o ajuda quando surgem preocupações com o futuro?"]
       de: ["Was haben Sie kürzlich wieder gern gemacht?", "Wie bauen Sie Ihre Energie wieder auf?", "Teilen Sie einen Moment dieser Woche, in dem Sie stolz auf sich waren.", "Was hilft Ihnen, wenn Sorgen um die Zukunft auftauchen?"]
+      it: ["Che cosa ti è piaciuto tornare a fare di recente?", "Come stai recuperando le energie?", "Condividi un piccolo traguardo raggiunto questa settimana.", "Cosa ti aiuta quando arrivano le preoccupazioni per il futuro?"]
+      ar: ["ما الشيء الذي استمتعت بالعودة إليه مؤخرًا؟", "كيف تستعيد طاقتك؟", "شارك إنجازًا صغيرًا حققته هذا الأسبوع.", "ما الذي يساعدك عندما تظهر المخاوف بشأن المستقبل؟"]
 
   - id: caregivers
     icon: people
     audience: caregivers
-    title: {en: "Family & caregivers", fr: "Proches aidants", es: "Familia y cuidadores", pt: "Família e cuidadores", de: "Angehörige & Pflegende"}
+    title: {en: "Family & caregivers", fr: "Proches aidants", es: "Familia y cuidadores", pt: "Família e cuidadores", de: "Angehörige & Pflegende", it: "Famiglia e caregiver", ar: "العائلة ومقدمو الرعاية"}
     description:
       en: "Caring for someone is a lot. This is a place to be supported too."
       fr: "Accompagner un proche, c'est beaucoup. Ici, vous aussi êtes soutenu·e."
       es: "Cuidar de alguien es mucho. Aquí tú también recibes apoyo."
       pt: "Cuidar de alguém é muito. Aqui também é apoiado."
       de: "Jemanden zu begleiten ist viel. Hier werden auch Sie unterstützt."
+      it: "Prendersi cura di qualcuno è tanto. Qui trovi sostegno anche tu."
+      ar: "رعاية شخص عزيز مهمة كبيرة. هنا تجد الدعم أنت أيضًا."
     prompts:
       en: ["How did you look after yourself this week?", "What kind of help made a real difference?", "Share a moment of connection with the person you care for.", "What would you tell someone who just became a caregiver?"]
       fr: ["Comment avez-vous pris soin de vous cette semaine ?", "Quelle aide a vraiment fait la différence ?", "Partagez un moment de complicité avec la personne que vous accompagnez.", "Que diriez-vous à quelqu'un qui devient aidant·e ?"]
       es: ["¿Cómo te cuidaste esta semana?", "¿Qué tipo de ayuda marcó realmente la diferencia?", "Comparte un momento de conexión con la persona a la que cuidas.", "¿Qué le dirías a alguien que acaba de convertirse en cuidador?"]
       pt: ["Como cuidou de si esta semana?", "Que tipo de ajuda fez realmente a diferença?", "Partilhe um momento de ligação com a pessoa de quem cuida.", "O que diria a alguém que acabou de se tornar cuidador?"]
       de: ["Wie haben Sie diese Woche für sich selbst gesorgt?", "Welche Hilfe hat wirklich einen Unterschied gemacht?", "Teilen Sie einen Moment der Verbundenheit mit der Person, die Sie begleiten.", "Was würden Sie jemandem sagen, der gerade Angehörige pflegt?"]
+      it: ["Che cosa hai fatto per il tuo benessere questa settimana?", "Quale tipo di aiuto ha fatto davvero la differenza?", "Condividi un momento di vicinanza con la persona di cui ti prendi cura.", "Cosa diresti a chi inizia ora a prendersi cura di qualcuno?"]
+      ar: ["كيف اعتنيت بنفسك هذا الأسبوع؟", "ما نوع المساعدة الذي أحدث فرقًا حقيقيًا؟", "شارك لحظة تواصل مع الشخص الذي ترعاه.", "ماذا تقول لشخص بدأ للتو برعاية أحد أحبائه؟"]
 
 kinds: [win, encouragement, question, tip, milestone]
 reactions: [support, strength, thanks, inspired]
@@ -82,7 +98,8 @@ moderation:
   allowed_link_domains: [who.int, iarc.who.int, cancer.gov, cancer.org, cdc.gov, nhs.uk, cancerresearchuk.org,
                          macmillan.org.uk, e-cancer.fr, ligue-cancer.net, krebsinformationsdienst.de, krebshilfe.de,
                          aecc.es, ligacontracancro.pt, inca.gov.br, wcrf.org, cancer-code-europe.iarc.fr, esmo.org,
-                         asco.org, cancer.net, mskcc.org]
+                         asco.org, cancer.net, mskcc.org,
+                         salute.gov.it, iss.it, airc.it, aimac.it]
   # Selling, recruiting or moving people off-platform → held for review.
   solicitation:
     - "\\b(buy|order) (now|here|today)|discount|promo ?code|coupon|free shipping|affiliate|my (shop|store|website)|dm me|message me privately|contact me (on|via)|whats ?app|telegram|signal app|investment opportunity"
@@ -90,6 +107,8 @@ moderation:
     - "\\b(compre|compra) (ahora|aquí)|descuento|código promocional|envío gratis|mi tienda|escríbeme (por|al) privado"
     - "\\b(compre|encomende) (já|aqui)|desconto|código promocional|portes grátis|minha loja|fala comigo em privado"
     - "\\b(jetzt|hier) (kaufen|bestellen)|rabatt|gutscheincode|versandkostenfrei|mein shop|schreib mir privat"
+    - "\\b(compra|ordina) (ora|qui|subito)\\b|\\bsconto\\b|codice promozionale|spedizione gratuita|il mio negozio|scrivimi in privato|contattami (su|via)"
+    - "اشتر(ي)? الآن|خصم|كود (خصم|ترويجي)|رمز ترويجي|شحن مجاني|متجري|راسلني (على|عبر|في) (الخاص|واتساب)|تواصل معي (على|عبر)"
   # Insults and hostility → held for review (kept short; moderators handle nuance).
   abuse:
     - "\\b(idiot|stupid|moron|shut up|loser|pathetic|you deserve(d)? (it|cancer))\\b"
@@ -97,5 +116,7 @@ moderation:
     - "\\b(idiota|estúpid[oa]|imbécil|cállate|te lo mereces)\\b"
     - "\\b(idiota|estúpid[oa]|imbecil|cala-te|mereceste)\\b"
     - "\\b(idiot|dumm(kopf)?|halt die klappe|selbst schuld)\\b"
+    - "\\b(idiota|stupid[oa]|cretin[oa]|stai zitt[oa]|te lo meriti|sfigat[oa])\\b"
+    - "غبي|أحمق|اخرس|اصمت|تستحق (ذلك|المرض|السرطان)"
   # Handles that impersonate staff or clinicians are refused.
-  reserved_handles: "\\b(admin|moderat|stepwell|support team|official|doctor|docteur|doctora?|médico|medico|arzt|ärztin|nurse|infirmi|enfermer|krankenschwester|oncolog|onkolog|dr\\.?)\\b"
+  reserved_handles: "\\b(admin|moderat|stepwell|support team|official|doctor|docteur|doctora?|médico|medico|arzt|ärztin|nurse|infirmi|enfermer|krankenschwester|oncolog|onkolog|dr\\.?|dottor[ea]?|dott\\.?|infermier[ea]?)\\b|طبيب|دكتور|ممرض|مشرف|إدارة"

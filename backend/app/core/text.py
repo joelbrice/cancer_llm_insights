@@ -49,7 +49,45 @@ QUERY_FILLERS = frozenset([
 ])
 
 _STEMMER_LANG = {"en": "english", "fr": "french", "es": "spanish", "pt": "portuguese", "de": "german",
-                 "it": "italian", "nl": "dutch"}
+                 "it": "italian", "nl": "dutch", "ar": "arabic"}
+
+# ── Languages added after 1.0 (Italian, Arabic) ──────────────────────────────────────────────────────────────
+# Kept OUT of STOPWORDS / QUERY_FILLERS on purpose: those tables are shared by every language (the hashing
+# embedder drops the union of all stopwords), so adding words there would change retrieval for the original
+# five languages. These apply only when the text's language is "it" or "ar".
+_AR_DIACRITICS = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]")
+_AR_LETTERS = str.maketrans({"أ": "ا", "إ": "ا", "آ": "ا", "ٱ": "ا", "ى": "ي", "ؤ": "و", "ئ": "ي", "ة": "ه"})
+
+
+def normalize_arabic(text: str) -> str:
+    """Light Arabic normalisation for matching: drop diacritics and tatweel, unify alef/yaa/taa marbuta forms."""
+    return _AR_DIACRITICS.sub("", text).translate(_AR_LETTERS)
+
+
+EXTRA_STOPWORDS: dict[str, frozenset[str]] = {
+    "it": frozenset(
+        ["a", "ad", "al", "allo", "ai", "agli", "all", "alla", "alle", "con", "col", "coi", "da", "dal", "dallo", "dai", "dagli", "dall", "dalla", "dalle", "di", "del", "dello", "dei", "degli", "dell", "della", "delle", "in", "nel", "nello", "nei", "negli", "nell", "nella", "nelle", "su", "sul", "sullo", "sui", "sugli", "sull", "sulla", "sulle", "per", "tra", "fra", "il", "lo", "la", "i", "gli", "le", "l", "un", "uno", "una", "e", "ed", "o", "od", "ma", "che", "chi", "cui", "non", "più", "anche", "come", "se", "perché", "quando", "dove", "quale", "quali", "quanto", "quanta", "questo", "questa", "questi", "queste", "quello", "quella", "quelli", "quelle", "mi", "ti", "si", "ci", "vi", "ne", "io", "tu", "lui", "lei", "noi", "voi", "loro", "mio", "mia", "miei", "mie", "tuo", "tua", "tuoi", "tue", "suo", "sua", "suoi", "sue", "nostro", "nostra", "vostro", "vostra", "è", "sono", "sei", "siamo", "siete", "era", "erano", "essere", "stato", "stata", "stati", "ho", "hai", "ha", "abbiamo", "avete", "hanno", "avere", "può", "possono", "molto", "poco", "tutto", "tutti", "ogni", "già", "ancora", "solo", "sempre", "dopo", "prima", "senza", "sotto", "sopra", "cosa", "così", "quindi", "però", "nemmeno", "neanche"]
+    ),
+    "ar": frozenset(normalize_arabic(w) for w in [
+        "في", "من", "إلى", "على", "عن", "مع", "هذا", "هذه", "ذلك", "تلك", "التي", "الذي", "الذين", "هو", "هي", "هم", "هن", "أنا", "أنت", "نحن", "كان", "كانت", "يكون", "تكون", "أن", "إن", "أو", "و", "ثم", "لا", "لم", "لن", "ما", "ماذا", "هل", "كيف", "لماذا", "متى", "أين", "كل", "بعض", "قد", "لقد", "عند", "بين", "حتى", "إذا", "لكن", "غير", "بعد", "قبل", "حول", "أي", "أيضا", "فقط", "جدا", "ذو", "ذات", "له", "لها", "لهم", "به", "بها", "فيه", "فيها", "منه", "منها", "عليه", "عليها", "هناك", "هنا", "يمكن", "هؤلاء", "أولئك", "كما", "لدى", "لدي", "عندي", "وهو", "وهي", "ولا", "وما", "فهل",
+    ]),
+}
+
+# Stemmed question words with no topical content, per added language.
+EXTRA_QUERY_FILLERS: dict[str, frozenset[str]] = {
+    "it": frozenset(["come", "perch", "qual", "cos", "aiut", "consigl", "miglior", "buon", "ver", "effett", "influ", "caus",
+                     "domand", "spieg", "dir", "sapere", "cosa", "fa"]),
+    "ar": frozenset(normalize_arabic(w) for w in ["كيف", "لماذا", "ماذا", "هل", "ما", "افضل", "نصيحه", "نصائح", "تاثير", "يسبب", "يساعد"]),
+}
+
+
+def stopwords(lang: str) -> frozenset[str]:
+    return STOPWORDS.get(lang) or EXTRA_STOPWORDS.get(lang) or STOPWORDS["en"]
+
+
+def query_fillers(lang: str | None) -> frozenset[str]:
+    extra = EXTRA_QUERY_FILLERS.get((lang or "")[:2])
+    return QUERY_FILLERS | extra if extra else QUERY_FILLERS
 
 _ABBREVIATIONS = frozenset([
     "e.g", "i.e", "et", "al", "etc", "vs", "fig", "figs", "no", "nos", "dr", "prof", "mr", "mrs", "ms", "approx",
@@ -60,7 +98,7 @@ _ABBREVIATIONS = frozenset([
 _CITE = r"\s?\[\d+(?:\s*[,;–-]\s*\d+)*\]"
 # group 2 keeps closing quotes/brackets AND citation markers ("… cancer. [1][2]") with the sentence they follow
 _SENT_BOUNDARY = re.compile(
-    r"([.!?…]+|[。！？])((?:[\"'”’)\]]|" + _CITE + r")*)(\s+)(?=(?!\[\d)[\"'“‘(\[¿¡]?[A-ZÀ-ÖØ-Þ0-9•\-])"
+    r"([.!?…؟]+|[。！？])((?:[\"'”’)\]]|" + _CITE + r")*)(\s+)(?=(?!\[\d)[\"'“‘(\[¿¡]?[A-ZÀ-ÖØ-Þ0-9•\-\u0621-\u064A])"
 )
 _BLOCK_START = re.compile(r"^\s*(?:[•\-*–·]\s|\d{1,2}[.)]\s|#{1,6}\s)")
 
@@ -119,7 +157,9 @@ def _stem(token: str, lang: str) -> str:
 def analyze(text: str, lang: str | None = None, *, keep_stopwords: bool = False) -> list[str]:
     """Tokenize → lowercase → drop stopwords → stem → fold accents. Used by BM25 and verification."""
     lang = (lang or "en")[:2]
-    stop = STOPWORDS.get(lang, STOPWORDS["en"])
+    stop = stopwords(lang)
+    if lang == "ar":
+        text = normalize_arabic(text)
     out: list[str] = []
     for raw in words(text.lower()):
         for token in raw.replace("’", "'").split("'"):
@@ -141,10 +181,11 @@ def idf_weights(term_sets: list[set[str]]) -> dict[str, float]:
     return {term: max(0.05, math.log((n + 1) / (count + 0.5))) for term, count in df.items()}
 
 
-def weighted_coverage(query_terms: set[str], text_terms: set[str], idf: dict[str, float]) -> float:
+def weighted_coverage(query_terms: set[str], text_terms: set[str], idf: dict[str, float],
+                      language: str | None = None) -> float:
     """Share of the query's information (IDF mass) present in the text: generic words count less, and query
     terms found nowhere in the collection (e.g. "radon" in a corpus without radon) count the most."""
-    query_terms = query_terms - QUERY_FILLERS
+    query_terms = query_terms - query_fillers(language)
     if not query_terms:
         return 0.0
     unseen = max(idf.values(), default=1.0)

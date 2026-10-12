@@ -54,6 +54,15 @@ domains:
   dkfz.de: {credibility: authoritative, publisher: Deutsches Krebsforschungszentrum}
   krebshilfe.de: {credibility: reputable, publisher: Deutsche Krebshilfe}
   leitlinienprogramm-onkologie.de: {credibility: authoritative, publisher: Leitlinienprogramm Onkologie}
+  # Italy
+  salute.gov.it: {credibility: authoritative, publisher: Ministero della Salute}
+  iss.it: {credibility: authoritative, publisher: Istituto Superiore di Sanità}
+  airc.it: {credibility: reputable, publisher: Fondazione AIRC per la ricerca sul cancro}
+  aimac.it: {credibility: reputable, publisher: AIMaC — Associazione Italiana Malati di Cancro}
+  # Middle East and North Africa
+  moh.gov.sa: {credibility: authoritative, publisher: Ministry of Health (Saudi Arabia)}
+  kfshrc.edu.sa: {credibility: reputable, publisher: King Faisal Specialist Hospital & Research Centre}
+  khcc.jo: {credibility: reputable, publisher: King Hussein Cancer Center}
   # Africa
   cansa.org.za: {credibility: reputable, publisher: Cancer Association of South Africa}
   # Cancer centres

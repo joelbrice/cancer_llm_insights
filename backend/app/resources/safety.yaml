@@ -15,6 +15,8 @@ rules:
       - "suicidarme|pensamientos suicidas|ideas suicidas|quitarme la vida|matarme|quiero morir(me)?|no quiero (vivir|seguir viviendo)|acabar con (mi vida|todo)|no vale la pena vivir"
       - "suicidar-me|me suicidar|pensamentos suicidas|me matar|matar-me|quero morrer|tirar a minha (própria )?vida|não quero (mais )?viver|acabar com (a minha vida|tudo)|pôr fim à (minha )?vida|não vale a pena viver"
       - "suizidgedanken|suizidal|mich umbringen|mir das leben nehmen|nicht mehr leben (will|möchte)|(will|möchte) nicht mehr leben|(will|möchte) sterben|mein leben beenden|allem ein ende (setzen|machen)|lebensmüde"
+      - "(mi voglio|voglio|vorrei) (uccidere|ammazzare)|uccidermi|ammazzarmi|togliermi la vita|suicidarmi|pensieri suicid|idee suicid|voglio morire|non voglio più vivere|mettere fine alla mia vita|non vale la pena (di )?vivere|(voglio|vorrei) farla finita(?!\\s+con\\s+(la|le|il|lo|i|questa|questo|queste)\\s+(chemio|terapi|cur|radio|dolor|stanchezz|esam))"
+      - "[أا]ريد ([أا]ن )?[أا]موت|[أا]فكر في الانتحار|[أا]فكار انتحارية|الانتحار|انتحر|[أا]قتل نفسي|[أا]نهي حياتي|[إا]نهاء حياتي|لا [أا]ريد [أا]ن [أا]عيش|لم [أا]عد [أا]ريد العيش|لا فائدة من الحياة|[أا]ؤذي نفسي"
   - id: medical_emergency
     level: emergency
     block_generation: true
@@ -24,6 +26,8 @@ rules:
       - "dolor (fuerte|intenso) (en el|de) pecho|no puedo respirar|me ahogo|toso sangre|vomito sangre|sangrado (abundante|que no para)|inconsciente|convulsi"
       - "dor (forte|intensa) no peito|não consigo respirar|tosse com sangue|vomitar sangue|sangramento (intenso|que não para)|inconsciente|convuls"
       - "starke brustschmerzen|keine luft|kann nicht atmen|blut husten|blut erbrechen|starke blutung|bewusstlos|krampfanfall"
+      - "dolore (forte|intenso) al petto|non riesco (più )?a respirare|sto soffocando|tossisco sangue|vomito sangue|sanguinamento (abbondante|che non si ferma)|ho perso conoscenza|svenut[oa]|incoscient|convulsion|crisi epilettica"
+      - "[أا]لم (شديد|حاد) في الصدر|لا [أا]ستطيع التنفس|[أا]ختنق|[أا]سعل دما|[أا]تقي[أا] دما|نزيف (شديد|لا يتوقف)|فقد(ت)? الوعي|غائب عن الوعي|نوبة صرع|تشنجات"
   - id: oncologic_urgent
     level: urgent
     block_generation: false
@@ -46,6 +50,12 @@ rules:
       - "cara hinchada|pantorrilla (hinchada|dolorosa)|falta de aire repentina|vómitos (todo el día|desde hace)"
       - "rosto inchado|panturrilha (inchada|dolorosa)|falta de ar súbita|vómitos (o dia todo|há \\d+)"
       - "geschwollenes gesicht|geschwollene(s|r)? wade|plötzliche atemnot|erbreche (seit|den ganzen tag)"
+      - "(febbre|temperatura|brividi).{0,40}(chemio|terapia|trattamento|neutropen)|(chemio|neutropen).{0,40}(febbre|brividi)"
+      - "(حمى|حرارة|قشعريرة).{0,40}(كيماوي|كيميائي|العلاج|العدلات)|(كيماوي|كيميائي).{0,40}(حمى|حرارة|قشعريرة)"
+      - "(mal di schiena|dolore alla schiena).{0,60}(debolezza|intorpid|formicol)|gambe (deboli|intorpidite|che cedono)|non riesco a controllare (la vescica|l'urina|le feci)"
+      - "[أا]لم (في )?الظهر.{0,60}(ضعف|تنميل|خدر)|(ضعف|خدر|تنميل) في (الساقين|الرجلين)|لا [أا]ستطيع (التحكم|السيطرة) (في|ب)(المثانة|البول|الإخراج)"
+      - "viso gonfio|polpaccio (gonfio|dolorante)|mancanza di respiro improvvisa|vomito (tutto il giorno|da \\d+)|non riesco a tenere (giù )?(niente|nessun liquido|i liquidi)"
+      - "تورم (الوجه|الرقبة)|(تورم|[أا]لم) (في )?(ربلة الساق|الساق).{0,40}(احمرار|سخونة)|ضيق (مفاجئ في التنفس|نفس مفاجئ)|قيء (طوال اليوم|منذ)"
   - id: diagnosis_request
     level: caution
     block_generation: false
@@ -55,6 +65,8 @@ rules:
       - "tengo cáncer|¿?es (un )?cáncer|podría ser cáncer|cuánto tiempo me queda"
       - "tenho (um )?(cancro|câncer)|é (um )?(cancro|câncer)|pode ser (cancro|câncer)|quanto tempo me resta"
       - "habe ich krebs|ist (das|es) krebs|könnte (das|es) krebs sein|wie lange habe ich noch"
+      - "ho (un )?(cancro|tumore)\\s*\\?|(è|sarà) (un )?(cancro|tumore)\\s*\\?|potrebbe essere (un )?(cancro|tumore)|quanto (tempo )?mi resta( da vivere)?"
+      - "هل (لدي|عندي) (سرطان|ورم)|هل (هذا|هذه|هو|هي) سرطان|هل (يمكن|ممكن) [أا]ن يكون (سرطانا|سرطان|ورما)|كم (تبقى|بقي) لي"
   - id: treatment_decision
     level: caution
     block_generation: false
@@ -64,6 +76,8 @@ rules:
       - "(dejar|suspender|rechazar|saltarme) (la |el |mi )?(quimio|quimioterapia|radioterapia|tratamiento)|en lugar de (la )?(quimio|quimioterapia|cirugía)|qué dosis|cuántos mg"
       - "(parar|suspender|recusar|interromper) (a |o |minha |meu )?(quimio|quimioterapia|radioterapia|tratamento)|em vez de (a )?(quimio|quimioterapia|cirurgia)|que dose|quantos mg"
       - "(chemo|chemotherapie|bestrahlung|behandlung|therapie) (abbrechen|absetzen|ablehnen|aussetzen)|statt (der )?(chemo|chemotherapie|operation)|welche dosis|wie viel mg"
+      - "(smettere|interrompere|rifiutare|saltare|rimandare|sospendere) (la |il |le )?(chemio|chemioterapia|radioterapia|terapia|cura|cure|trattamento|immunoterapia|terapia ormonale)|invece (della|di) (chemio|chemioterapia|chirurgia|operazione)|che dose|quanti mg"
+      - "([أا]وقف|[إا]يقاف|[أا]توقف عن|التوقف عن|[أا]رفض|رفض|[أا]ؤجل|تأجيل|[أا]ترك|ترك) (العلاج|الكيماوي|العلاج الكيميائي|العلاج الإشعاعي|الإشعاع)|بدلا من (العلاج|الكيماوي|الجراحة)|ما الجرعة|كم (ملغ|مليغرام)"
   - id: harmful_alternative
     level: caution
     block_generation: false
@@ -73,6 +87,8 @@ rules:
       - "bicarbonato|semillas? de albaricoque|vitamina b17|enemas? de café|dióxido de cloro|curar el cáncer|dieta alcalina|matar (el|las) (cáncer|células)"
       - "bicarbonato de sódio|caroços? de damasco|vitamina b17|enemas? de café|dióxido de cloro|curar o (cancro|câncer)|dieta alcalina"
       - "natron|aprikosenkerne|vitamin b17|kaffee-?einl[äa]uf|chlordioxid|krebs heilen|basische ernährung.{0,30}(heil|bekämpf)"
+      - "bicarbonato|noccioli di albicocca|semi di albicocca|vitamina b17|clisteri? di caff|biossido di cloro|curare il cancro|dieta alcalina|affamare il (cancro|tumore)|olio di cannabis.{0,30}(cura|guari)"
+      - "بيكربونات|بذور المشمش|نوى المشمش|فيتامين ب17|حقن(ة)? القهوة|ثاني [أا]كسيد الكلور|يشفي السرطان|علاج السرطان (نهائيا|بالأعشاب)|الحمية القلوية|تجويع (السرطان|الورم)|زيت القنب.{0,30}(يشفي|يعالج)"
   - id: supplement_interaction
     level: caution
     block_generation: false
@@ -82,6 +98,8 @@ rules:
       - "(hierba de san juan|cúrcuma|curcumina|extracto de té verde|antioxidantes?|pomelo|suplementos?).{0,60}(quimio|radioterapia|inmunoterapia|tamoxifeno|tratamiento)"
       - "(erva-de-são-joão|hipericão|açafrão|curcumina|extrato de chá verde|antioxidantes?|toranja|suplementos?).{0,60}(quimio|radioterapia|imunoterapia|tamoxifeno|tratamento)"
       - "(johanniskraut|kurkuma|curcumin|grüntee-?extrakt|antioxidantien|grapefruit|mistel|nahrungsergänzung).{0,60}(chemo|bestrahlung|immuntherapie|tamoxifen|behandlung)"
+      - "(iperico|erba di san giovanni|curcuma|curcumina|estratto di tè verde|antiossidant|pompelmo|vischio|integrator).{0,60}(chemio|radioterapia|immunoterapia|tamoxifene|terapia|trattamento)|(chemio|radioterapia|tamoxifene).{0,60}(integrator|erbe|curcuma|iperico|pompelmo)"
+      - "(نبتة سانت جون|عشبة القديس يوحنا|كركم|مستخلص الشاي الأخضر|مضادات الأكسدة|جريب ?فروت|غريب ?فروت|مكملات|[أا]عشاب).{0,60}(الكيماوي|العلاج الكيميائي|العلاج الإشعاعي|المناعي|تاموكسيفين|العلاج)|(الكيماوي|العلاج الكيميائي|تاموكسيفين).{0,60}(مكملات|[أا]عشاب|كركم|جريب ?فروت)"
 
 messages:
   self_harm:
@@ -90,42 +108,56 @@ messages:
     es: "Siento mucho que te sientas así. Mereces apoyo ahora mismo. Si crees que podrías actuar según estos pensamientos, llama de inmediato al número de emergencias. También puedes contactar una línea de crisis: hablar con alguien puede ayudar."
     pt: "Lamento muito que se sinta assim. Merece apoio agora. Se sentir que pode agir de acordo com estes pensamentos, ligue imediatamente para o número de emergência. Também pode contactar uma linha de apoio — falar com alguém pode ajudar."
     de: "Es tut mir sehr leid, dass es Ihnen so geht. Sie verdienen jetzt Unterstützung. Wenn Sie befürchten, diesen Gedanken nachzugeben, rufen Sie bitte sofort den Notruf. Sie können sich auch an eine Krisenhotline wenden – Reden kann helfen."
+    it: "Mi dispiace davvero che tu ti senta così. Meriti sostegno adesso. Se pensi di poter mettere in atto questi pensieri, chiama subito il numero di emergenza (112). Puoi anche contattare una linea di ascolto: parlarne con qualcuno può aiutare."
+    ar: "يؤسفني حقًا أنك تمر بهذا الشعور. أنت تستحق الدعم الآن. إذا كنت تخشى أن تتصرف بناءً على هذه الأفكار، فاتصل فورًا برقم الطوارئ المحلي. يمكنك أيضًا التواصل مع خط دعم نفسي، فالتحدث مع أحد قد يساعد."
   medical_emergency:
     en: "This may be a medical emergency. Please call your local emergency number now (112 in Europe, 911 in North America) or go to the nearest emergency department. Don't wait for an online answer."
     fr: "Il peut s'agir d'une urgence médicale. Appelez immédiatement les urgences (112 en Europe, 15 en France) ou rendez-vous aux urgences les plus proches. N'attendez pas une réponse en ligne."
     es: "Puede tratarse de una urgencia médica. Llame ahora al número de emergencias (112 en Europa) o acuda al servicio de urgencias más cercano. No espere una respuesta en línea."
     pt: "Pode tratar-se de uma emergência médica. Ligue já para o número de emergência (112 na Europa, 192 SAMU no Brasil) ou dirija-se às urgências mais próximas. Não espere por uma resposta online."
     de: "Das könnte ein medizinischer Notfall sein. Rufen Sie bitte sofort den Notruf (112) oder suchen Sie die nächste Notaufnahme auf. Warten Sie nicht auf eine Online-Antwort."
+    it: "Potrebbe trattarsi di un'emergenza medica. Chiama subito il numero di emergenza (112 in Europa, 118 in Italia) o recati al pronto soccorso più vicino. Non aspettare una risposta online."
+    ar: "قد تكون هذه حالة طبية طارئة. اتصل الآن برقم الطوارئ المحلي أو توجّه إلى أقرب قسم للطوارئ. لا تنتظر إجابة عبر الإنترنت."
   oncologic_urgent:
     en: "Some symptoms you describe can be urgent during cancer treatment (for example fever during chemotherapy, or new back pain with leg weakness). Contact your oncology team's 24-hour line or emergency services now — don't wait."
     fr: "Certains symptômes que vous décrivez peuvent être urgents pendant un traitement du cancer (par exemple de la fièvre sous chimiothérapie, ou une nouvelle douleur dorsale avec faiblesse des jambes). Contactez maintenant la ligne d'urgence de votre équipe d'oncologie ou le 15/112 — n'attendez pas."
     es: "Algunos síntomas que describe pueden ser urgentes durante el tratamiento del cáncer (por ejemplo, fiebre durante la quimioterapia o dolor de espalda nuevo con debilidad en las piernas). Contacte ahora con la línea de 24 horas de su equipo de oncología o con emergencias: no espere."
     pt: "Alguns sintomas que descreve podem ser urgentes durante o tratamento do cancro (por exemplo, febre durante a quimioterapia ou dor nas costas nova com fraqueza nas pernas). Contacte já a linha de 24 horas da sua equipa de oncologia ou os serviços de emergência — não espere."
     de: "Einige der beschriebenen Symptome können während einer Krebsbehandlung dringend sein (z. B. Fieber unter Chemotherapie oder neue Rückenschmerzen mit Beinschwäche). Kontaktieren Sie jetzt die 24-Stunden-Nummer Ihres onkologischen Teams oder den Notruf – warten Sie nicht."
+    it: "Alcuni sintomi che descrivi possono essere urgenti durante le cure oncologiche (per esempio la febbre durante la chemioterapia, o un nuovo mal di schiena con debolezza alle gambe). Contatta subito il numero attivo 24 ore su 24 del tuo centro oncologico o il 112: non aspettare."
+    ar: "بعض الأعراض التي تصفها قد تكون عاجلة أثناء علاج السرطان (مثل الحمى أثناء العلاج الكيميائي، أو ألم جديد في الظهر مع ضعف في الساقين). تواصل الآن مع خط الطوارئ المتاح على مدار الساعة لدى فريق الأورام المعالج لك أو مع خدمات الطوارئ، ولا تنتظر."
   diagnosis_request:
     en: "I can't tell whether you have cancer or assess your situation — only a clinician who examines you can. I can share what the research says, and it's worth booking an appointment to get checked."
     fr: "Je ne peux pas dire si vous avez un cancer ni évaluer votre situation — seul un professionnel de santé qui vous examine le peut. Je peux partager ce que dit la recherche, et il est utile de prendre rendez-vous pour vous faire examiner."
     es: "No puedo decir si tiene cáncer ni evaluar su situación: solo un profesional que le examine puede hacerlo. Puedo compartir lo que dice la investigación, y conviene pedir una cita para revisarlo."
     pt: "Não consigo dizer se tem cancro nem avaliar a sua situação — só um profissional de saúde que o examine pode. Posso partilhar o que diz a investigação, e vale a pena marcar uma consulta para ser avaliado."
     de: "Ich kann nicht beurteilen, ob Sie Krebs haben – das kann nur eine Ärztin oder ein Arzt nach einer Untersuchung. Ich kann teilen, was die Forschung sagt; ein Termin zur Abklärung ist sinnvoll."
+    it: "Non posso dire se hai un cancro né valutare la tua situazione: può farlo solo un medico che ti visita. Posso condividere ciò che dice la ricerca, ed è utile prenotare una visita per un controllo."
+    ar: "لا يمكنني معرفة ما إذا كنت مصابًا بالسرطان أو تقييم حالتك، فهذا لا يستطيعه إلا طبيب يفحصك. يمكنني مشاركة ما تقوله الأبحاث، ومن المفيد حجز موعد لإجراء الفحص."
   treatment_decision:
     en: "Decisions about starting, stopping, delaying or dosing treatment should be made with your oncology team, who know your full situation. I can share general evidence to help you prepare questions for them."
     fr: "Les décisions de commencer, arrêter, reporter un traitement ou d'en modifier la dose doivent être prises avec votre équipe d'oncologie, qui connaît toute votre situation. Je peux partager des données générales pour vous aider à préparer vos questions."
     es: "Las decisiones sobre iniciar, suspender, retrasar o dosificar un tratamiento deben tomarse con su equipo de oncología, que conoce toda su situación. Puedo compartir evidencia general para ayudarle a preparar sus preguntas."
     pt: "As decisões sobre iniciar, parar, adiar ou ajustar a dose de um tratamento devem ser tomadas com a sua equipa de oncologia, que conhece toda a sua situação. Posso partilhar evidência geral para ajudar a preparar perguntas."
     de: "Entscheidungen über Beginn, Abbruch, Verschiebung oder Dosierung einer Behandlung sollten Sie mit Ihrem onkologischen Team treffen, das Ihre gesamte Situation kennt. Ich kann allgemeine Evidenz teilen, damit Sie Fragen vorbereiten können."
+    it: "Le decisioni su iniziare, interrompere, rimandare una terapia o modificarne la dose vanno prese con la tua équipe oncologica, che conosce tutta la tua situazione. Posso condividere prove generali per aiutarti a preparare le domande."
+    ar: "يجب اتخاذ قرارات بدء العلاج أو إيقافه أو تأجيله أو تعديل جرعته مع فريق الأورام المعالج لك، الذي يعرف وضعك كاملًا. يمكنني مشاركة أدلة عامة لمساعدتك في تحضير أسئلتك."
   harmful_alternative:
     en: "Some of the approaches mentioned are promoted as cancer cures without reliable evidence, and some can cause serious harm or interfere with effective treatment. Here is what the research actually shows."
     fr: "Certaines approches mentionnées sont présentées comme des remèdes contre le cancer sans preuve fiable, et certaines peuvent être dangereuses ou nuire à l'efficacité des traitements. Voici ce que montre réellement la recherche."
     es: "Algunos de los enfoques mencionados se promocionan como curas del cáncer sin evidencia fiable, y algunos pueden causar daños graves o interferir con tratamientos eficaces. Esto es lo que muestra realmente la investigación."
     pt: "Algumas das abordagens mencionadas são promovidas como curas para o cancro sem evidência fiável, e algumas podem causar danos graves ou interferir com tratamentos eficazes. Eis o que a investigação realmente mostra."
     de: "Einige der genannten Ansätze werden ohne verlässliche Evidenz als Krebsheilmittel beworben; manche können ernsthaft schaden oder wirksame Behandlungen beeinträchtigen. Das zeigt die Forschung tatsächlich."
+    it: "Alcuni degli approcci citati vengono promossi come cure per il cancro senza prove affidabili, e alcuni possono causare danni gravi o interferire con trattamenti efficaci. Ecco cosa mostra davvero la ricerca."
+    ar: "يُروَّج لبعض الأساليب المذكورة على أنها علاجات للسرطان دون أدلة موثوقة، وقد يسبب بعضها ضررًا جسيمًا أو يتعارض مع العلاجات الفعالة. إليك ما تُظهره الأبحاث فعلًا."
   supplement_interaction:
     en: "Some supplements, herbs and foods can interact with cancer treatments (for example St John's wort, high-dose antioxidants or grapefruit). Always tell your oncology team and pharmacist about anything you take."
     fr: "Certains compléments, plantes et aliments peuvent interagir avec les traitements du cancer (par exemple le millepertuis, les antioxydants à forte dose ou le pamplemousse). Informez toujours votre équipe d'oncologie et votre pharmacien de tout ce que vous prenez."
     es: "Algunos suplementos, hierbas y alimentos pueden interactuar con los tratamientos del cáncer (por ejemplo, la hierba de San Juan, los antioxidantes en dosis altas o el pomelo). Informe siempre a su equipo de oncología y a su farmacéutico de todo lo que toma."
     pt: "Alguns suplementos, plantas e alimentos podem interagir com os tratamentos do cancro (por exemplo, o hipericão, antioxidantes em doses elevadas ou a toranja). Informe sempre a sua equipa de oncologia e o farmacêutico sobre tudo o que toma."
     de: "Manche Nahrungsergänzungsmittel, Kräuter und Lebensmittel können mit Krebsbehandlungen wechselwirken (z. B. Johanniskraut, hochdosierte Antioxidantien oder Grapefruit). Informieren Sie immer Ihr onkologisches Team und Ihre Apotheke über alles, was Sie einnehmen."
+    it: "Alcuni integratori, erbe e alimenti possono interagire con le terapie oncologiche (per esempio l'iperico, gli antiossidanti ad alte dosi o il pompelmo). Informa sempre la tua équipe oncologica e il farmacista di tutto ciò che assumi."
+    ar: "قد تتفاعل بعض المكملات والأعشاب والأطعمة مع علاجات السرطان (مثل نبتة سانت جون، أو مضادات الأكسدة بجرعات عالية، أو الجريب فروت). أخبر دائمًا فريق الأورام والصيدلي بكل ما تتناوله."
 
 # Crisis lines. VERIFY LOCALLY BEFORE LAUNCH and review every 6 months (numbers change).
 crisis_resources:
@@ -143,6 +175,10 @@ crisis_resources:
   BR: [{name: "CVV — Centro de Valorização da Vida", contact: "188"}]
   DE: [{name: "TelefonSeelsorge", contact: "0800 111 0 111 · 0800 111 0 222"}]
   AT: [{name: "TelefonSeelsorge", contact: "142"}]
+  # added with Italian and Arabic (verify before launch, like every line here)
+  IT: [{name: "Telefono Amico Italia", contact: "02 2327 2327"}, {name: "Samaritans Onlus", contact: "06 77208977"}]
+  LB: [{name: "Embrace Lifeline", contact: "1564"}]
+  QA: [{name: "Mental health helpline (Hamad Medical Corporation)", contact: "16000"}]
 
 # Phrases that must never appear in generated output (checked post-generation).
 output_rules:
@@ -153,6 +189,8 @@ output_rules:
       - "cura (el|su) cáncer|garantiza (la )?curación|100 ?% (eficaz|seguro)|elimina (todo )?(el )?riesgo"
       - "cura o (cancro|câncer)|garante a cura|100 ?% (eficaz|seguro)|elimina (todo o )?risco"
       - "heilt (den )?krebs|garantierte heilung|100 ?% (wirksam|sicher)|beseitigt (jedes )?risiko"
+      - "cura (il|il tuo) cancro|guarigione garantita|100 ?% (efficace|sicuro)|elimina (ogni|tutto il) rischio"
+      - "يشفي (من )?السرطان|شفاء مضمون|فعال بنسبة 100|[أا]من بنسبة 100|يقضي على (كل|جميع) المخاطر"
   - id: stop_treatment_advice
     patterns:
       - "(you should|you can) (stop|skip|quit) (your )?(treatment|chemo)|no need (to see|for) (a|your) doctor"
@@ -160,3 +198,5 @@ output_rules:
       - "puede (dejar|suspender) (su|el) (tratamiento|quimio)|no necesita (ver a|un) médico"
       - "pode (parar|suspender) o (tratamento|quimio)|não precisa (de ver|de um) médico"
       - "können (die|ihre) (behandlung|chemo) (absetzen|abbrechen)|kein arzt nötig"
+      - "(puoi|può) (smettere|interrompere) (la |il )?(chemio|terapia|cura|trattamento)|non (serve|c'è bisogno di) (andare dal|vedere il|un) medico"
+      - "يمكنك (التوقف عن|إيقاف) (العلاج|الكيماوي)|لا داعي (لزيارة|لمراجعة) الطبيب"

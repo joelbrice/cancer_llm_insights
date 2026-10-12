@@ -218,7 +218,7 @@ def _pubmed(root) -> list[LoadedDocument]:
         meta["authors"] = authors
         lang = article.find("{*}Language")
         if lang is not None:
-            meta["language"] = {"eng": "en", "fre": "fr", "spa": "es", "por": "pt", "ger": "de"}.get(_t(lang), "en")
+            meta["language"] = {"eng": "en", "fre": "fr", "spa": "es", "por": "pt", "ger": "de", "ita": "it", "ara": "ar"}.get(_t(lang), "en")
         pub_types = [_t(p) for p in article.findall(".//{*}PublicationTypeList/{*}PublicationType")]
         mesh = [_t(m.find("{*}DescriptorName")) for m in citation.findall(".//{*}MeshHeadingList/{*}MeshHeading")]
         blocks = []

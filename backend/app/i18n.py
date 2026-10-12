@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 LANGUAGE_NAMES = {"en": "English", "fr": "French (français)", "es": "Spanish (español)",
-                  "pt": "Portuguese (português)", "de": "German (Deutsch)"}
+                  "pt": "Portuguese (português)", "de": "German (Deutsch)", "it": "Italian (italiano)",
+                  "ar": "Arabic (العربية)"}
 
 MESSAGES: dict[str, dict[str, str]] = {
     "disclaimer": {
@@ -12,6 +13,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Información educativa basada en evidencia publicada: no es un diagnóstico ni sustituye a su equipo médico.",
         "pt": "Informação educativa baseada em evidência publicada — não é um diagnóstico nem substitui a sua equipa de saúde.",
         "de": "Bildungsinformation auf Grundlage veröffentlichter Evidenz – keine Diagnose und kein Ersatz für Ihr Behandlungsteam.",
+        "it": "Informazioni educative basate su prove pubblicate: non sono una diagnosi né sostituiscono la tua équipe di cura.",
+        "ar": "معلومات تثقيفية مبنية على أدلة منشورة، وليست تشخيصًا ولا بديلًا عن فريقك الطبي.",
     },
     "abstain": {
         "en": "I couldn't find enough reliable evidence in the library to answer this confidently. Rather than guess, I suggest discussing it with your doctor or care team.",
@@ -19,6 +22,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "No encontré suficiente evidencia fiable en la biblioteca para responder con seguridad. En lugar de suponer, le sugiero comentarlo con su médico o equipo de salud.",
         "pt": "Não encontrei evidência fiável suficiente na biblioteca para responder com confiança. Em vez de adivinhar, sugiro que fale com o seu médico ou equipa de saúde.",
         "de": "Ich habe in der Bibliothek nicht genug verlässliche Evidenz gefunden, um dies sicher zu beantworten. Statt zu raten, besprechen Sie es bitte mit Ihrer Ärztin, Ihrem Arzt oder Ihrem Behandlungsteam.",
+        "it": "Non ho trovato nella biblioteca prove affidabili sufficienti per rispondere con sicurezza. Invece di tirare a indovinare, ti suggerisco di parlarne con il tuo medico o con la tua équipe di cura.",
+        "ar": "لم أجد في المكتبة أدلة موثوقة كافية للإجابة عن ذلك بثقة. وبدلًا من التخمين، أقترح مناقشة الأمر مع طبيبك أو فريقك الطبي.",
     },
     "awaiting_data": {
         "en": "The evidence library is still empty — answers will be available as soon as research documents are connected.",
@@ -26,6 +31,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "La biblioteca de evidencia aún está vacía: las respuestas estarán disponibles en cuanto se conecten documentos de investigación.",
         "pt": "A biblioteca de evidência ainda está vazia — as respostas estarão disponíveis assim que forem ligados documentos de investigação.",
         "de": "Die Evidenzbibliothek ist noch leer – Antworten sind verfügbar, sobald Forschungsdokumente verbunden sind.",
+        "it": "La biblioteca delle prove è ancora vuota: le risposte saranno disponibili non appena verranno collegati i documenti di ricerca.",
+        "ar": "مكتبة الأدلة لا تزال فارغة، وستتوفر الإجابات فور ربط الوثائق البحثية.",
     },
     "extractive_intro": {
         "en": "Here is what the sources in the library say:",
@@ -33,6 +40,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Esto es lo que dicen las fuentes de la biblioteca:",
         "pt": "Eis o que dizem as fontes da biblioteca:",
         "de": "Das sagen die Quellen in der Bibliothek:",
+        "it": "Ecco cosa dicono le fonti della biblioteca:",
+        "ar": "إليك ما تقوله المصادر الموجودة في المكتبة:",
     },
     "sources_other_language": {
         "en": "Quoted passages are shown in their original language.",
@@ -40,6 +49,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Los fragmentos citados se muestran en su idioma original.",
         "pt": "Os excertos citados são apresentados na língua original.",
         "de": "Zitierte Passagen werden in ihrer Originalsprache angezeigt.",
+        "it": "I passaggi citati sono mostrati nella loro lingua originale.",
+        "ar": "تُعرض المقاطع المقتبسة بلغتها الأصلية.",
     },
     "evidence_strength": {
         "en": "Overall strength of evidence: {label} ({grade}).",
@@ -47,6 +58,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Solidez global de la evidencia: {label} ({grade}).",
         "pt": "Força global da evidência: {label} ({grade}).",
         "de": "Gesamtstärke der Evidenz: {label} ({grade}).",
+        "it": "Forza complessiva delle prove: {label} ({grade}).",
+        "ar": "القوة الإجمالية للأدلة: {label} ({grade}).",
     },
     "next_step": {
         "en": "Talk with your doctor or care team before making major changes, especially during treatment.",
@@ -54,6 +67,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Hable con su médico o equipo de salud antes de hacer cambios importantes, especialmente durante el tratamiento.",
         "pt": "Fale com o seu médico ou equipa de saúde antes de fazer mudanças importantes, sobretudo durante o tratamento.",
         "de": "Sprechen Sie vor größeren Veränderungen – besonders während einer Behandlung – mit Ihrem Behandlungsteam.",
+        "it": "Parlane con il tuo medico o con la tua équipe di cura prima di fare cambiamenti importanti, soprattutto durante le cure.",
+        "ar": "تحدّث مع طبيبك أو فريقك الطبي قبل إجراء تغييرات كبيرة، خاصةً أثناء العلاج.",
     },
     # ── evidence rationale ──
     "r_sources": {
@@ -62,6 +77,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Basado en {n} fuente(s) independiente(s).",
         "pt": "Baseado em {n} fonte(s) independente(s).",
         "de": "Basierend auf {n} unabhängigen Quelle(n).",
+        "it": "Fonti indipendenti: {n}.",
+        "ar": "عدد المصادر المستقلة: {n}.",
     },
     "r_designs": {
         "en": "Study designs: {designs}.",
@@ -69,6 +86,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Diseños de estudio: {designs}.",
         "pt": "Desenhos de estudo: {designs}.",
         "de": "Studiendesigns: {designs}.",
+        "it": "Disegni di studio: {designs}.",
+        "ar": "تصاميم الدراسات: {designs}.",
     },
     "r_strongest": {
         "en": "Strongest source: {design}{year}.",
@@ -76,6 +95,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Fuente más sólida: {design}{year}.",
         "pt": "Fonte mais sólida: {design}{year}.",
         "de": "Stärkste Quelle: {design}{year}.",
+        "it": "Fonte più solida: {design}{year}.",
+        "ar": "أقوى مصدر: {design}{year}.",
     },
     "r_authoritative": {
         "en": "Includes guidance from an authoritative health body.",
@@ -83,6 +104,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Incluye recomendaciones de un organismo sanitario de referencia.",
         "pt": "Inclui orientações de uma entidade de saúde de referência.",
         "de": "Enthält Empfehlungen einer maßgeblichen Gesundheitsbehörde.",
+        "it": "Include raccomandazioni di un ente sanitario autorevole.",
+        "ar": "يتضمن توصيات من هيئة صحية موثوقة.",
     },
     "r_single_source": {
         "en": "Only one source — confirmation by other studies is needed.",
@@ -90,6 +113,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Una sola fuente: se necesita confirmación por otros estudios.",
         "pt": "Apenas uma fonte — é necessária confirmação por outros estudos.",
         "de": "Nur eine Quelle – eine Bestätigung durch weitere Studien ist nötig.",
+        "it": "Una sola fonte: servono conferme da altri studi.",
+        "ar": "مصدر واحد فقط، ويلزم تأكيده بدراسات أخرى.",
     },
     "r_observational": {
         "en": "Evidence is observational: it shows associations, which do not by themselves prove cause and effect.",
@@ -97,6 +122,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "La evidencia es observacional: muestra asociaciones, que por sí solas no demuestran causa y efecto.",
         "pt": "A evidência é observacional: mostra associações, que por si só não provam causa e efeito.",
         "de": "Die Evidenz ist beobachtend: Sie zeigt Zusammenhänge, die für sich allein keine Ursache-Wirkung belegen.",
+        "it": "Le prove sono osservazionali: mostrano associazioni che, da sole, non dimostrano un rapporto di causa-effetto.",
+        "ar": "الأدلة رصدية: تُظهر ارتباطات لا تُثبت بحد ذاتها علاقة سبب ونتيجة.",
     },
     "r_old": {
         "en": "The newest source dates from {year}; more recent research could change this.",
@@ -104,6 +131,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "La fuente más reciente es de {year}; investigaciones más recientes podrían cambiar esto.",
         "pt": "A fonte mais recente é de {year}; investigação mais recente poderá alterar esta conclusão.",
         "de": "Die neueste Quelle stammt aus {year}; neuere Forschung könnte dies ändern.",
+        "it": "La fonte più recente risale al {year}; ricerche più recenti potrebbero cambiare il quadro.",
+        "ar": "يعود أحدث مصدر إلى عام {year}، وقد تغيّر الأبحاث الأحدث هذه الصورة.",
     },
     "r_recent": {
         "en": "Sources published between {start} and {end}.",
@@ -111,6 +140,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Fuentes publicadas entre {start} y {end}.",
         "pt": "Fontes publicadas entre {start} e {end}.",
         "de": "Quellen veröffentlicht zwischen {start} und {end}.",
+        "it": "Fonti pubblicate tra il {start} e il {end}.",
+        "ar": "مصادر منشورة بين عامي {start} و{end}.",
     },
     "r_consistent": {
         "en": "Sources point in the same direction.",
@@ -118,6 +149,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Las fuentes apuntan en la misma dirección.",
         "pt": "As fontes apontam no mesmo sentido.",
         "de": "Die Quellen weisen in dieselbe Richtung.",
+        "it": "Le fonti vanno nella stessa direzione.",
+        "ar": "تشير المصادر إلى الاتجاه نفسه.",
     },
     "r_mixed": {
         "en": "Some sources report different or null findings.",
@@ -125,6 +158,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Algunas fuentes informan resultados diferentes o nulos.",
         "pt": "Algumas fontes relatam resultados diferentes ou nulos.",
         "de": "Einige Quellen berichten abweichende oder keine Effekte.",
+        "it": "Alcune fonti riportano risultati diversi o nulli.",
+        "ar": "تشير بعض المصادر إلى نتائج مختلفة أو إلى عدم وجود تأثير.",
     },
     "r_partial_support": {
         "en": "Some statements are only partially supported by the quoted passages.",
@@ -132,6 +167,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Algunas afirmaciones solo están parcialmente respaldadas por los fragmentos citados.",
         "pt": "Algumas afirmações são apenas parcialmente suportadas pelos excertos citados.",
         "de": "Einige Aussagen werden von den zitierten Passagen nur teilweise gestützt.",
+        "it": "Alcune affermazioni sono supportate solo in parte dai passaggi citati.",
+        "ar": "بعض العبارات مدعومة جزئيًا فقط بالمقاطع المقتبسة.",
     },
     "r_cap_no_human": {
         "en": "No human studies among the sources — grade capped at Low.",
@@ -139,6 +176,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Ningún estudio en humanos entre las fuentes: grado limitado a Bajo.",
         "pt": "Nenhum estudo em humanos entre as fontes — grau limitado a Baixo.",
         "de": "Keine Humanstudien unter den Quellen – Bewertung auf Niedrig begrenzt.",
+        "it": "Nessuno studio sull'uomo tra le fonti: valutazione limitata a Bassa.",
+        "ar": "لا توجد دراسات على البشر بين المصادر، لذا يقتصر التقييم على «منخفض».",
     },
     "r_cap_secondary_only": {
         "en": "Only blogs or news articles — grade capped at Very low.",
@@ -146,6 +185,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Solo blogs o noticias: grado limitado a Muy bajo.",
         "pt": "Apenas blogues ou notícias — grau limitado a Muito baixo.",
         "de": "Nur Blogs oder Nachrichtenartikel – Bewertung auf Sehr niedrig begrenzt.",
+        "it": "Solo blog o articoli di giornale: valutazione limitata a Molto bassa.",
+        "ar": "مدونات أو مقالات إخبارية فقط، لذا يقتصر التقييم على «منخفض جدًا».",
     },
     "r_cap_observational": {
         "en": "No systematic review, trial or guideline — grade capped at Moderate.",
@@ -153,6 +194,8 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "Sin revisión sistemática, ensayo ni guía: grado limitado a Moderado.",
         "pt": "Sem revisão sistemática, ensaio ou diretriz — grau limitado a Moderado.",
         "de": "Keine systematische Übersicht, Studie oder Leitlinie – Bewertung auf Mittel begrenzt.",
+        "it": "Nessuna revisione sistematica, sperimentazione o linea guida: valutazione limitata a Moderata.",
+        "ar": "لا توجد مراجعة منهجية أو تجربة أو دليل إرشادي، لذا يقتصر التقييم على «متوسط».",
     },
     "r_none": {
         "en": "No supporting source was found in the library.",
@@ -160,50 +203,52 @@ MESSAGES: dict[str, dict[str, str]] = {
         "es": "No se encontró ninguna fuente de apoyo en la biblioteca.",
         "pt": "Não foi encontrada nenhuma fonte de suporte na biblioteca.",
         "de": "In der Bibliothek wurde keine stützende Quelle gefunden.",
+        "it": "Nella biblioteca non è stata trovata alcuna fonte a supporto.",
+        "ar": "لم يُعثر في المكتبة على أي مصدر داعم.",
     },
 }
 
 LEVEL_LABELS = {
-    "high": {"en": "High", "fr": "Élevé", "es": "Alto", "pt": "Alto", "de": "Hoch"},
-    "moderate": {"en": "Moderate", "fr": "Modéré", "es": "Moderado", "pt": "Moderado", "de": "Mittel"},
-    "low": {"en": "Low", "fr": "Faible", "es": "Bajo", "pt": "Baixo", "de": "Niedrig"},
-    "very_low": {"en": "Very low", "fr": "Très faible", "es": "Muy bajo", "pt": "Muito baixo", "de": "Sehr niedrig"},
+    "high": {"en": "High", "fr": "Élevé", "es": "Alto", "pt": "Alto", "de": "Hoch", "it": "Alta", "ar": "مرتفع"},
+    "moderate": {"en": "Moderate", "fr": "Modéré", "es": "Moderado", "pt": "Moderado", "de": "Mittel", "it": "Moderata", "ar": "متوسط"},
+    "low": {"en": "Low", "fr": "Faible", "es": "Bajo", "pt": "Baixo", "de": "Niedrig", "it": "Bassa", "ar": "منخفض"},
+    "very_low": {"en": "Very low", "fr": "Très faible", "es": "Muy bajo", "pt": "Muito baixo", "de": "Sehr niedrig", "it": "Molto bassa", "ar": "منخفض جدًا"},
     "insufficient": {"en": "Insufficient", "fr": "Insuffisant", "es": "Insuficiente", "pt": "Insuficiente",
-                     "de": "Unzureichend"},
+                     "de": "Unzureichend", "it": "Insufficiente", "ar": "غير كافٍ"},
 }
 
 DESIGN_LABELS = {
     "umbrella_review": {"en": "umbrella review", "fr": "revue parapluie", "es": "revisión paraguas",
-                        "pt": "revisão guarda-chuva", "de": "Umbrella-Review"},
+                        "pt": "revisão guarda-chuva", "de": "Umbrella-Review", "it": "revisione ombrello", "ar": "مراجعة شاملة للمراجعات"},
     "meta_analysis": {"en": "meta-analysis", "fr": "méta-analyse", "es": "metaanálisis", "pt": "meta-análise",
-                      "de": "Metaanalyse"},
+                      "de": "Metaanalyse", "it": "meta-analisi", "ar": "تحليل تلوي"},
     "systematic_review": {"en": "systematic review", "fr": "revue systématique", "es": "revisión sistemática",
-                          "pt": "revisão sistemática", "de": "systematische Übersicht"},
-    "guideline": {"en": "guideline", "fr": "recommandation", "es": "guía", "pt": "diretriz", "de": "Leitlinie"},
+                          "pt": "revisão sistemática", "de": "systematische Übersicht", "it": "revisione sistematica", "ar": "مراجعة منهجية"},
+    "guideline": {"en": "guideline", "fr": "recommandation", "es": "guía", "pt": "diretriz", "de": "Leitlinie", "it": "linea guida", "ar": "دليل إرشادي"},
     "rct": {"en": "randomised trial", "fr": "essai randomisé", "es": "ensayo aleatorizado",
-            "pt": "ensaio randomizado", "de": "randomisierte Studie"},
+            "pt": "ensaio randomizado", "de": "randomisierte Studie", "it": "studio randomizzato", "ar": "تجربة معشاة"},
     "cohort": {"en": "cohort study", "fr": "étude de cohorte", "es": "estudio de cohorte", "pt": "estudo de coorte",
-               "de": "Kohortenstudie"},
+               "de": "Kohortenstudie", "it": "studio di coorte", "ar": "دراسة أترابية"},
     "case_control": {"en": "case-control study", "fr": "étude cas-témoins", "es": "estudio de casos y controles",
-                     "pt": "estudo caso-controlo", "de": "Fall-Kontroll-Studie"},
+                     "pt": "estudo caso-controlo", "de": "Fall-Kontroll-Studie", "it": "studio caso-controllo", "ar": "دراسة الحالات والشواهد"},
     "cross_sectional": {"en": "cross-sectional study", "fr": "étude transversale", "es": "estudio transversal",
-                        "pt": "estudo transversal", "de": "Querschnittstudie"},
+                        "pt": "estudo transversal", "de": "Querschnittstudie", "it": "studio trasversale", "ar": "دراسة مقطعية"},
     "narrative_review": {"en": "narrative review", "fr": "revue narrative", "es": "revisión narrativa",
-                         "pt": "revisão narrativa", "de": "narrative Übersicht"},
+                         "pt": "revisão narrativa", "de": "narrative Übersicht", "it": "revisione narrativa", "ar": "مراجعة سردية"},
     "case_series": {"en": "case report", "fr": "série de cas", "es": "serie de casos", "pt": "série de casos",
-                    "de": "Fallserie"},
+                    "de": "Fallserie", "it": "serie di casi", "ar": "سلسلة حالات"},
     "expert_opinion": {"en": "expert opinion", "fr": "avis d'expert", "es": "opinión de expertos",
-                       "pt": "opinião de especialistas", "de": "Expertenmeinung"},
+                       "pt": "opinião de especialistas", "de": "Expertenmeinung", "it": "parere di esperti", "ar": "رأي الخبراء"},
     "institutional_web": {"en": "institutional information", "fr": "information institutionnelle",
                           "es": "información institucional", "pt": "informação institucional",
-                          "de": "institutionelle Information"},
+                          "de": "institutionelle Information", "it": "informazione istituzionale", "ar": "معلومات مؤسسية"},
     "preclinical": {"en": "lab/animal study", "fr": "étude préclinique", "es": "estudio preclínico",
-                    "pt": "estudo pré-clínico", "de": "präklinische Studie"},
+                    "pt": "estudo pré-clínico", "de": "präklinische Studie", "it": "studio preclinico", "ar": "دراسة ما قبل سريرية"},
     "news": {"en": "news article", "fr": "article de presse", "es": "noticia", "pt": "notícia",
-             "de": "Nachrichtenartikel"},
-    "blog": {"en": "blog", "fr": "blog", "es": "blog", "pt": "blogue", "de": "Blog"},
+             "de": "Nachrichtenartikel", "it": "articolo di giornale", "ar": "مقال إخباري"},
+    "blog": {"en": "blog", "fr": "blog", "es": "blog", "pt": "blogue", "de": "Blog", "it": "blog", "ar": "مدونة"},
     "unknown": {"en": "unclassified source", "fr": "source non classée", "es": "fuente sin clasificar",
-                "pt": "fonte não classificada", "de": "nicht klassifizierte Quelle"},
+                "pt": "fonte não classificada", "de": "nicht klassifizierte Quelle", "it": "fonte non classificata", "ar": "مصدر غير مصنّف"},
 }
 
 

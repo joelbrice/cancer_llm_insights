@@ -25,11 +25,22 @@ STOPWORDS: dict[str, set[str]] = {
     "pt": {"o", "a", "os", "as", "e", "que", "uma", "para", "com", "por", "do", "da", "não", "se", "seu"},
     "de": {"der", "die", "das", "und", "ist", "nicht", "mit", "für", "ein", "eine", "sie", "zu", "auf", "den", "von"},
 }
+# Added languages: Italian scores only on words none of the original five use (so their detection is unchanged);
+# Arabic is recognised by its script.
+EXTRA_STOPWORDS: dict[str, set[str]] = {
+    "it": {"della", "delle", "degli", "nella", "nelle", "gli", "sono", "che", "anche", "più", "perché", "questo", "questa",
+           "abbiamo", "hanno", "molto", "essere"},
+}
+_ARABIC = re.compile(r"[\u0600-\u06FF]")
 
 
 def detect_language(text: str) -> str:
+    if len(_ARABIC.findall(text)) > max(3, len(text) * 0.2):
+        return "ar"
     tokens = [w.lower() for w in _WORD.findall(text)]
     scores = {lang: sum(t in stop for t in tokens) for lang, stop in STOPWORDS.items()}
+    base = set().union(*STOPWORDS.values())
+    scores.update({lang: sum(t in stop - base for t in tokens) for lang, stop in EXTRA_STOPWORDS.items()})
     return max(scores, key=lambda k: scores[k]) if any(scores.values()) else "en"
 
 

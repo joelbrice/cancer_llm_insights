@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from app.core.text import QUERY_FILLERS, analyze, idf_weights, weighted_coverage
+from app.core.text import analyze, idf_weights, query_fillers, weighted_coverage
 from app.evidence.grading import source_ref
 from app.retrieval.embeddings import Embedder
 from app.retrieval.reranker import Reranker
@@ -151,7 +151,7 @@ class HybridRetriever:
         return RetrievalResult(evidence, best_relevance, trace, coverage, missing_share)
 
     def _missing_terms(self, query: str, language: str, selected: list[Candidate]) -> tuple[float, list[str]]:
-        terms = {t for t in set(analyze(query, language)) - QUERY_FILLERS if len(t) >= 3}
+        terms = {t for t in set(analyze(query, language)) - query_fillers(language) if len(t) >= 3}
         if not terms:
             return 0.0, []
         ids = {t: term_id(t) for t in terms}
@@ -173,7 +173,7 @@ class HybridRetriever:
         if not same_lang:
             return best_relevance  # cross-lingual evidence: rely on the (semantic) relevance score
         union = set().union(*(set(analyze(c.point.payload.get("text", ""), language)) for c in same_lang))
-        return weighted_coverage(set(analyze(query, language)), union, idf_weights(term_sets))
+        return weighted_coverage(set(analyze(query, language)), union, idf_weights(term_sets), language)
 
     def _mmr(self, pool: list[Candidate], k: int, language: str) -> list[Candidate]:
         if not pool:

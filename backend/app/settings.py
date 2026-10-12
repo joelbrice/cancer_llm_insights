@@ -121,9 +121,9 @@ class Settings(BaseSettings):
     bm25_avg_doc_tokens: float = 220.0
 
     # ── Languages ────────────────────────────────────────────────────────────
-    supported_languages: CsvList = ["en", "fr", "es", "pt", "de"]
+    supported_languages: CsvList = ["en", "fr", "es", "pt", "de", "it", "ar"]
     default_language: str = "en"
-    insight_languages: CsvList = ["en", "fr", "es", "pt", "de"]  # every UI language gets its own insights
+    insight_languages: CsvList = ["en", "fr", "es", "pt", "de", "it", "ar"]  # every UI language gets its own insights
 
     # ── Insights ─────────────────────────────────────────────────────────────
     insight_topics_file: Path | None = None

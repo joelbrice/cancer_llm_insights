@@ -18,6 +18,20 @@ _CUES: dict[str, tuple[re.Pattern[str], float]] = {
     "pt": (re.compile(r"[ãõ]|ção\b|ções\b|\b(?:não|você|também|está|são)\b", re.I), 1.8),
     "de": (re.compile(r"[äöüß]|\b(?:und|nicht|ist|ich|wie|das|der|die)\b", re.I), 1.2),
     "en": (re.compile(r"\b(?:the|and|is|what|how|does|should|can|my|of)\b", re.I), 0.6),
+    "it": (re.compile(r"zion[ei]\b|\b(?:perché|più|può|cioè|gli|della|delle|degli|nella|nelle|questo|questa|sono|anche"
+                      r"|rischio|rischi|tumore|tumori|chemio|chemioterapia|mangiare|fumare|bere|dottore|grazie|ciao)\b",
+                      re.I), 1.5),
+}
+
+# Languages added after 1.0 score only on function words that are unmistakably theirs (never used in English,
+# French, Spanish, Portuguese or German text), so adding them cannot change how those texts are identified.
+# Arabic is recognised by its script (_SCRIPTS).
+_DISTINCT_STOP: dict[str, frozenset[str]] = {
+    "it": frozenset({
+        "della", "delle", "degli", "dello", "nella", "nelle", "negli", "sulla", "sulle", "dalla", "dalle", "alla",
+        "alle", "gli", "sono", "che", "anche", "più", "perché", "questo", "questa", "questi", "queste", "quello",
+        "quella", "abbiamo", "hanno", "molto", "essere", "avere", "stato", "cioè", "può", "possono",
+    }) - frozenset().union(*STOPWORDS.values()),
 }
 
 _SCRIPTS = [
@@ -43,7 +57,7 @@ def detect_language(text: str, supported: list[str] | None = None, hint: str | N
 
     scores: Counter[str] = Counter()
     for lang in supported:
-        stop = STOPWORDS.get(lang)
+        stop = STOPWORDS.get(lang) or _DISTINCT_STOP.get(lang)
         if stop:
             scores[lang] += sum(1.0 for t in tokens if t in stop)
         cue = _CUES.get(lang)

@@ -71,7 +71,7 @@ class ExtractiveComposer:
         candidates: list[Picked] = []
         for chunk, span, s_terms in units:
             q_terms = set(analyze(question, chunk.source.language))
-            coverage = weighted_coverage(q_terms, s_terms, idf)
+            coverage = weighted_coverage(q_terms, s_terms, idf, chunk.source.language)
             section_bonus = 0.08 if chunk.section and _GOOD_SECTIONS.search(chunk.section) else 0.0
             cue = 0.1 if _FINDING_CUES.search(span.text) else 0.0
             rec = 0.12 if prefer_recommendations and _RECOMMENDATION_CUES.search(span.text) else 0.0

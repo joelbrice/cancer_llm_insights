@@ -34,7 +34,7 @@ class LexicalReranker(Reranker):
         idf = idf_weights(passage_terms) if len(passage_terms) >= 5 else {}
         for (_text, lang), p_terms, cos in zip(passages, passage_terms, dense, strict=True):
             q_terms = set(analyze(query, lang))
-            coverage = weighted_coverage(q_terms, p_terms, idf) if lang == query_lang and q_terms else 0.0
+            coverage = weighted_coverage(q_terms, p_terms, idf, lang) if lang == query_lang and q_terms else 0.0
             if self.semantic:  # neural cosine is informative (and cross-lingual)
                 dense_rel = min(1.0, max(0.0, (cos - 0.70) / 0.20))
                 rel = max(dense_rel, 0.55 * coverage + 0.45 * dense_rel)
