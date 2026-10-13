@@ -7,7 +7,7 @@
  *
  * Frameworks: European Code Against Cancer (IARC/WHO), WCRF/AICR Cancer Prevention Recommendations,
  * WHO 2020 guidelines on physical activity and sedentary behaviour. Thresholds are maintained by the
- * clinical lead (docs/BUILD_SPEC.md §6.4).
+ * clinical lead (docs/BUILD_SPEC.md §6.9).
  */
 import type { Locale } from "./types";
 

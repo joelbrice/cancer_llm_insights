@@ -55,7 +55,7 @@ Everything Stepwell says comes from a curated library of research, guidelines an
 ### 1.3 What Stepwell is not
 
 - It is not a medical device, symptom checker or diagnostic tool, and it does not calculate personal cancer risk
-  (see §6.4 and §10.4).
+  (see §6.9 and §10.4).
 - It does not replace a care team or offer telemedicine.
 - It has no private messaging, marketplace or fundraising.
 
@@ -128,13 +128,16 @@ Inclusion requirements:
 | **Insights** | ✓ | ✓ | See below. |
 | **Evidence library** | ✓ | ✓ | Every citable document with its study design (and how it was detected), credibility, year, abstract, indexed passages and the insights that cite it. Retracted documents are flagged and never used. |
 | **How we grade evidence** | ✓ | ✓ | The evidence pyramid, the grades, the safeguards (caps), verification, abstention and safety, in plain language. |
-| **Lifestyle check** | ✓ | ✓ | Fifteen questions mapped to international recommendations (§6.4). Computed on the device; explicitly *not* a risk score; each result links to the evidence. |
+| **Lifestyle check** | ✓ | ✓ | Fifteen questions mapped to international recommendations (§6.9). Computed on the device; explicitly *not* a risk score; each result links to the evidence. |
 | **My plan** | ✓ | ✓ | Recommendations added from insights; weekly check-ins; streak count; milestones shareable to the community; stored only on the device. |
 | **Community** | ✓ | ✓ | §9. |
 | **Profile** | ✓ | ✓ | Journey, age range, sex, cancer types, treatment phase and country (for helplines). Only on the device; sent with questions to tailor relevance; never stored on the server. |
-| **Settings** | ✓ | ✓ | Language (5), theme (system / light / dark), on mobile the API endpoint, and delete all local data. |
+| **Settings** | ✓ | ✓ | Language (5 in v1.0; 7 since v1.2), theme (system / light / dark), on mobile the API endpoint, and delete all local data. |
 | **Data & admin** (operators) | ✓ | — | See below. |
 | **Offline** | ✓ (service worker) | partial | Previously visited pages and the plan work offline; an offline page explains what is unavailable. |
+
+Added since v1.0, all optional (§15): reminders, read-aloud, questions for your appointment, offline insight packs,
+step counts, encrypted sync (§6.3–§6.8), appeals and the transparency report (§9.4), Italian and Arabic (§11.2).
 
 **Ask (streaming chat):**
 
@@ -164,7 +167,7 @@ Inclusion requirements:
 - Clinician-facing features.
 - Personal risk prediction.
 - Wearable integrations.
-- Push notifications (planned for v1.1 as opt-in).
+- Server push notifications. Weekly reminders are local and opt-in instead (§6.3).
 - Payments.
 
 ---
@@ -288,6 +291,12 @@ The clinical lead reviews:
 - every new insight in each language before first publication (staged in a non-production environment);
 - a random 10 % sample each month.
 
+Reviews are recorded in the admin console (**Clinical review**): the reviewer's name and role, a decision
+(approve, reject, withdraw) and a note. Readers see "Reviewed by our clinical team" with the date on signed-off
+insights. With `INSIGHT_REVIEW_REQUIRED=true`, a rebuilt insight waits as a draft and the public version keeps its
+last approved content until a reviewer approves the draft. The default (`false`) publishes rebuilt insights
+immediately, as in v1.0.
+
 Users' feedback ("not helpful", plus a reason) is triaged weekly.
 
 ---
@@ -312,12 +321,48 @@ consecutive weeks is shown as a streak. Missed weeks are never shamed.
 
 Milestones can be **shared to the community** with one tap as a *Plan milestone* post.
 
-### 6.3 Reminders (v1.1)
+### 6.3 Reminders
 
-Reminders will be opt-in local notifications, for example "Sunday evening: how did your plan go?". They will
-run on the device only, with no server push in v1.1.
+Reminders are opt-in and never pass through a server. People choose a day and time ("Sunday 18:30: how did your
+plan go?"):
 
-### 6.4 Lifestyle check — thresholds (clinical-lead controlled)
+- **mobile:** a weekly local notification scheduled on the device;
+- **web:** a weekly event for the person's own calendar (an `.ics` file), because browsers cannot schedule
+  notifications reliably without a push server.
+
+### 6.4 Read-aloud
+
+Insights can be listened to, using the device's own speech engine in the reader's language, with no audio sent
+anywhere. Citation markers are left out of the spoken text; the disclaimer is read too. The person can pause,
+resume and stop.
+
+### 6.5 Questions for your appointment
+
+A list a person builds for their next appointment. They pick from a bank of questions grouped by journey
+(written as questions to ask, never as advice), add their own, reorder them, write notes during the visit and
+print the list. An insight can add "What does the research on *topic* mean for me?". The list stays on the device.
+
+### 6.6 Offline insight packs (mobile)
+
+People can download every published insight in their language to read without a connection, and remove the pack
+again. Packs are refreshed when the person asks.
+
+### 6.7 Step counts (mobile, on device)
+
+An optional step count next to the plan, read from the phone's motion sensor after the person allows it. Steps
+are never sent anywhere. On iOS the last 7 days are shown; on Android the count is live while the app is open
+(the platform offers no history without Health Connect, which is not integrated).
+
+### 6.8 End-to-end-encrypted sync (optional)
+
+People who use more than one device can turn on sync of their plan and profile. The device creates a random
+32-character code (160 bits) and derives from it, with HKDF-SHA256, a storage id, a write secret and an
+XChaCha20-Poly1305 key. The server stores only ciphertext, a version number and the SHA-256 of the write secret:
+no account, email or device identifier. Another device joins by typing the code. Changes merge three ways, so a
+removal on one device and a check-in on another are both kept. Turning sync off deletes the server copy and stops
+the other devices; the data stays on each device. Losing the code means losing access, by design.
+
+### 6.9 Lifestyle check — thresholds (clinical-lead controlled)
 
 The check is computed **only on the device** and is explicitly **not a cancer risk score**. The interface says so
 on every result. For each answer:
@@ -388,7 +433,7 @@ sentences of the sources. Grounding is therefore 100 % by construction, and serv
 | Alternatives | Llama 3.2 3B (low cost / edge), Llama 3.3 70B (highest quality), GGUF via Ollama / llama.cpp for CPU |
 | Training data | RAFT export from the platform (grounded with distractors · abstention · safety), only after clinical sign-off bound to the file's SHA-256 |
 | Release gates | Citation validity ≥ 0.98 · citation coverage ≥ 0.85 · answers with unsupported numbers ≤ 2 % · abstention ≥ 0.90 · safety = 1.00 · language fidelity ≥ 0.95 · no regression > 0.02 against the current model. Gates fail closed. |
-| Promotion | All gates pass **and** the platform evaluation is at least as good as the current model **and** the CSO signs the report (§8). A canary at 10 % of traffic for 48 h precedes full rollout. |
+| Promotion | All gates pass **and** the platform evaluation is at least as good as the current model **and** the CSO signs the report (§8). A canary at 10 % of traffic for 48 h precedes full rollout (`LLM_CANARY_MODEL`, `LLM_CANARY_PERCENT`; requests are assigned by a hash of their id, and insights always use the current model). |
 | Licence | Llama Community License and Acceptable Use Policy; "Built with Llama" attribution in About and NOTICE. |
 
 ### 7.3 Monitoring
@@ -404,7 +449,9 @@ The following are monitored:
 
 Prometheus metrics (`chat_answers_total{mode}`, `chat_grounded_ratio`, `chat_unsupported_claims_total`,
 `safety_triggers_total{rule,language,surface}`, `community_posts_total{outcome,reason}`) and dashboards cover
-these. The rules live in `deploy/monitoring/alerts.yaml`. Alerts fire when:
+these. During a canary the same signals are split by variant (`llm_variant_answers_total{variant,mode}`,
+`llm_variant_grounded_ratio{variant}`, `llm_variant_unsupported_claims_total{variant}`). The rules live in
+`deploy/monitoring/alerts.yaml`. Alerts fire when:
 
 - the grounded ratio drops below 0.9 (7-day mean);
 - the fallback share exceeds 20 %;
@@ -542,8 +589,15 @@ priority, then reports, then age. They can approve, remove or pause a member.
 | Staffed hours | Published in the guidelines |
 | Out of hours | The guidelines state the community is not watched around the clock; helplines are shown |
 
-**Transparency:** authors see why a post is held. Appeals go to the community lead. A quarterly transparency
-report publishes counts of held and removed posts by reason.
+**Appeals:** an author can ask once for a held or removed post to be looked at again, with a short note
+(screened like any text; someone in crisis is shown help immediately). Appeals go to the community lead, who
+reverses the decision (the post is published and the strike refunded, lifting an automatic suspension that no
+longer meets the threshold) or upholds it, with a reply the author sees.
+
+**Transparency:** authors see why a post is held. A public quarterly transparency report (`/transparency`) gives
+counts of posts, holds, removals, reports and appeals by reason, and median time to a decision. It is built from
+an anonymous event ledger (no member, post or text), so it survives the purge of the posts themselves. Counts
+below 5 are shown as "fewer than 5".
 
 ### 9.5 Community health metrics (not engagement metrics)
 
@@ -553,7 +607,7 @@ report publishes counts of held and removed posts by reason.
 | Time to moderation | Moderation responsiveness |
 | Reports per 100 posts | Community health |
 | Share of posts held | Screening load |
-| Members' self-reported "I felt supported" | Short in-app survey, opt-in, v1.1 |
+| Members' self-reported "I felt supported" | Short in-app question (yes / somewhat / no), optional, asked at most every 30 days and only after a week of membership |
 
 ---
 
@@ -566,7 +620,10 @@ report publishes counts of held and removed posts by reason.
 | Profile, plan, lifestyle-check answers, conversation, language, theme | **Device only** | Until the user deletes them ("Delete my data from this device") | n/a (not processed by Stepwell) |
 | Questions and answers | Processed in memory; **not stored** by default (`STORE_CONVERSATIONS=false`). If enabled for quality, stored PII-scrubbed. | Off by default (30 days if enabled) | Art. 6(1)(f) / Art. 9(2)(a) consent if enabled |
 | Feedback (rating, reasons, comment) | Server, PII-scrubbed | 12 months | Art. 6(1)(f) |
-| Community: nickname, journey badge, posts, reactions, reports, token hash | Server | Until deleted by the member; removed content purged after 90 days | Art. 9(2)(a) explicit consent |
+| Community: nickname, journey badge, posts, reactions, reports, appeals, token hash | Server | Until deleted by the member; removed content purged after 90 days | Art. 9(2)(a) explicit consent |
+| "I felt supported" answers | Server; unlinked from the member when they delete their account | 12 months | Art. 9(2)(a) explicit consent |
+| Moderation event ledger (kind, reason, language, hours to decision) | Server; no member, post or text | Kept for the transparency report | Not personal data |
+| Encrypted sync (optional): ciphertext of plan and profile, version, SHA-256 of the write secret | Server; **unreadable by Stepwell** (the key never leaves the person's devices) | Until sync is turned off; deleted after 400 days without an update | Art. 9(2)(a) explicit consent (turning sync on) |
 | Operational logs | Server, no bodies, no IP storage beyond rate-limit memory | 30 days | Art. 6(1)(f) |
 
 - A **DPIA** is mandatory before launch because of health data and the community.
@@ -657,13 +714,18 @@ The target is **WCAG 2.2 AA**:
 - text scales to 200 %;
 - VoiceOver and TalkBack labels on mobile.
 
-Audits are automated (axe) in CI (v1.1), with a manual audit by an accessibility specialist before launch.
+Audits are automated in CI (axe, WCAG 2.2 AA, every page in every language on phone and desktop sizes), with a
+manual audit by an accessibility specialist before launch.
 Usability tests include people with low vision, older adults and people with limited health literacy.
 
 ### 11.2 Localisation
 
-- Languages are EN, FR, ES, PT and DE. Interface dictionaries are type-checked for completeness: a missing key
-  fails the build.
+- Languages are EN, FR, ES, PT, DE, IT and AR. Interface dictionaries are type-checked for completeness: a
+  missing key fails the build.
+- Arabic is laid out right to left: the web uses logical (start/end) layout and `dir="rtl"`; text written by
+  members or quoted from sources keeps its own direction. On mobile, choosing Arabic lays the app out right to
+  left. Language identification, stop words, stemming, safety rules, crisis lines, topic anchors and community
+  screening cover both new languages, scoped so that nothing changes for the original five.
 - Insights are generated per language. Answers are written in the user's language.
 - Dates are formatted in the user's locale. Crisis lines are chosen by country.
 - Native-speaker clinical review of every language is required before launch.
@@ -673,6 +735,8 @@ Usability tests include people with low vision, older adults and people with lim
 - [ ] App name "Stepwell", subtitle "Cancer prevention & support"; category Health & Fitness (not Medical).
 - [ ] Privacy nutrition labels (Apple) and the Data safety form (Google). They declare:
   - community posts linked to a pseudonymous ID;
+  - optional encrypted sync: plan and profile stored as ciphertext the developer cannot read;
+  - step counts and reminders stay on the device;
   - no tracking;
   - no data sold;
   - deletion available in the app.
@@ -689,7 +753,14 @@ Usability tests include people with low vision, older adults and people with lim
 - [ ] Age rating 17+/18+ because of the community, with the age gate in the app.
 - [ ] Crisis lines verified for every launch country.
 - [ ] Accessibility statement and support URL; privacy policy URL; account deletion in the app (Apple 5.1.1(v)).
-- [ ] Screenshots in five languages; no real patient images.
+- [ ] Screenshots in seven languages (Arabic right to left); no real patient images.
+- [ ] Permissions explained in context and only requested when the feature is turned on: notifications (weekly
+  reminder) and motion / physical activity (step counts). The motion text is translated in `mobile/locales/`.
+- [ ] **Export compliance (counsel to confirm).** Encrypted sync uses standard algorithms (XChaCha20-Poly1305,
+  HKDF-SHA256) implemented in the app rather than only the operating system's encryption. `mobile/app.json` still
+  declares `ios.config.usesNonExemptEncryption: false`, as in v1.0. Before submitting a build that includes
+  sync, confirm the classification (likely mass-market, EAR §740.17(b)(1) with an annual self-classification
+  report) and update the declaration and App Store Connect answers accordingly.
 - [ ] Build signing via EAS (`mobile/eas.json`), with the production API URL and certificate pinning considered.
 
 ---
@@ -725,7 +796,7 @@ See `docs/ARCHITECTURE.md` for diagrams and components. In summary:
 |---|---|---|
 | Engine | Unit and integration tests: ingestion, retrieval, grading, verification, safety (including multilingual crisis phrasing and false-alarm cases), chat streaming, insights, jobs, community (screening, privacy rights, CORS) | `backend/tests` (CI) |
 | Shared | i18n completeness and placeholders, client (SSE, community headers), lifestyle check, plan streaks | `packages/shared/test` (CI) |
-| Web / mobile | Type-checking; production build; Metro bundle; Playwright smoke screenshots (manual, v1.1 in CI) | CI |
+| Web / mobile | Type-checking; production build; Metro bundle; Playwright end-to-end journeys and axe accessibility checks on every page in every language, phone and desktop | CI |
 | Model | Data validation, review gate, behavioural metrics, release gates | `ml/tests` (CI); `stepwell-ml evaluate` |
 | Platform evaluation | Golden questions per journey and language (`data/eval/`): recall@k, MRR, groundedness, citation precision, abstention, safety flags | Admin console → *Run evaluation* |
 | Human | Clinical review of insights; native-speaker review; usability tests per journey (5 participants per journey per round); accessibility audit; penetration test | Before launch and each major release |
@@ -777,12 +848,16 @@ The **"awaiting data"** state is normal until documents are linked: the platform
 
 ## 15. Roadmap
 
-| Version | Scope |
-|---|---|
-| **1.0** (this build) | Everything in §4–§14 |
-| 1.1 | Opt-in local reminders; in-app "I felt supported" survey; automated accessibility tests; Playwright end-to-end tests in CI; offline insight packs on mobile |
-| 1.2 | More languages (Italian, Arabic, with right-to-left layout); audio read-aloud; "Questions to bring to your appointment" builder (individual-facing, no clinical advice) |
-| 2.0 | Optional end-to-end-encrypted sync of plan and profile across devices; optional step-count import from Apple Health / Health Connect (on device); research partnerships to evaluate outcomes (pre-registered) |
+| Version | Scope | Status |
+|---|---|---|
+| **1.0** | Everything in §4–§14 | Built |
+| 1.1 | Opt-in local reminders (§6.3); in-app "I felt supported" survey (§9.5); automated accessibility tests; Playwright end-to-end tests in CI; offline insight packs on mobile (§6.6); appeals and the public transparency report (§9.4); recorded clinical sign-off of insights (§5.5); model canary (§7.2) | Built |
+| 1.2 | Italian and Arabic, with right-to-left layout (§11.2); audio read-aloud (§6.4); "Questions for your appointment" builder (§6.5) | Built; native-speaker clinical review of IT and AR pending (§16) |
+| 2.0 | Optional end-to-end-encrypted sync of plan and profile across devices (§6.8); step counts on device (§6.7) | Built: steps come from the phone's motion sensor; history import from Apple Health / Health Connect is not integrated |
+| 2.0 | Research partnerships to evaluate outcomes (pre-registered) | Not a software feature: needs partners, a protocol and ethics approval |
+
+Every addition is additive or opt-in: with default settings, people who do not use a new feature see the platform
+behave exactly as in v1.0, and the end-to-end and regression suites check this.
 
 ---
 

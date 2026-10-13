@@ -10,8 +10,8 @@ treatment** and **live well afterwards**, and supports **the people who care for
 - Every answer carries an **honest grade of how strong the evidence is**.
 - A small, moderated **community** lets people encourage each other.
 
-It is written for individuals and families, not professionals. It works in English, French, Spanish, Portuguese
-and German, on the web (installable PWA), iOS and Android.
+It is written for individuals and families, not professionals. It works in English, French, Spanish, Portuguese,
+German, Italian and Arabic (right to left), on the web (installable PWA), iOS and Android.
 
 > **Use with caution.** Stepwell provides educational information. It is not a medical device, does not diagnose,
 > and does not replace a care team. In an emergency, call your local emergency number.
@@ -24,8 +24,9 @@ and German, on the web (installable PWA), iOS and Android.
 | **Insights** | 43 topics across four journeys, generated per language: key points, "what you can do", limits of the evidence, study-design profile and full references. |
 | **Evidence library** | Every source with its study design, credibility and year, and the insights that cite it. Retracted papers are never used. |
 | **Lifestyle check** | 15 questions compared with WHO, WCRF and the European Code Against Cancer. Private on the device. **Not** a risk score. |
-| **My plan** | Evidence-based steps with weekly check-ins and streaks; milestones can be shared with the community. |
-| **Community** | Four circles with weekly prompts; wins, tips and encouragement; supportive reactions only; no private messages. Every post is screened, and posts link to "what the research says". |
+| **My plan** | Evidence-based steps with weekly check-ins and streaks; milestones can be shared with the community. Optional weekly reminder, and on mobile a step count that never leaves the phone. |
+| **Personal tools** | Read-aloud of insights; a "questions for your appointment" list to print; offline insight packs on mobile; optional **end-to-end-encrypted sync** of plan and profile between devices (the server cannot read it). |
+| **Community** | Four circles with weekly prompts; wins, tips and encouragement; supportive reactions only; no private messages. Every post is screened, and posts link to "what the research says". Authors can appeal decisions; a public quarterly transparency report shows aggregate moderation numbers. |
 | **AI engine** | Hybrid retrieval, reranking, a Llama model fine-tuned for grounded answers (or an extractive fallback), claim verification, GRADE-inspired grading, multilingual safety. |
 | **Data link** | Drop files in `data/raw/`, or link S3, GCS, Azure or HTTPS buckets. Sync is incremental and automatic. |
 
@@ -36,7 +37,7 @@ soon as documents are linked.
 
 ```
 backend/          FastAPI engine: ingestion, retrieval, grading, verification, safety, insights, community, jobs
-web/              Next.js 16 PWA (5 languages, mobile-first, dark mode, offline)
+web/              Next.js 16 PWA (7 languages incl. right-to-left, mobile-first, dark mode, offline)
 mobile/           Expo SDK 57 app (iOS, Android, web)
 packages/shared/  TypeScript client, types, i18n, evidence/lifestyle/plan/community logic shared by web + mobile
 ml/               Llama fine-tuning: RAFT data checks, clinical review gate, QLoRA, serving, release gates
@@ -76,6 +77,7 @@ Kubernetes: `kubectl apply -k deploy/k8s/overlays/production` (see `docs/OPERATI
 ```bash
 make test        # engine, model pipeline and shared-package tests
 make typecheck   # shared, web, mobile
+make e2e         # Playwright journeys + axe (WCAG 2.2 AA) on every page in every language, phone and desktop
 ```
 
 CI runs all of these, the web production build, a Metro bundle of the mobile app, and both container builds.

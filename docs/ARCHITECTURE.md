@@ -30,17 +30,18 @@
 | Data link | `backend/app/datasources/` | `sources.yaml` registry; URI parsing for `file`, `s3`, `gs`, `az`, `https` (manifest) and `memory`; `${ENV}` credential references (redacted in every response); connection tests |
 | Ingestion | `backend/app/ingestion/`, `services/ingestion.py` | Incremental fingerprints; loaders for PDF, HTML, Markdown, TXT, DOCX, JATS/PubMed XML, JSON/JSONL/CSV; sidecar and manifest metadata; study-design classification; retractions; duplicates; structure-aware chunking |
 | Retrieval | `backend/app/retrieval/` | Embeddings (multilingual-e5 / hashing / OpenAI-compatible); BM25 sparse vectors; local or Qdrant store; RRF fusion; cross-encoder or lexical rerank; quality prior; MMR with per-document cap; answerability |
-| Evidence | `backend/app/evidence/` | Taxonomy; GRADE-inspired grading with caps and floor; claim verification (lexical, semantic, NLI); rationale in five languages |
-| Generation | `backend/app/llm/` | Versioned prompts; OpenAI-compatible provider (JSON schema, then JSON object, then text); extractive composer |
+| Evidence | `backend/app/evidence/` | Taxonomy; GRADE-inspired grading with caps and floor; claim verification (lexical, semantic, NLI); rationale in seven languages |
+| Generation | `backend/app/llm/` | Versioned prompts; OpenAI-compatible provider (JSON schema, then JSON object, then text); extractive composer; optional model canary for a share of chat answers (`LLM_CANARY_*`) |
 | Safety | `backend/app/safety/`, `resources/safety.yaml` | Multilingual input rules (crisis, emergency, urgent, boundaries); output rules; crisis lines by country; prompt-injection defence |
-| Insights | `services/insights.py`, `resources/insight_topics.yaml` | 43 topics; anchor precision gate; minimum sources; per-language generation; versioning; journeys taken from the taxonomy |
-| Community | `backend/app/community/`, `resources/community.yaml` | Members (hashed keys); circles and weekly prompts; posts, replies and reactions; screening; reports; mutual blocking; moderation; strikes; export and erasure; evidence links |
+| Insights | `services/insights.py`, `resources/insight_topics.yaml` | 43 topics; anchor precision gate (with language-scoped anchors for Italian and Arabic); minimum sources; per-language generation; versioning; journeys taken from the taxonomy; clinical review records and optional review-before-publish drafts |
+| Community | `backend/app/community/`, `resources/community.yaml` | Members (hashed keys); circles and weekly prompts; posts, replies and reactions; screening; reports; mutual blocking; moderation; strikes; appeals; "I felt supported" survey; anonymous event ledger for the quarterly transparency report (small counts suppressed); export and erasure; evidence links |
+| Device sync | `services/device_sync.py`, `api/routes/sync.py`, `packages/shared/src/sync.ts` | Optional end-to-end-encrypted sync of plan and profile: the client derives id, write secret and key from a code (HKDF-SHA256) and encrypts with XChaCha20-Poly1305; the server stores ciphertext with a version (409 on a stale write; the client merges three ways and retries) |
 | Jobs | `backend/app/workers/` | DB-backed jobs; inline thread pool or RQ; heartbeat, cancel and stale recovery; leader-elected scheduler (sync + daily retention) |
 | Evaluation and fine-tuning data | `services/evaluation.py`, `services/sft_export.py` | Golden-set metrics; RAFT export with the production prompt |
 | Model pipeline | `ml/` | Data checks, clinical review gate, QLoRA, merge, serving, release gates |
-| Shared TS | `packages/shared/` | API client (SSE), types, typed i18n (5 languages), evidence and reference helpers, lifestyle check, plan, community helpers, brand |
-| Web | `web/` | Next.js App Router with `[lang]` routes; server-rendered evidence pages; streaming chat; PWA (manifest, service worker, offline page); admin and moderation console |
-| Mobile | `mobile/` | Expo Router tabs: Home, Ask, Insights, Community, Me; on-device storage; `expo/fetch` streaming |
+| Shared TS | `packages/shared/` | API client (SSE), types, typed i18n (7 languages, with reading direction), evidence and reference helpers, lifestyle check, plan, community helpers, sync, reminders, appointment questions, read-aloud text, offline packs, brand |
+| Web | `web/` | Next.js App Router with `[lang]` routes; server-rendered evidence pages; streaming chat; PWA (manifest, service worker, offline page); right-to-left layout for Arabic (logical CSS); admin, moderation, appeals and clinical-review console |
+| Mobile | `mobile/` | Expo Router tabs: Home, Ask, Insights, Community, Me; on-device storage; `expo/fetch` streaming; local notifications, speech, pedometer (all opt-in) |
 | Deploy | `docker-compose.yml`, `deploy/k8s/`, `.github/workflows/ci.yml` | Images, Compose stack, Kubernetes (HPA, PDB, network policies, ingress for SSE), CI |
 
 ## Key flows
