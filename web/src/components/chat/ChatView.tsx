@@ -167,7 +167,7 @@ export function ChatView({ initialQuestion }: { initialQuestion?: string }) {
             <ul className="flex flex-wrap gap-2">
               {suggestions.map((s) => (
                 <li key={s}>
-                  <button type="button" className="btn btn-ghost !min-h-10 text-left !font-medium" onClick={() => void send(s)}>
+                  <button type="button" className="btn btn-ghost !min-h-10 text-start !font-medium" onClick={() => void send(s)}>
                     {s}
                   </button>
                 </li>
@@ -179,7 +179,7 @@ export function ChatView({ initialQuestion }: { initialQuestion?: string }) {
         {turns.map((turn) =>
           turn.role === "user" ? (
             <div key={turn.id} className="flex justify-end">
-              <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-on-brand">{turn.content}</p>
+              <p dir="auto" className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-ee-md bg-brand px-4 py-2.5 text-on-brand">{turn.content}</p>
             </div>
           ) : (
             <AnswerCard key={turn.id} turn={turn} onCitation={setOpenCitation} />

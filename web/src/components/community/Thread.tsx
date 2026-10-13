@@ -9,6 +9,7 @@ import { communityError, isAuthError, useCommunityToken } from "@/lib/community"
 import { useLocale, useT } from "@/lib/i18n-client";
 import { readLocal } from "@/lib/storage";
 
+import { TextArrow } from "../Icon";
 import { ModerationNotice } from "./Composer";
 import { PostCard } from "./PostCard";
 
@@ -40,7 +41,7 @@ export function CommunityThread({ id }: { id: string }) {
     return (
       <p className="card p-5">
         <Link href={`/${lang}/community`} className="font-semibold text-brand hover:underline">
-          {t("community.joinTitle")} →
+          {t("community.joinTitle")} <TextArrow />
         </Link>
       </p>
     );
@@ -70,7 +71,7 @@ export function CommunityThread({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <Link href={`/${lang}/community`} className="text-sm font-semibold text-brand hover:underline">
-        ← {t("community.title")}
+        <TextArrow back /> {t("community.title")}
       </Link>
       <PostCard
         post={thread.post}
@@ -81,7 +82,7 @@ export function CommunityThread({ id }: { id: string }) {
         onBlocked={() => window.history.back()}
         showThreadLink={false}
       />
-      <ol className="space-y-3 border-l-2 border-line pl-3 md:pl-5" aria-label={t("community.replies", { n: thread.replies.length })}>
+      <ol className="space-y-3 border-s-2 border-line ps-3 md:ps-5" aria-label={t("community.replies", { n: thread.replies.length })}>
         {thread.replies.map((reply) => (
           <li key={reply.id}>
             <PostCard

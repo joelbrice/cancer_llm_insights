@@ -157,7 +157,7 @@ export function PostCard({
           </div>
         </div>
       ) : (
-        <p className="mt-3 whitespace-pre-wrap break-words leading-relaxed text-ink">{post.body}</p>
+        <p dir="auto" className="mt-3 whitespace-pre-wrap break-words leading-relaxed text-ink">{post.body}</p>
       )}
 
       {post.notes.includes("care_team") && !deleted ? (
@@ -204,7 +204,7 @@ export function PostCard({
               </button>
             );
           })}
-          <span className="ml-auto flex items-center gap-1">
+          <span className="ms-auto flex items-center gap-1">
             {showThreadLink && !post.parent_id && post.status === "published" ? (
               <Link href={`/${lang}/community/${encodeURIComponent(post.id)}`} className="btn btn-ghost !min-h-9 !px-3 text-sm">
                 <Icon name="chat" size={16} />

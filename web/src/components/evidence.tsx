@@ -81,7 +81,7 @@ export function SupportMeter({ support, label, t }: { support: number | null; la
   return (
     <span className="inline-flex items-center gap-2 text-xs text-ink-2">
       <span className="relative h-1.5 w-14 overflow-hidden rounded-full" style={{ background: "var(--ev-track)" }} aria-hidden="true">
-        <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${pct}%`, background: color }} />
+        <span className="absolute inset-y-0 start-0 rounded-full" style={{ width: `${pct}%`, background: color }} />
       </span>
       {t(`insights.support.${label}`)}
     </span>
@@ -105,11 +105,11 @@ export function CitationCard({ citation, t, anchorPrefix = "ref" }: { citation: 
           {citation.n}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="font-semibold leading-snug text-ink">
+          <p dir="auto" className="font-semibold leading-snug text-ink">
             {link ? (
               <a href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
                 {s.title}
-                <Icon name="external" size={14} className="ml-1 inline align-[-2px] text-ink-3" />
+                <Icon name="external" size={14} className="ms-1 inline align-[-2px] text-ink-3" />
                 <span className="sr-only"> ({t("insights.openSource")})</span>
               </a>
             ) : (
@@ -123,8 +123,9 @@ export function CitationCard({ citation, t, anchorPrefix = "ref" }: { citation: 
             {page ? <span className="chip">{t("insights.page", { page })}</span> : null}
             {citation.section ? <span className="chip max-w-[14rem] truncate">{citation.section}</span> : null}
           </div>
-          <blockquote className="mt-3 border-l-2 border-[var(--series-1)] pl-3 text-[0.95rem] leading-relaxed text-ink">
-            <span className="sr-only">{t("insights.quote")}: </span>“{citation.quote}”
+          <blockquote className="mt-3 border-s-2 border-[var(--series-1)] ps-3 text-[0.95rem] leading-relaxed text-ink">
+            <span className="sr-only">{t("insights.quote")}: </span>
+            <bdi>“{citation.quote}”</bdi>
           </blockquote>
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
             <SupportMeter support={citation.support} label={citation.support_label} t={t} />
@@ -136,7 +137,7 @@ export function CitationCard({ citation, t, anchorPrefix = "ref" }: { citation: 
                 <Icon name="chevronDown" size={16} className="transition group-open:rotate-180" />
                 {t("insights.context")}
               </summary>
-              <p className="mt-2 whitespace-pre-wrap rounded-xl bg-surface-2 p-3 text-sm leading-relaxed text-ink-2">
+              <p dir="auto" className="mt-2 whitespace-pre-wrap rounded-xl bg-surface-2 p-3 text-sm leading-relaxed text-ink-2">
                 {before}
                 <mark className="quote-mark">{quote}</mark>
                 {after}

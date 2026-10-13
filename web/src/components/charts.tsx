@@ -58,7 +58,7 @@ export function HBarChart({ data, title, valueFormat = (v) => String(v) }: { dat
       <div className="grid grid-cols-[minmax(7rem,40%)_1fr] items-center gap-x-3 gap-y-2" aria-hidden="true">
         {data.map((d) => (
           <Fragment key={d.id}>
-            <span className="truncate text-right text-sm text-ink-2" title={d.label}>
+            <span className="truncate text-end text-sm text-ink-2" title={d.label}>
               {d.label}
             </span>
             {/* Values are printed beside each bar and the table below carries the data for assistive tech, so the
@@ -68,12 +68,12 @@ export function HBarChart({ data, title, valueFormat = (v) => String(v) }: { dat
               onPointerEnter={(e) => show(e.currentTarget, d)}
               onPointerLeave={() => setTip(null)}
             >
-              <div className="absolute inset-y-0 left-0 w-px" style={{ background: "var(--axis)" }} />
+              <div className="absolute inset-y-0 start-0 w-px" style={{ background: "var(--axis)" }} />
               <div
                 className="h-4 transition-[filter] group-hover:brightness-110 group-focus:brightness-110"
-                style={{ width: `${Math.max(2, (d.value / max) * 85)}%`, background: "var(--series-1)", borderRadius: "0 4px 4px 0" }}
+                style={{ width: `${Math.max(2, (d.value / max) * 85)}%`, background: "var(--series-1)", borderStartEndRadius: 4, borderEndEndRadius: 4 }}
               />
-              <span className="ml-2 text-sm font-semibold tabular-nums text-ink">{valueFormat(d.value)}</span>
+              <span className="ms-2 text-sm font-semibold tabular-nums text-ink">{valueFormat(d.value)}</span>
             </div>
           </Fragment>
         ))}

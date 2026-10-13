@@ -8,7 +8,7 @@ import { browserApi } from "@/lib/browser-api";
 import { communityError } from "@/lib/community";
 import { useLocale, useT } from "@/lib/i18n-client";
 
-import { Icon } from "../Icon";
+import { Icon, TextArrow } from "../Icon";
 
 export function JoinCommunity({ meta, onToken }: { meta: CommunityMeta; onToken: (token: string) => void }) {
   const t = useT();
@@ -131,7 +131,7 @@ export function JoinCommunity({ meta, onToken }: { meta: CommunityMeta; onToken:
           </div>
           <p className="text-sm">
             <Link href={`/${lang}/community/guidelines`} className="font-semibold text-brand hover:underline">
-              {t("community.guidelinesTitle")} →
+              {t("community.guidelinesTitle")} <TextArrow />
             </Link>
           </p>
           <div className="flex flex-wrap items-center gap-2">

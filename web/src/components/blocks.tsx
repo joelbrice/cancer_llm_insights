@@ -103,7 +103,7 @@ export function InsightCard({ insight, lang, t }: { insight: InsightSummary; lan
           <EvidenceBadge level={insight.evidence_level} grade={insight.evidence_grade} t={t} size="sm" showGrade={false} />
         </div>
         <h3 className="text-lg font-semibold leading-snug text-ink group-hover:text-brand-strong">{insight.title}</h3>
-        <p className="line-clamp-3 text-sm text-ink-2">{insight.summary}</p>
+        <p dir="auto" className="line-clamp-3 text-sm text-ink-2">{insight.summary}</p>
         <div className="mt-auto flex items-center justify-between pt-1 text-xs text-ink-3">
           <span>{insight.n_sources === 1 ? t("common.source") : t("common.sources", { n: insight.n_sources })}</span>
           <span>{t("common.updated", { date: formatDate(lang, insight.updated_at) })}</span>

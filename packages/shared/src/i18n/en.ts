@@ -277,7 +277,7 @@ export const en = {
     abstentionBody: "When the library does not contain enough relevant evidence, {app} says so instead of guessing.",
     safetyTitle: "Safety first",
     safetyBody:
-      "Emergencies, crisis situations and urgent symptoms during treatment are detected in five languages and answered with safety guidance first. {app} never diagnoses or advises on treatment decisions.",
+      "Emergencies, crisis situations and urgent symptoms during treatment are detected in seven languages and answered with safety guidance first. {app} never diagnoses or advises on treatment decisions.",
     levelsTitle: "Grades",
     weight: "Weight",
   },

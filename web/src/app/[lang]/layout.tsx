@@ -1,6 +1,6 @@
 import "../globals.css";
 
-import { brandName, BRAND, createTranslator, LOCALES } from "@stepwell/shared";
+import { brandName, BRAND, createTranslator, localeDirection, LOCALES } from "@stepwell/shared";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -47,7 +47,7 @@ export default async function RootLayout({ children, params }: { children: React
   const { lang } = await resolveLocale(params);
   const t = createTranslator(lang);
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={lang} dir={localeDirection(lang)} suppressHydrationWarning>
       <body className="min-h-dvh">
         {/* Applies the saved theme before first paint. Kept in <body>: a hand-written <head> collides with the
             metadata Next.js streams into the head and causes intermittent hydration mismatches. */}

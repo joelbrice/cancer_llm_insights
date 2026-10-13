@@ -26,7 +26,7 @@ import { useSettings } from "@/lib/settings";
 import { readJSON } from "@/lib/storage";
 import { levelColor, radius, space } from "@/lib/theme";
 
-import { Button, Card, Chip, EvidenceMeter, SafetyBanner, Txt } from "./ui";
+import { Button, Card, Chip, directionStyle, EvidenceMeter, SafetyBanner, Txt } from "./ui";
 
 const REASONS: ReportReason[] = ["harmful_medical", "crisis", "harassment", "spam", "privacy", "other"];
 
@@ -70,7 +70,7 @@ export function PostCard({ post, token, reactions, onChange, onDeleted, onBlocke
   onBlocked?: (handle: string) => void;
   threadLink?: boolean;
 }) {
-  const { t, api, locale, colors, scheme } = useSettings();
+  const { t, api, locale, colors, scheme, rtl } = useSettings();
   const [message, setMessage] = useState<string | null>(null);
   const [reporting, setReporting] = useState(false);
   const mine = post.author?.is_me ?? false;
@@ -218,7 +218,7 @@ export function PostCard({ post, token, reactions, onChange, onDeleted, onBlocke
       ) : null}
       {message ? <Txt variant="small">{message}</Txt> : null}
       <Modal visible={reporting} transparent animationType="fade" onRequestClose={() => setReporting(false)}>
-        <Pressable style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-end" }} onPress={() => setReporting(false)}>
+        <Pressable style={[{ flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-end" }, directionStyle(rtl)]} onPress={() => setReporting(false)}>
           <SafeAreaView edges={["bottom"]} style={{ backgroundColor: colors.surface, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl, padding: space(4), gap: space(2) }}>
             <Txt variant="h2">{t("community.reportTitle")}</Txt>
             {REASONS.map((reason) => (

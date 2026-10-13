@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { ApiDown, DataStatusCard, EmptyState, PageHeader } from "@/components/blocks";
 import { DesignChip } from "@/components/evidence";
-import { Icon } from "@/components/Icon";
+import { Icon, TextArrow } from "@/components/Icon";
 import { api, load } from "@/lib/api";
 import { href, resolveLocale } from "@/lib/i18n";
 
@@ -99,7 +99,7 @@ export default async function LibraryPage({ params, searchParams }: { params: Pr
                     <span className="chip uppercase">{doc.language}</span>
                     <span className="inline-flex items-center gap-1.5 text-xs text-ink-2" title={t("library.quality")}>
                       <span className="relative h-1.5 w-12 overflow-hidden rounded-full" style={{ background: "var(--ev-track)" }} aria-hidden="true">
-                        <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.round(doc.quality_score * 100)}%`, background: "var(--series-1)" }} />
+                        <span className="absolute inset-y-0 start-0 rounded-full" style={{ width: `${Math.round(doc.quality_score * 100)}%`, background: "var(--series-1)" }} />
                       </span>
                       <span className="tabular-nums">{Math.round(doc.quality_score * 100)}</span>
                     </span>
@@ -112,7 +112,7 @@ export default async function LibraryPage({ params, searchParams }: { params: Pr
             <nav className="mt-6 flex items-center justify-between" aria-label="Pagination">
               {docs.data.page > 1 ? (
                 <Link className="btn btn-ghost" href={pageHref(docs.data.page - 1)}>
-                  ← {t("common.previous")}
+                  <TextArrow back /> {t("common.previous")}
                 </Link>
               ) : (
                 <span />
@@ -120,7 +120,7 @@ export default async function LibraryPage({ params, searchParams }: { params: Pr
               <span className="text-sm text-ink-2">{t("common.page", { page: docs.data.page, pages })}</span>
               {docs.data.page < pages ? (
                 <Link className="btn btn-ghost" href={pageHref(docs.data.page + 1)}>
-                  {t("common.next")} →
+                  {t("common.next")} <TextArrow />
                 </Link>
               ) : (
                 <span />

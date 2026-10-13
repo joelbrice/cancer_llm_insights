@@ -279,7 +279,7 @@ export const es: Dictionary = {
     abstentionBody: "Cuando la biblioteca no contiene evidencia relevante suficiente, {app} lo dice en lugar de adivinar.",
     safetyTitle: "La seguridad primero",
     safetyBody:
-      "Las emergencias, situaciones de crisis y síntomas urgentes durante el tratamiento se detectan en cinco idiomas y reciben primero indicaciones de seguridad. {app} nunca diagnostica ni aconseja sobre decisiones de tratamiento.",
+      "Las emergencias, situaciones de crisis y síntomas urgentes durante el tratamiento se detectan en siete idiomas y reciben primero indicaciones de seguridad. {app} nunca diagnostica ni aconseja sobre decisiones de tratamiento.",
     levelsTitle: "Calificaciones",
     weight: "Peso",
   },

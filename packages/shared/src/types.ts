@@ -3,7 +3,7 @@
  * Keep in sync when the backend schemas change (CI type-checks web and mobile against this file).
  */
 
-export type Locale = "en" | "fr" | "es" | "pt" | "de";
+export type Locale = "en" | "fr" | "es" | "pt" | "de" | "it" | "ar";
 export type EvidenceLevelId = "high" | "moderate" | "low" | "very_low" | "insufficient";
 export type Audience = "prevention" | "in_treatment" | "after_treatment" | "caregivers";
 export type SupportLabel = "supported" | "partial" | "unsupported" | "no_citation" | "not_claim" | "not_assessed";

@@ -17,7 +17,7 @@ import { ApiDown, Disclaimer } from "@/components/blocks";
 import { HBarChart, YearStrip } from "@/components/charts";
 import { CitationCard, EvidenceBadge, EvidenceMeter } from "@/components/evidence";
 import { AddQuestionButton, FeedbackButtons, PlanButton } from "@/components/InsightActions";
-import { Icon } from "@/components/Icon";
+import { Icon, TextArrow } from "@/components/Icon";
 import { ReadAloud } from "@/components/ReadAloud";
 import { api, load } from "@/lib/api";
 import { href, resolveLocale } from "@/lib/i18n";
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function PointText({ point, t }: { point: InsightPoint; t: Translate }) {
   const flagged = point.label === "partial";
   return (
-    <span className={flagged ? "claim-partial" : undefined} title={flagged ? t("ask.claimPartial") : undefined}>
+    <span dir="auto" className={flagged ? "claim-partial" : undefined} title={flagged ? t("ask.claimPartial") : undefined}>
       {point.text}
       {point.citations.map((n) => (
         <a key={n} href={`#ref-${n}`} className="cite" aria-label={`${t("ask.sources")} ${n}`}>
@@ -119,7 +119,7 @@ export default async function InsightPage({ params }: Props) {
         </header>
 
         {insight.summary ? (
-          <p className="text-lg leading-relaxed text-ink">
+          <p dir="auto" className="text-lg leading-relaxed text-ink">
             <Summary text={insight.summary} />
           </p>
         ) : null}
@@ -167,7 +167,7 @@ export default async function InsightPage({ params }: Props) {
               <Icon name="info" size={18} />
               {t("insights.limitations")}
             </h2>
-            <ul className="list-disc space-y-1 pl-5 text-ink-2">
+            <ul className="list-disc space-y-1 ps-5 text-ink-2">
               {insight.limitations.map((l) => (
                 <li key={l}>{l}</li>
               ))}
@@ -220,7 +220,7 @@ export default async function InsightPage({ params }: Props) {
               <Icon name="chevronDown" size={16} className="transition group-open:rotate-180" />
               {t("insights.whyGrade")}
             </summary>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-2">
+            <ul className="mt-2 list-disc space-y-1 ps-5 text-sm text-ink-2">
               {ev.rationale.map((r) => (
                 <li key={r.code}>{r.text}</li>
               ))}
@@ -233,7 +233,7 @@ export default async function InsightPage({ params }: Props) {
             {t(`consistency.${ev.consistency}`)}
           </p>
           <Link href={href(lang, "/methodology")} className="text-sm font-semibold text-brand hover:underline">
-            {t("nav.methodology")} →
+            {t("nav.methodology")} <TextArrow />
           </Link>
         </section>
       </aside>

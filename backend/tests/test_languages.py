@@ -3,10 +3,13 @@ languages: language identification, shared stopword/filler tables, topic vectors
 
 from __future__ import annotations
 
+import itertools
+import re
 from pathlib import Path
 
 import pytest
 
+from app.community.moderation import CommunityConfig, CommunityModerator
 from app.core.language import detect_language
 from app.core.text import QUERY_FILLERS, STOPWORDS, analyze, split_sentences, stopwords
 from app.safety.guardrails import Guardrails
@@ -131,3 +134,16 @@ def test_insights_are_built_in_italian_and_arabic(ingested):
     assert ar and ar.title == "فوائد الإقلاع عن التدخين"
     assert it.status == ar.status == "published" and it.citations
     assert any("lingua originale" in limitation for limitation in it.limitations)
+
+
+def test_every_suggested_italian_and_arabic_handle_is_accepted():
+    """The apps suggest pseudonyms from word lists in packages/shared; the server must accept every one of them."""
+    source = (Path(__file__).resolve().parents[2] / "packages/shared/src/community.ts").read_text(encoding="utf-8")
+    moderator = CommunityModerator(CommunityConfig(), Guardrails())
+    for lang in ("it", "ar"):
+        block = re.search(rf"^  {lang}: \{{ a: \[(.*?)\], n: \[(.*?)\] \}},$", source, re.M)
+        assert block, lang
+        first, second = (re.findall(r'"([^"]+)"', group) for group in block.groups())
+        assert len(first) >= 10 and len(second) >= 10
+        rejected = [f"{a} {n} 42" for a, n in itertools.product(first, second) if moderator.check_handle(f"{a} {n} 42")]
+        assert rejected == []

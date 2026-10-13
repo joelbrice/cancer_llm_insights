@@ -2,7 +2,7 @@ import type { Audience } from "@stepwell/shared";
 import Link from "next/link";
 
 import { ApiDown, DataStatusCard, InsightCard } from "@/components/blocks";
-import { Icon, type IconName } from "@/components/Icon";
+import { Icon, TextArrow, type IconName } from "@/components/Icon";
 import { AskBox } from "@/components/AskBox";
 import { api, load } from "@/lib/api";
 import { href, resolveLocale } from "@/lib/i18n";
@@ -26,7 +26,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <section className="relative overflow-hidden rounded-3xl border border-line bg-surface px-5 py-10 md:px-12 md:py-14">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-60 blur-3xl"
+          className="pointer-events-none absolute -end-24 -top-24 h-72 w-72 rounded-full opacity-60 blur-3xl"
           style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--brand) 28%, transparent), transparent 70%)" }}
         />
         <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold text-brand-strong">
@@ -71,7 +71,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               {t("home.featured")}
             </h2>
             <Link href={href(lang, "/insights")} className="text-sm font-semibold text-brand hover:underline">
-              {t("common.viewAll")} →
+              {t("common.viewAll")} <TextArrow />
             </Link>
           </div>
           <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -88,7 +88,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             {t("home.howTitle")}
           </h2>
           <Link href={href(lang, "/methodology")} className="mt-2 inline-block text-sm font-semibold text-brand hover:underline">
-            {t("nav.methodology")} →
+            {t("nav.methodology")} <TextArrow />
           </Link>
         </div>
         <ol className="grid gap-4 md:grid-cols-3">

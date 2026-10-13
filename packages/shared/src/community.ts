@@ -37,6 +37,10 @@ const WORDS: Record<Locale, { a: string[]; n: string[] }> = {
   es: { a: ["Valiente", "Sereno", "Brillante", "Amable", "Firme", "Alegre", "Tenaz", "Claro", "Cálido", "Fiel"], n: ["Sauce", "Puerto", "Gorrión", "Cedro", "Río", "Prado", "Farol", "Arce", "Enebro", "Mirlo"] },
   pt: { a: ["Corajoso", "Sereno", "Brilhante", "Gentil", "Firme", "Alegre", "Tenaz", "Claro", "Caloroso", "Fiel"], n: ["Salgueiro", "Porto", "Pardal", "Cedro", "Rio", "Prado", "Lanterna", "Bordo", "Zimbro", "Melro"] },
   de: { a: ["Mutig", "Ruhig", "Hell", "Sanft", "Stetig", "Froh", "Treu", "Klar", "Warm", "Kühn"], n: ["Weide", "Hafen", "Spatz", "Zeder", "Fluss", "Wiese", "Laterne", "Ahorn", "Wacholder", "Amsel"] },
+  // Italian: adjectives in -e agree with any noun
+  it: { a: ["Gentile", "Dolce", "Forte", "Felice", "Lieve", "Fedele", "Tenace", "Brillante", "Costante", "Paziente"], n: ["Salice", "Porto", "Passero", "Cedro", "Fiume", "Prato", "Lanterna", "Acero", "Ginepro", "Merlo"] },
+  // Arabic puts the noun first: "a" holds nouns and "n" adjectives (all masculine so they agree; no diacritics)
+  ar: { a: ["نهر", "قمر", "أرز", "عصفور", "مرفأ", "فجر", "نسيم", "ضوء", "غصن", "نخيل"], n: ["هادئ", "شجاع", "لطيف", "دافئ", "مشرق", "ثابت", "صبور", "وفي", "حالم", "رقيق"] },
 };
 
 /** A friendly pseudonym suggestion, e.g. "Calm Willow 27". Never derived from personal data. */

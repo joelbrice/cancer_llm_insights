@@ -53,7 +53,7 @@ export default function ThreadScreen() {
   return (
     <Screen>
       <PostCard post={thread.post} token={token} reactions={meta.reactions} onChange={update} onDeleted={() => router.back()} onBlocked={() => router.back()} threadLink={false} />
-      <View style={{ gap: space(3), borderLeftWidth: 2, borderLeftColor: colors.border, paddingLeft: space(3) }}>
+      <View style={{ gap: space(3), borderStartWidth: 2, borderStartColor: colors.border, paddingStart: space(3) }}>
         {thread.replies.map((reply) => (
           <PostCard
             key={reply.id}

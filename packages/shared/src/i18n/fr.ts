@@ -281,7 +281,7 @@ export const fr: Dictionary = {
     abstentionBody: "Quand la bibliothèque ne contient pas assez de preuves pertinentes, {app} le dit au lieu de deviner.",
     safetyTitle: "La sécurité d'abord",
     safetyBody:
-      "Les urgences, situations de crise et symptômes urgents pendant un traitement sont détectés en cinq langues et reçoivent d'abord des consignes de sécurité. {app} ne pose jamais de diagnostic et ne conseille pas sur les décisions de traitement.",
+      "Les urgences, situations de crise et symptômes urgents pendant un traitement sont détectés en sept langues et reçoivent d'abord des consignes de sécurité. {app} ne pose jamais de diagnostic et ne conseille pas sur les décisions de traitement.",
     levelsTitle: "Niveaux",
     weight: "Poids",
   },

@@ -65,6 +65,17 @@ export function Card({ children, style }: { children: ReactNode; style?: StylePr
   );
 }
 
+/** Icons that point along the reading direction are mirrored in right-to-left languages. */
+const MIRRORED = new Set<string>(["chevron-forward", "chevron-back", "arrow-forward", "arrow-back", "send"]);
+export function mirrorStyle(rtl: boolean, name: string) {
+  return rtl && MIRRORED.has(name) ? { transform: [{ scaleX: -1 }] } : undefined;
+}
+
+/** Lays a subtree out right to left for Arabic. Modals are separate roots, so each one applies it too. */
+export function directionStyle(rtl: boolean) {
+  return rtl ? ({ direction: "rtl" } as const) : undefined;
+}
+
 export function Button({
   label,
   onPress,
@@ -80,7 +91,7 @@ export function Button({
   disabled?: boolean;
   accessibilityLabel?: string;
 }) {
-  const { colors } = useSettings();
+  const { colors, rtl } = useSettings();
   const primary = variant === "primary";
   const fg = primary ? colors.onBrand : variant === "danger" ? colors.critical : colors.ink;
   return (
@@ -104,7 +115,7 @@ export function Button({
         opacity: disabled ? 0.5 : pressed ? 0.85 : 1,
       })}
     >
-      {icon ? <Ionicons name={icon} size={18} color={fg} /> : null}
+      {icon ? <Ionicons name={icon} size={18} color={fg} style={mirrorStyle(rtl, icon)} /> : null}
       <Text style={{ color: fg, fontWeight: "600", fontSize: 15 }}>{label}</Text>
     </Pressable>
   );
@@ -215,7 +226,7 @@ export function CitationCard({ citation, onDocument }: { citation: Citation; onD
           </View>
         </View>
       </View>
-      <View style={{ borderLeftWidth: 2, borderLeftColor: colors.series, paddingLeft: space(3), marginTop: space(1) }}>
+      <View style={{ borderStartWidth: 2, borderStartColor: colors.series, paddingStart: space(3), marginTop: space(1) }}>
         <Txt accessibilityLabel={`${t("insights.quote")}: ${citation.quote}`}>“{citation.quote}”</Txt>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
@@ -286,7 +297,7 @@ export function SafetyBanner({ safety }: { safety: SafetyAssessment }) {
 }
 
 export function InsightRow({ insight, onPress }: { insight: InsightSummary; onPress: () => void }) {
-  const { t, colors } = useSettings();
+  const { t, colors, rtl } = useSettings();
   return (
     <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
       <Card>
@@ -302,7 +313,7 @@ export function InsightRow({ insight, onPress }: { insight: InsightSummary; onPr
         </Txt>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Txt variant="muted">{insight.n_sources === 1 ? t("common.source") : t("common.sources", { n: insight.n_sources })}</Txt>
-          <Ionicons name="chevron-forward" size={18} color={colors.ink3} />
+          <Ionicons name="chevron-forward" size={18} color={colors.ink3} style={mirrorStyle(rtl, "chevron-forward")} />
         </View>
       </Card>
     </Pressable>

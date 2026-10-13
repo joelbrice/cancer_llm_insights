@@ -60,7 +60,7 @@ export default function Check() {
           <View style={{ flexDirection: "row", height: 12, borderRadius: 6, overflow: "hidden", backgroundColor: colors.surface3 }} accessible={false}>
             {(["aligned", "partly", "info", "not_aligned"] as CheckStatus[]).map((s) =>
               result.counts[s] ? (
-                <View key={s} style={{ flex: result.counts[s], backgroundColor: STATUS[s].color(colors), borderRightWidth: 2, borderRightColor: colors.surface }} />
+                <View key={s} style={{ flex: result.counts[s], backgroundColor: STATUS[s].color(colors), borderEndWidth: 2, borderEndColor: colors.surface }} />
               ) : null,
             )}
           </View>

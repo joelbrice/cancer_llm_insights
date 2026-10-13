@@ -1,14 +1,16 @@
 import { brandName } from "../brand";
 import type { Locale } from "../types";
 import { de } from "./de";
+import { ar } from "./ar";
 import { type Dictionary, en } from "./en";
 import { es } from "./es";
 import { fr } from "./fr";
+import { it } from "./it";
 import { pt } from "./pt";
 
 export type { Dictionary };
 
-export const LOCALES: readonly Locale[] = ["en", "fr", "es", "pt", "de"] as const;
+export const LOCALES: readonly Locale[] = ["en", "fr", "es", "pt", "de", "it", "ar"] as const;
 export const DEFAULT_LOCALE: Locale = "en";
 
 export const LOCALE_NAMES: Record<Locale, string> = {
@@ -17,9 +19,18 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   es: "Español",
   pt: "Português",
   de: "Deutsch",
+  it: "Italiano",
+  ar: "العربية",
 };
 
-export const DICTIONARIES: Record<Locale, Dictionary> = { en, fr, es, pt, de };
+/** Right-to-left scripts among the supported languages. */
+export const RTL_LOCALES: readonly Locale[] = ["ar"];
+
+export function localeDirection(locale: Locale): "rtl" | "ltr" {
+  return RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
+}
+
+export const DICTIONARIES: Record<Locale, Dictionary> = { en, fr, es, pt, de, it, ar };
 
 type Leaves<T, P extends string = ""> = {
   [K in keyof T & string]: T[K] extends string ? `${P}${K}` : Leaves<T[K], `${P}${K}.`>;

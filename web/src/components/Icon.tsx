@@ -64,7 +64,11 @@ const PATHS = {
 
 export type IconName = keyof typeof PATHS;
 
-export function Icon({ name, size = 20, title, ...rest }: { name: IconName; size?: number; title?: string } & SVGProps<SVGSVGElement>) {
+/** Icons that point along the reading direction: mirrored in right-to-left languages. */
+const MIRRORED = new Set<IconName>(["chevronRight", "send", "logout"]);
+
+export function Icon({ name, size = 20, title, className, ...rest }: { name: IconName; size?: number; title?: string } & SVGProps<SVGSVGElement>) {
+  const mirrored = MIRRORED.has(name) ? "rtl:-scale-x-100" : undefined;
   return (
     <svg
       width={size}
@@ -78,12 +82,18 @@ export function Icon({ name, size = 20, title, ...rest }: { name: IconName; size
       aria-hidden={title ? undefined : true}
       role={title ? "img" : undefined}
       focusable="false"
+      className={[className, mirrored].filter(Boolean).join(" ") || undefined}
       {...rest}
     >
       {title ? <title>{title}</title> : null}
       <path d={PATHS[name]} />
     </svg>
   );
+}
+
+/** An arrow in running text ("Next →", "← Back"), turned to follow the reading direction. */
+export function TextArrow({ back = false }: { back?: boolean }) {
+  return <span className="inline-block rtl:-scale-x-100">{back ? "←" : "→"}</span>;
 }
 
 /** Brand mark: a leaf-shaped "V" whose stem is a citation bracket — life + evidence. */

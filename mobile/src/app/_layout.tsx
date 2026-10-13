@@ -2,21 +2,23 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { SyncAgent } from "@/components/personal";
+import { directionStyle } from "@/components/ui";
 import { WelcomeNotice } from "@/components/WelcomeNotice";
 import { SettingsProvider, useSettings } from "@/lib/settings";
 
 void SplashScreen.preventAutoHideAsync();
 
 function Navigator() {
-  const { colors, scheme, t } = useSettings();
+  const { colors, scheme, t, rtl } = useSettings();
   useEffect(() => {
     void SplashScreen.hideAsync();
   }, []);
   return (
-    <>
+    <View style={[{ flex: 1 }, directionStyle(rtl)]}>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       <Stack
         screenOptions={{
@@ -42,7 +44,7 @@ function Navigator() {
       </Stack>
       <WelcomeNotice />
       <SyncAgent />
-    </>
+    </View>
   );
 }
 

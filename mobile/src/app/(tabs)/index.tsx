@@ -4,13 +4,13 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, TextInput, View } from "react-native";
 
-import { Button, Card, Disclaimer, ErrorNote, InsightRow, Screen, StatusCard, Txt, type IconName } from "@/components/ui";
+import { Button, Card, Disclaimer, ErrorNote, InsightRow, mirrorStyle, Screen, StatusCard, Txt, type IconName } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
 import { radius, space } from "@/lib/theme";
 import { useApi } from "@/lib/useApi";
 
 export default function Home() {
-  const { t, api, locale, colors } = useSettings();
+  const { t, api, locale, colors, rtl } = useSettings();
   const [q, setQ] = useState("");
   const status = useApi(() => api.status(), [api]);
   const featured = useApi(() => api.insights({ lang: locale, page_size: 4 }), [api, locale]);
@@ -39,7 +39,7 @@ export default function Home() {
         <Txt variant="title">{t("home.heroTitle")}</Txt>
         <Txt variant="small">{t("home.heroSubtitle")}</Txt>
       </View>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingLeft: space(4), paddingRight: 6, paddingVertical: 6 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingStart: space(4), paddingEnd: 6, paddingVertical: 6 }}>
         <TextInput
           value={q}
           onChangeText={setQ}
@@ -51,7 +51,7 @@ export default function Home() {
           accessibilityLabel={t("ask.placeholder")}
         />
         <Pressable onPress={ask} accessibilityRole="button" accessibilityLabel={t("ask.send")} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.brand, alignItems: "center", justifyContent: "center" }}>
-          <Ionicons name="send" size={18} color={colors.onBrand} />
+          <Ionicons name="send" size={18} color={colors.onBrand} style={mirrorStyle(rtl, "send")} />
         </Pressable>
       </View>
       {status.data ? <StatusCard status={status.data} /> : status.error ? <ErrorNote message={status.error} onRetry={status.reload} /> : null}

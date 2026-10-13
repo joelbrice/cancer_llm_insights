@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ApiDown, DataStatusCard, EmptyState, InsightCard, PageHeader } from "@/components/blocks";
-import { Icon } from "@/components/Icon";
+import { Icon, TextArrow } from "@/components/Icon";
 import { api, load } from "@/lib/api";
 import { href, resolveLocale } from "@/lib/i18n";
 
@@ -120,7 +120,7 @@ export default async function InsightsPage({ params, searchParams }: { params: P
             <nav className="mt-6 flex items-center justify-between" aria-label="Pagination">
               {list.data.page > 1 ? (
                 <Link className="btn btn-ghost" href={pageHref(list.data.page - 1)}>
-                  ← {t("common.previous")}
+                  <TextArrow back /> {t("common.previous")}
                 </Link>
               ) : (
                 <span />
@@ -128,7 +128,7 @@ export default async function InsightsPage({ params, searchParams }: { params: P
               <span className="text-sm text-ink-2">{t("common.page", { page: list.data.page, pages })}</span>
               {list.data.page < pages ? (
                 <Link className="btn btn-ghost" href={pageHref(list.data.page + 1)}>
-                  {t("common.next")} →
+                  {t("common.next")} <TextArrow />
                 </Link>
               ) : (
                 <span />

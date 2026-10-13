@@ -15,7 +15,7 @@ import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, Tex
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Feedback } from "@/components/Feedback";
-import { Card, Chip, CitationCard, EvidenceBadge, SafetyBanner, Txt } from "@/components/ui";
+import { Card, Chip, CitationCard, directionStyle, EvidenceBadge, mirrorStyle, SafetyBanner, Txt } from "@/components/ui";
 import { useSettings } from "@/lib/settings";
 import { readJSON } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
@@ -83,7 +83,7 @@ function AnswerText({ response, onCite }: { response: ChatResponse; onCite: (c: 
 }
 
 export default function Ask() {
-  const { t, api, locale, colors } = useSettings();
+  const { t, api, locale, colors, rtl } = useSettings();
   const params = useLocalSearchParams<{ q?: string }>();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
@@ -244,7 +244,7 @@ export default function Ask() {
               accessibilityLabel={busy ? t("ask.stop") : t("ask.send")}
               style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.brand, alignItems: "center", justifyContent: "center", opacity: !busy && !input.trim() ? 0.5 : 1 }}
             >
-              <Ionicons name={busy ? "stop" : "send"} size={18} color={colors.onBrand} />
+              <Ionicons name={busy ? "stop" : "send"} size={18} color={colors.onBrand} style={mirrorStyle(rtl, busy ? "stop" : "send")} />
             </Pressable>
           </View>
           <Txt variant="muted" style={{ textAlign: "center" }}>
@@ -253,7 +253,7 @@ export default function Ask() {
         </View>
       </KeyboardAvoidingView>
       <Modal visible={!!cite} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setCite(null)}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
+        <SafeAreaView style={[{ flex: 1, backgroundColor: colors.bg }, directionStyle(rtl)]}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: space(4) }}>
             <Txt variant="label">{t("ask.sources")}</Txt>
             <Pressable onPress={() => setCite(null)} accessibilityRole="button" accessibilityLabel={t("common.close")} hitSlop={10}>

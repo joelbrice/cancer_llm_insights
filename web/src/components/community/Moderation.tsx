@@ -102,10 +102,10 @@ export function CommunityModeration() {
                     {relativeTime(lang, item.appeal.created_at)}
                   </span>
                 </p>
-                <p className="whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
+                <p dir="auto" className="whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
                 <p className="rounded-xl bg-surface-2 p-3 text-sm text-ink">
                   <span className="font-semibold">{t("admin.appealText")}: </span>
-                  {item.appeal.text}
+                  <bdi>{item.appeal.text}</bdi>
                 </p>
                 <label className="block">
                   <span className="sr-only">{t("admin.responsePlaceholder")}</span>
@@ -143,7 +143,7 @@ export function CommunityModeration() {
                   {item.post.circle} · {relativeTime(lang, item.post.created_at)} · {item.post.status}
                 </span>
               </p>
-              <p className="whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
+              <p dir="auto" className="whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
               <p className="text-xs text-ink-2">
                 {t("admin.flags")}: {item.flags.join(", ") || "—"}
                 {item.reports.length ? ` · ${t("admin.reports")}: ${item.reports.map((r) => r.reason).join(", ")}` : ""}
@@ -151,7 +151,7 @@ export function CommunityModeration() {
               {item.appeal ? (
                 <p className="rounded-xl bg-surface-2 p-3 text-sm text-ink">
                   <span className="font-semibold">{t("admin.appealText")}: </span>
-                  {item.appeal.text}
+                  <bdi>{item.appeal.text}</bdi>
                 </p>
               ) : null}
               <div className="flex flex-wrap gap-2">

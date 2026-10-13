@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Alert, Pressable, TextInput, View } from "react-native";
 
 import { OfflineCard } from "@/components/personal";
-import { Button, Card, Chip, Disclaimer, Screen, Txt, type IconName } from "@/components/ui";
+import { Button, Card, Chip, Disclaimer, mirrorStyle, Screen, Txt, type IconName } from "@/components/ui";
 import { offlinePackKeys } from "@/lib/offline";
 import { cancelWeeklyReminder } from "@/lib/reminders";
 import { API_URL_KEY, useSettings } from "@/lib/settings";
@@ -14,7 +14,7 @@ import { readJSON, removeKeys } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
 
 export default function Me() {
-  const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors, api } = useSettings();
+  const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors, api, rtl } = useSettings();
   const [url, setUrl] = useState(apiUrl);
   const links: { href: Href; icon: IconName; label: string }[] = [
     { href: "/plan", icon: "checkbox-outline", label: t("nav.plan") },
@@ -56,7 +56,7 @@ export default function Me() {
           >
             <Ionicons name={l.icon} size={22} color={colors.brand} />
             <Txt style={{ flex: 1 }}>{l.label}</Txt>
-            <Ionicons name="chevron-forward" size={18} color={colors.ink3} />
+            <Ionicons name="chevron-forward" size={18} color={colors.ink3} style={mirrorStyle(rtl, "chevron-forward")} />
           </Pressable>
         ))}
       </Card>

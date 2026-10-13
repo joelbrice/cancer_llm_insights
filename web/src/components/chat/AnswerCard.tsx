@@ -86,7 +86,7 @@ export function AnswerBody({ response, onCitation }: { response: ChatResponse; o
     cursor = claim.end;
   }
   if (cursor < answer.length) pieces.push(<Fragment key="tail">{withCitations(answer.slice(cursor), citations, onCitation, t)}</Fragment>);
-  return <div className="prose-answer text-[1.02rem] text-ink">{pieces}</div>;
+  return <div dir="auto" className="prose-answer text-[1.02rem] text-ink">{pieces}</div>;
 }
 
 export function SafetyBanner({ safety }: { safety: SafetyAssessment }) {
@@ -200,7 +200,7 @@ export function AnswerCard({ turn, onCitation }: { turn: Turn; onCitation: (c: C
           </p>
         ) : !response ? (
           <div className="space-y-3">
-            {turn.content ? <div className="prose-answer text-ink">{turn.content}</div> : null}
+            {turn.content ? <div dir="auto" className="prose-answer text-ink">{turn.content}</div> : null}
             <Progress turn={turn} />
           </div>
         ) : response.abstained ? (
@@ -209,7 +209,7 @@ export function AnswerCard({ turn, onCitation }: { turn: Turn; onCitation: (c: C
               <Icon name="info" className="text-ink-2" />
               {t("ask.abstainedTitle")}
             </p>
-            <div className="prose-answer text-ink-2">{response.answer}</div>
+            <div dir="auto" className="prose-answer text-ink-2">{response.answer}</div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -231,7 +231,7 @@ export function AnswerCard({ turn, onCitation }: { turn: Turn; onCitation: (c: C
                   {t("insights.whyGrade")}
                 </summary>
                 <p className="mt-2 text-sm text-ink-2">{t(`levels.${response.evidence.level}Desc`)}</p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink">
+                <ul className="mt-2 list-disc space-y-1 ps-5 text-sm text-ink">
                   {response.evidence.rationale.map((r) => (
                     <li key={r.code}>{r.text}</li>
                   ))}

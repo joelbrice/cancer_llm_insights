@@ -106,7 +106,7 @@ export default async function DocumentPage({ params }: Props) {
                 {chunk.section ? <span>· {chunk.section}</span> : null}
                 {chunk.page_start ? <span>· {t("insights.page", { page: chunk.page_start })}</span> : null}
               </p>
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{chunk.text}</p>
+              <p dir="auto" className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{chunk.text}</p>
             </li>
           ))}
         </ol>

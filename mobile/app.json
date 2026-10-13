@@ -30,7 +30,9 @@
       "fr": "./locales/fr.json",
       "es": "./locales/es.json",
       "pt": "./locales/pt.json",
-      "de": "./locales/de.json"
+      "de": "./locales/de.json",
+      "it": "./locales/it.json",
+      "ar": "./locales/ar.json"
     },
     "plugins": [
       "expo-router",

@@ -24,7 +24,7 @@ export async function noHorizontalOverflow(page: Page) {
   return page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
 }
 
-export const LOCALES = ["en", "fr", "es", "pt", "de"] as const;
+export const LOCALES = ["en", "fr", "es", "pt", "de", "it", "ar"] as const;
 export const PAGES = [
   "", "/ask", "/insights", "/community", "/community/guidelines", "/check", "/plan", "/library", "/methodology", "/profile",
   "/about", "/admin", "/appointment", "/transparency",

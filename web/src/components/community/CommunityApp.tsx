@@ -9,7 +9,7 @@ import { communityError, isAuthError, useCommunityToken } from "@/lib/community"
 import { useLocale, useT } from "@/lib/i18n-client";
 import { readLocal } from "@/lib/storage";
 
-import { Icon, type IconName } from "../Icon";
+import { Icon, TextArrow, type IconName } from "../Icon";
 import { AccountPanel } from "./Account";
 import { Composer, ModerationNotice, type ComposerHandle } from "./Composer";
 import { JoinCommunity } from "./Join";
@@ -236,7 +236,7 @@ export function CommunityApp() {
               type="button"
               onClick={() => setCircle(c.id)}
               aria-pressed={circle === c.id}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition ${circle === c.id ? "bg-brand-soft text-brand-strong" : "text-ink-2 hover:bg-surface-2"}`}
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-medium transition ${circle === c.id ? "bg-brand-soft text-brand-strong" : "text-ink-2 hover:bg-surface-2"}`}
             >
               <Icon name={c.icon} size={18} />
               {c.title}
@@ -254,7 +254,7 @@ export function CommunityApp() {
             {t("community.g5")}
           </p>
           <Link href={`/${lang}/community/guidelines`} className="inline-block font-semibold text-brand hover:underline">
-            {t("community.guidelinesTitle")} →
+            {t("community.guidelinesTitle")} <TextArrow />
           </Link>
         </section>
         {token && me ? <AccountPanel me={me} token={token} onSignedOut={signOut} /> : null}

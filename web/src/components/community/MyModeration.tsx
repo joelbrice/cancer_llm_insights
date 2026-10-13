@@ -64,7 +64,7 @@ export function MyModeration({ token, country }: { token: string; country?: stri
                 <span className="chip">{item.post.status === "removed" ? t("community.removedByModerator") : t("community.heldForReview")}</span>
                 <span className="text-xs text-ink-3">{relativeTime(lang, item.post.created_at)}</span>
               </p>
-              <p className="line-clamp-4 whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
+              <p dir="auto" className="line-clamp-4 whitespace-pre-wrap break-words text-ink">{item.post.body}</p>
               <p className="text-xs text-ink-2">{t("community.reasonLabel", { reason: t(`community.held.${reason}` as MessageKey) })}</p>
               {item.appeal ? (
                 <div className="space-y-1 border-t border-line pt-2">

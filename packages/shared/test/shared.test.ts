@@ -16,6 +16,7 @@ import {
   formatReference,
   highlightQuote,
   isoWeek,
+  localeDirection,
   negotiateLocale,
   sortedDesigns,
   sourceLink,
@@ -38,12 +39,28 @@ describe("i18n", () => {
       expect(keys(DICTIONARIES[locale]).sort()).toEqual(reference);
     }
     const t = createTranslator("en");
-    const fr = createTranslator("fr");
-    for (const key of reference) {
-      const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort().join();
-      // @ts-expect-error dynamic key in test
-      expect(placeholders(fr(key, {})), key).toBe(placeholders(t(key, {})));
+    const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort().join();
+    for (const locale of LOCALES) {
+      const other = createTranslator(locale);
+      for (const key of reference) {
+        // @ts-expect-error dynamic key in test
+        expect(placeholders(other(key, {})), `${locale}: ${key}`).toBe(placeholders(t(key, {})));
+      }
     }
+  });
+
+  it("adds Italian and Arabic, with Arabic read right to left", () => {
+    expect(LOCALES).toEqual(["en", "fr", "es", "pt", "de", "it", "ar"]);
+    expect(LOCALES.map(localeDirection)).toEqual(["ltr", "ltr", "ltr", "ltr", "ltr", "ltr", "rtl"]);
+    expect(negotiateLocale("ar-LB,ar;q=0.9")).toBe("ar");
+    expect(negotiateLocale(["it-CH", "de"])).toBe("it");
+    expect(createTranslator("it")("common.language")).toBe("Lingua");
+    for (const item of CHECK_ITEMS) {
+      for (const label of [item.question, item.advice, ...item.options.map((o) => o.label)]) {
+        expect(label.it && label.ar && label.ar !== label.en, label.en).toBeTruthy();
+      }
+    }
+    expect(suggestHandle("ar", () => 0)).toMatch(/^\p{Script=Arabic}+ \p{Script=Arabic}+ 10$/u);
   });
 
   it("interpolates params and the brand name", () => {

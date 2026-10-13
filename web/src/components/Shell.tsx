@@ -60,9 +60,9 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
   return (
     <label className={`relative inline-flex items-center ${className}`}>
       <span className="sr-only">{t("common.language")}</span>
-      <Icon name="globe" size={16} className="pointer-events-none absolute left-3 text-ink-2" />
+      <Icon name="globe" size={16} className="pointer-events-none absolute start-3 text-ink-2" />
       <select
-        className="field !min-h-11 !w-auto cursor-pointer appearance-none !rounded-full !py-1 pl-9 pr-4 text-sm font-medium"
+        className="field !min-h-11 !w-auto cursor-pointer appearance-none !rounded-full !py-1 ps-9 pe-4 text-sm font-medium"
         value={lang}
         onChange={(event) => {
           const next = event.target.value as Locale;
@@ -105,7 +105,7 @@ export function Header() {
             <span className="mt-0.5 hidden whitespace-nowrap text-[0.7rem] font-medium tracking-normal text-ink-2 sm:block">{t("app.descriptor")}</span>
           </span>
         </Link>
-        <nav aria-label="Main" className="ml-4 hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className="ms-4 hidden items-center gap-1 lg:flex">
           {HEADER_NAV.map((item) => {
             const active = isActive(pathname, lang, item.path);
             return (
@@ -121,7 +121,7 @@ export function Header() {
             );
           })}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <div className="hidden sm:block">
             <ThemeToggle compact />
@@ -135,7 +135,7 @@ export function Header() {
         ref={dialog}
         onClose={() => setOpen(false)}
         onClick={(e) => e.target === dialog.current && setOpen(false)}
-        className="m-0 ml-auto h-dvh max-h-dvh w-[min(22rem,90vw)] max-w-none bg-surface p-0 text-ink shadow-card open:flex open:flex-col"
+        className="m-0 ms-auto h-dvh max-h-dvh w-[min(22rem,90vw)] max-w-none bg-surface p-0 text-ink shadow-card open:flex open:flex-col"
         aria-label={t("nav.menu")}
       >
         <div className="flex items-center justify-between border-b border-line p-4">

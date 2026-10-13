@@ -56,7 +56,7 @@ export default async function MethodologyPage({ params }: { params: Promise<{ la
               </div>
               <div className="text-sm">
                 {designs.map((id) => (
-                  <span key={id} className="mr-3 inline-block">
+                  <span key={id} className="me-3 inline-block">
                     <span className="font-medium text-ink">{translateDynamic(t, "designs", id)}</span>{" "}
                     <span className="tabular-nums text-ink-3">
                       {t("methodology.weight")} {(weights[id] ?? 0).toFixed(2)}
@@ -87,7 +87,7 @@ export default async function MethodologyPage({ params }: { params: Promise<{ la
             <tbody>
               {levels.map((l) => (
                 <tr key={l.id} className="border-t border-line first:border-t-0">
-                  <td className="py-2 pr-2">
+                  <td className="py-2 pe-2">
                     <EvidenceBadge level={l.id} grade={LEVEL_GRADE[l.id]} t={t} size="sm" />
                   </td>
                   <td className="whitespace-nowrap px-2 py-2 tabular-nums text-ink-3">{l.min}</td>

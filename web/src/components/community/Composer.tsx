@@ -81,7 +81,7 @@ export const Composer = forwardRef<ComposerHandle, { token: string; circles: Cir
             </button>
           ))}
           {!circle ? (
-            <select className="field !min-h-9 ml-auto w-auto !py-1 text-sm" value={target} onChange={(e) => setTarget(e.target.value)} aria-label={t("community.circle")}>
+            <select className="field !min-h-9 ms-auto w-auto !py-1 text-sm" value={target} onChange={(e) => setTarget(e.target.value)} aria-label={t("community.circle")}>
               {circles.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}

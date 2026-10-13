@@ -6,6 +6,7 @@ for (const lang of LOCALES) {
       const res = await page.goto(`/${lang}${path}`, { waitUntil: "networkidle" });
       expect(res?.status(), `${lang}${path}`).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
+      await expect(page.locator("html")).toHaveAttribute("dir", lang === "ar" ? "rtl" : "ltr");
       expect(await noHorizontalOverflow(page), `overflow on ${lang}${path}`).toBe(true);
     }
     expect(errors).toEqual([]);
@@ -29,5 +30,20 @@ test.describe("first launch", () => {
 
 test("locale negotiation redirects the root to a language", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  await expect(page).toHaveURL(/\/(en|fr|es|pt|de)$/);
+  await expect(page).toHaveURL(/\/(en|fr|es|pt|de|it|ar)$/);
+});
+
+test("Italian and Arabic browsers land in their language, and Arabic reads right to left", async ({ browser }) => {
+  for (const [locale, lang] of [["it-IT", "it"], ["ar-LB", "ar"]] as const) {
+    const ctx = await browser.newContext({ locale });
+    const page = await ctx.newPage();
+    await page.addInitScript(() => localStorage.setItem("stepwell.welcome.v1", "true"));
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page).toHaveURL(new RegExp(`/${lang}$`));
+    const width = page.viewportSize()!.width;
+    const brand = (await page.locator("header a").first().boundingBox())!;
+    if (lang === "ar") expect(brand.x).toBeGreaterThan(width / 2); // the brand sits at the start: the right
+    else expect(brand.x + brand.width).toBeLessThan(width / 2);
+    await ctx.close();
+  }
 });

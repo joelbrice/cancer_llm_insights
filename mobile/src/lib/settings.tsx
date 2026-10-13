@@ -2,6 +2,7 @@ import {
   configureBrand,
   createTranslator,
   isLocale,
+  localeDirection,
   negotiateLocale,
   STORAGE_KEYS,
   StepwellClient,
@@ -27,6 +28,8 @@ const DEFAULT_API =
 
 interface SettingsValue {
   locale: Locale;
+  /** The chosen language reads right to left (Arabic). */
+  rtl: boolean;
   setLocale: (locale: Locale | null) => void;
   t: Translate;
   scheme: "light" | "dark";
@@ -54,6 +57,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<SettingsValue>(
     () => ({
       locale,
+      rtl: localeDirection(locale) === "rtl",
       setLocale: (l) => setSavedLocale(l),
       t: createTranslator(locale),
       scheme,

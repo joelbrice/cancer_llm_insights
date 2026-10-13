@@ -17,7 +17,7 @@ import { browserApi } from "@/lib/browser-api";
 import { useLocale, useT } from "@/lib/i18n-client";
 import { useLocalState } from "@/lib/storage";
 
-import { Icon, type IconName } from "./Icon";
+import { Icon, TextArrow, type IconName } from "./Icon";
 
 const STATUS_STYLE: Record<CheckStatus, { icon: IconName; color: string; key: "aligned" | "partly" | "notAligned" | "info" }> = {
   aligned: { icon: "check", color: "var(--good-ink)", key: "aligned" },
@@ -66,7 +66,7 @@ export function LifestyleCheck() {
               result.counts[s] ? (
                 <span
                   key={s}
-                  className="h-full border-r-2 border-[var(--surface)] last:border-r-0"
+                  className="h-full border-e-2 border-[var(--surface)] last:border-e-0"
                   style={{ width: `${(result.counts[s] / Math.max(1, result.answered)) * 100}%`, background: STATUS_STYLE[s].color }}
                 />
               ) : null,
@@ -96,13 +96,13 @@ export function LifestyleCheck() {
                   {t(`check.${style.key}`)}
                 </p>
                 <h3 className="mt-1 font-semibold text-ink">{it.question[lang]}</h3>
-                <p className="mt-0.5 text-sm text-ink-2">→ {option.label[lang]}</p>
+                <p className="mt-0.5 text-sm text-ink-2"><TextArrow /> {option.label[lang]}</p>
                 <p className="mt-3 text-ink">{it.advice[lang]}</p>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs text-ink-3">{t("check.framework", { framework: FRAMEWORKS[it.framework] })}</span>
                   {topic?.status === "published" && topic.insight_id ? (
                     <Link href={`/${lang}/insights/${encodeURIComponent(topic.insight_id)}`} className="text-sm font-semibold text-brand hover:underline">
-                      {t("check.seeEvidence")} →
+                      {t("check.seeEvidence")} <TextArrow />
                     </Link>
                   ) : (
                     <span className="chip">{t("insights.awaitingEvidence")}</span>
@@ -189,11 +189,11 @@ export function LifestyleCheck() {
       </fieldset>
       <div className="mt-6 flex items-center justify-between gap-2">
         <button type="button" className="btn btn-ghost" disabled={step === 0} onClick={() => setStep((s) => s - 1)}>
-          ← {t("check.back")}
+          <TextArrow back /> {t("check.back")}
         </button>
         {step < total - 1 ? (
           <button type="button" className="btn btn-primary" disabled={!selected} onClick={() => setStep((s) => s + 1)}>
-            {t("check.next")} →
+            {t("check.next")} <TextArrow />
           </button>
         ) : (
           <button type="button" className="btn btn-primary" disabled={!selected} onClick={() => setShowResults(true)}>

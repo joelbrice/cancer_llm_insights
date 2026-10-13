@@ -7,7 +7,7 @@ import { useSettings } from "@/lib/settings";
 import { useStored } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
 
-import { Button, Txt, type IconName } from "./ui";
+import { Button, directionStyle, Txt, type IconName } from "./ui";
 
 const POINTS: { key: "evidence" | "notAdvice" | "emergency" | "privacy"; icon: IconName }[] = [
   { key: "evidence", icon: "shield-checkmark-outline" },
@@ -18,12 +18,12 @@ const POINTS: { key: "evidence" | "notAdvice" | "emergency" | "privacy"; icon: I
 
 /** First-launch notice (BUILD_SPEC §11.3): educational, not medical advice; emergencies; privacy. Shown once. */
 export function WelcomeNotice() {
-  const { t, colors } = useSettings();
+  const { t, colors, rtl } = useSettings();
   const [seen, setSeen, loaded] = useStored<boolean>(STORAGE_KEYS.welcome, false);
   if (!loaded || seen) return null;
   return (
     <Modal visible animationType="fade" presentationStyle="fullScreen" onRequestClose={() => undefined}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
+      <SafeAreaView style={[{ flex: 1, backgroundColor: colors.bg }, directionStyle(rtl)]}>
         <ScrollView contentContainerStyle={{ padding: space(6), gap: space(4) }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
             <Image source={require("../../assets/icon.png")} style={{ width: 44, height: 44, borderRadius: 12 }} />
