@@ -24,7 +24,7 @@ German, Italian and Arabic (right to left), on the web (installable PWA), iOS an
 | **Insights** | 43 topics across four journeys, generated per language: key points, "what you can do", limits of the evidence, study-design profile and full references. |
 | **Evidence library** | Every source with its study design, credibility and year, and the insights that cite it. Retracted papers are never used. |
 | **Lifestyle check** | 15 questions compared with WHO, WCRF and the European Code Against Cancer. Private on the device. **Not** a risk score. |
-| **My plan** | Evidence-based steps with weekly check-ins and streaks; milestones can be shared with the community. Optional weekly reminder, and on mobile a step count that never leaves the phone. |
+| **My plan** | Evidence-based steps with weekly check-ins and streaks; milestones can be shared with the community. Optional weekly reminder, and on mobile a step count (motion sensor, or optionally Apple Health / Health Connect) that never leaves the phone. |
 | **Personal tools** | Read-aloud of insights; a "questions for your appointment" list to print; offline insight packs on mobile; optional **end-to-end-encrypted sync** of plan and profile between devices (the server cannot read it). |
 | **Community** | Four circles with weekly prompts; wins, tips and encouragement; supportive reactions only; no private messages. Every post is screened, and posts link to "what the research says". Authors can appeal decisions; a public quarterly transparency report shows aggregate moderation numbers. |
 | **AI engine** | Hybrid retrieval, reranking, a Llama model fine-tuned for grounded answers (or an extractive fallback), claim verification, GRADE-inspired grading, multilingual safety. |

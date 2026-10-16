@@ -764,6 +764,12 @@ export const en = {
     unavailable: "Step counting isn't available on this device.",
     denied: "Motion access is turned off for {app}. You can allow it in your device settings.",
     note: "Any movement counts. If your care team agrees, guidelines suggest building up to at least 150 minutes of moderate activity a week.",
+    useHealth: "Use my step history from {source}",
+    healthHelp: "Includes steps from your watch and other apps. Read on this phone only and never sent to us.",
+    healthDenied: "{app} can't read your steps from {source}. You can allow it in {source}.",
+    healthInstall: "To see your step history, install or update {source}.",
+    healthGet: "Get {source}",
+    healthError: "Couldn't read your steps from {source}. Please try again later.",
   },
   transparency: {
     title: "Community transparency report",

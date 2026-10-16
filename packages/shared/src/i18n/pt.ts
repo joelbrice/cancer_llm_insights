@@ -767,6 +767,12 @@ export const pt: Dictionary = {
     unavailable: "A contagem de passos não está disponível neste dispositivo.",
     denied: "O acesso ao movimento está desativado para o {app}. Pode permiti-lo nas definições do dispositivo.",
     note: "Todo o movimento conta. Se a sua equipa de saúde concordar, as recomendações sugerem chegar gradualmente a pelo menos 150 minutos de atividade moderada por semana.",
+    useHealth: "Usar o meu histórico de passos do {source}",
+    healthHelp: "Inclui os passos do seu relógio e de outras apps. Lidos apenas neste telemóvel e nunca enviados.",
+    healthDenied: "A {app} não consegue ler os seus passos do {source}. Pode permitir no {source}.",
+    healthInstall: "Para ver o seu histórico de passos, instale ou atualize o {source}.",
+    healthGet: "Obter {source}",
+    healthError: "Não foi possível ler os seus passos do {source}. Tente mais tarde.",
   },
   transparency: {
     title: "Relatório de transparência da comunidade",

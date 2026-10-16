@@ -1,1 +1,1 @@
-{"CFBundleDisplayName": "Stepwell", "NSMotionUsageDescription": "Stepwell counts your steps on this phone to show them next to your plan. Your steps never leave your device."}
+{"CFBundleDisplayName": "Stepwell", "NSMotionUsageDescription": "Stepwell counts your steps on this phone to show them next to your plan. Your steps never leave your device.", "NSHealthShareUsageDescription": "Stepwell reads your daily step count from Apple Health to show it next to your plan, only if you turn this on. Your steps stay on your phone."}

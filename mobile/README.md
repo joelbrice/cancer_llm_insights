@@ -11,7 +11,7 @@ lifestyle-check answers, language, theme) stays on the device in AsyncStorage.
 | Insights | Filter by topic / audience, search |
 | Insight | Key points, recommendations (→ *My plan*), limitations, evidence profile (grade rationale, study-design bars), references with quotes, share |
 | Check | 15-question lifestyle check vs. ECAC / WCRF / WHO recommendations, computed on device — explicitly *not* a risk score |
-| Plan | Weekly check-ins and streaks; optional weekly reminder (local notification); optional step count from the phone's motion sensor |
+| Plan | Weekly check-ins and streaks; optional weekly reminder (local notification); optional step count from the motion sensor or, if the person chooses, Apple Health / Health Connect |
 | Appointment | Questions for your next appointment: pick from a bank by journey, add your own, reorder, take notes, share or print |
 | Community | Circles, posts and replies, reactions, reports, blocking, appeals of moderation decisions, "I felt supported" (optional), transparency report |
 | Settings | Language (EN/FR/ES/PT/DE/IT/AR), theme, API URL, plan, profile, offline insight packs, encrypted sync, evidence library, methodology, delete local data |
@@ -25,9 +25,12 @@ Every feature below is off until the person turns it on; nothing changes for any
 | Feature | Permission | Notes |
 | --- | --- | --- |
 | Weekly reminder | Notifications (`expo-notifications`), asked when the reminder is turned on | Scheduled on the device; no push server, no token sent anywhere |
-| Step count | Motion & Fitness on iOS, physical activity on Android (`expo-sensors`) | iOS shows the last 7 days; Android has no step history without Health Connect, so the count is live while the app is open. Steps never leave the phone |
+| Step count | Motion & Fitness on iOS, physical activity on Android (`expo-sensors`) | iOS shows the last 7 days; on Android the sensor count is live while the app is open. Steps never leave the phone |
+| Step history from the health store | Apple Health read access to step count (`@kingstinct/react-native-healthkit`); Health Connect `READ_STEPS` (`react-native-health-connect`) | A second, separate switch. Last 7 days of step totals, read-only, no background access. Needs a development or store build (not Expo Go); Android 9+ |
 | Offline packs | — | Every published insight in one language, stored on the device (AsyncStorage) |
 | Encrypted sync | — | Plan and profile, end-to-end encrypted with a code only the person holds (`packages/shared/src/sync.ts`). Uses `expo-crypto` for random bytes. See the export-compliance item in `docs/BUILD_SPEC.md` §11.3 before store submission |
+
+Android's minimum is 8.0 (API 26, set with `expo-build-properties`), which Health Connect requires.
 
 ## Right-to-left (Arabic)
 

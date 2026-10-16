@@ -769,6 +769,12 @@ export const fr: Dictionary = {
     unavailable: "Le comptage des pas n'est pas disponible sur cet appareil.",
     denied: "L'accès aux mouvements est désactivé pour {app}. Vous pouvez l'autoriser dans les réglages de l'appareil.",
     note: "Tout mouvement compte. Si votre équipe soignante est d'accord, les recommandations conseillent d'atteindre progressivement au moins 150 minutes d'activité modérée par semaine.",
+    useHealth: "Utiliser mon historique de pas de {source}",
+    healthHelp: "Inclut les pas de votre montre et d'autres applications. Lus uniquement sur ce téléphone, jamais envoyés.",
+    healthDenied: "{app} ne peut pas lire vos pas dans {source}. Vous pouvez l'autoriser dans {source}.",
+    healthInstall: "Pour voir votre historique de pas, installez ou mettez à jour {source}.",
+    healthGet: "Obtenir {source}",
+    healthError: "Impossible de lire vos pas dans {source}. Réessayez plus tard.",
   },
   transparency: {
     title: "Rapport de transparence de la communauté",

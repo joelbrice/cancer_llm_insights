@@ -768,6 +768,12 @@ export const de: Dictionary = {
     unavailable: "Schrittzählung ist auf diesem Gerät nicht verfügbar.",
     denied: "Der Zugriff auf Bewegungsdaten ist für {app} ausgeschaltet. Sie können ihn in den Geräteeinstellungen erlauben.",
     note: "Jede Bewegung zählt. Wenn Ihr Behandlungsteam zustimmt, empfehlen Leitlinien, sich schrittweise auf mindestens 150 Minuten mäßige Aktivität pro Woche zu steigern.",
+    useHealth: "Meinen Schrittverlauf aus {source} verwenden",
+    healthHelp: "Umfasst Schritte Ihrer Uhr und anderer Apps. Wird nur auf diesem Telefon gelesen und nie gesendet.",
+    healthDenied: "{app} kann Ihre Schritte aus {source} nicht lesen. Sie können es in {source} erlauben.",
+    healthInstall: "Installieren oder aktualisieren Sie {source}, um Ihren Schrittverlauf zu sehen.",
+    healthGet: "{source} laden",
+    healthError: "Ihre Schritte aus {source} konnten nicht gelesen werden. Bitte versuchen Sie es später erneut.",
   },
   transparency: {
     title: "Transparenzbericht der Community",

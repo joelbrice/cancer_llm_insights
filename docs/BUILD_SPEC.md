@@ -349,9 +349,18 @@ again. Packs are refreshed when the person asks.
 
 ### 6.7 Step counts (mobile, on device)
 
-An optional step count next to the plan, read from the phone's motion sensor after the person allows it. Steps
-are never sent anywhere. On iOS the last 7 days are shown; on Android the count is live while the app is open
-(the platform offers no history without Health Connect, which is not integrated).
+An optional step count next to the plan. Steps are read on the phone and never sent anywhere.
+
+- **Default: the motion sensor**, after the person allows motion access. iOS shows the last 7 days; Android counts
+  live while the screen is open.
+- **Optional: the phone's health store.** A second switch reads the last 7 days of step totals from **Apple
+  Health** (iOS) or **Health Connect** (Android 9+, built in from Android 14). These totals include steps from a
+  watch or other apps, de-duplicated by the platform. Only read access to step counts is requested: nothing is
+  written, nothing runs in the background, and the switch can be turned off at any time. On Android 9–13 the app
+  offers to install or update Health Connect when it is missing.
+
+The health store needs the native modules in a development or store build; Expo Go and the web do not show the
+switch. Health Connect requires Android 8.0 (API 26) as the app's minimum.
 
 ### 6.8 End-to-end-encrypted sync (optional)
 
@@ -756,6 +765,12 @@ Usability tests include people with low vision, older adults and people with lim
 - [ ] Screenshots in seven languages (Arabic right to left); no real patient images.
 - [ ] Permissions explained in context and only requested when the feature is turned on: notifications (weekly
   reminder) and motion / physical activity (step counts). The motion text is translated in `mobile/locales/`.
+- [ ] **Health data.** iOS: the HealthKit capability is enabled (read-only, step count); App Review checks that health
+  data is used only for the stated purpose, never for advertising, and is covered by the privacy policy. Android:
+  declare `READ_STEPS` in the Play Console health permissions form, with the privacy-policy link shown on Health
+  Connect's permission screen. Both stores' data-safety answers: steps are read on the device and not collected.
+- [ ] **Android minimum 8.0 (API 26)** since Health Connect was added: Android 7.x phones can no longer install
+  or update the app.
 - [ ] **Export compliance (counsel to confirm).** Encrypted sync uses standard algorithms (XChaCha20-Poly1305,
   HKDF-SHA256) implemented in the app rather than only the operating system's encryption. `mobile/app.json` still
   declares `ios.config.usesNonExemptEncryption: false`, as in v1.0. Before submitting a build that includes
@@ -853,7 +868,7 @@ The **"awaiting data"** state is normal until documents are linked: the platform
 | **1.0** | Everything in §4–§14 | Built |
 | 1.1 | Opt-in local reminders (§6.3); in-app "I felt supported" survey (§9.5); automated accessibility tests; Playwright end-to-end tests in CI; offline insight packs on mobile (§6.6); appeals and the public transparency report (§9.4); recorded clinical sign-off of insights (§5.5); model canary (§7.2) | Built |
 | 1.2 | Italian and Arabic, with right-to-left layout (§11.2); audio read-aloud (§6.4); "Questions for your appointment" builder (§6.5) | Built; native-speaker clinical review of IT and AR pending (§16) |
-| 2.0 | Optional end-to-end-encrypted sync of plan and profile across devices (§6.8); step counts on device (§6.7) | Built: steps come from the phone's motion sensor; history import from Apple Health / Health Connect is not integrated |
+| 2.0 | Optional end-to-end-encrypted sync of plan and profile across devices (§6.8); step counts on device, from the motion sensor or, optionally, Apple Health / Health Connect (§6.7) | Built. Android minimum raised to 8.0 (API 26) for Health Connect |
 | 2.0 | Research partnerships to evaluate outcomes (pre-registered) | Not a software feature: needs partners, a protocol and ethics approval |
 
 Every addition is additive or opt-in: with default settings, people who do not use a new feature see the platform

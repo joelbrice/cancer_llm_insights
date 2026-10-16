@@ -767,6 +767,12 @@ export const it: Dictionary = {
     unavailable: "Il conteggio dei passi non è disponibile su questo dispositivo.",
     denied: "L'accesso ai dati di movimento è disattivato per {app}. Puoi consentirlo nelle impostazioni del dispositivo.",
     note: "Ogni movimento conta. Se la tua équipe di cura è d'accordo, le raccomandazioni suggeriscono di arrivare gradualmente ad almeno 150 minuti di attività moderata a settimana.",
+    useHealth: "Usa la mia cronologia dei passi da {source}",
+    healthHelp: "Include i passi del tuo orologio e di altre app. Letti solo su questo telefono e mai inviati.",
+    healthDenied: "{app} non può leggere i tuoi passi da {source}. Puoi consentirlo in {source}.",
+    healthInstall: "Per vedere la cronologia dei passi, installa o aggiorna {source}.",
+    healthGet: "Scarica {source}",
+    healthError: "Impossibile leggere i tuoi passi da {source}. Riprova più tardi.",
   },
   transparency: {
     title: "Rapporto sulla trasparenza della comunità",

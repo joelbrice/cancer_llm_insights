@@ -20,8 +20,10 @@ import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { Pedometer } from "expo-sensors";
 import { useEffect, useState } from "react";
-import { Alert, AppState, Platform, Switch, TextInput, View } from "react-native";
+import { Alert, AppState, Linking, Platform, Switch, TextInput, View } from "react-native";
 
+import { getHealthStore } from "@/lib/health";
+import type { HealthStore } from "@/lib/health-types";
 import { readOfflinePack, removeOfflinePacks, saveOfflinePack } from "@/lib/offline";
 import { cancelWeeklyReminder, remindersSupported, scheduleWeeklyReminder } from "@/lib/reminders";
 import { useSettings } from "@/lib/settings";
@@ -108,21 +110,69 @@ export function ReminderCard() {
   );
 }
 
-// ── steps (on-device pedometer, opt-in) ─────────────────────────────────────────────────────────────────────
+// ── steps (on-device pedometer, opt-in; optionally the phone's health store) ──────────────────────────────────
 interface Day {
   label: string;
   steps: number;
 }
 
+interface StepsPrefs {
+  enabled: boolean;
+  /** "health": read the step history from Apple Health / Health Connect instead of the motion sensor. */
+  source?: "health";
+}
+
 export function StepsCard() {
   const { t, locale, colors } = useSettings();
-  const [prefs, setPrefs, loaded] = useStored<{ enabled: boolean }>(STORAGE_KEYS.steps, { enabled: false });
+  const [prefs, setPrefs, loaded] = useStored<StepsPrefs>(STORAGE_KEYS.steps, { enabled: false });
   const [status, setStatus] = useState<"checking" | "ok" | "unavailable" | "denied">("checking");
   const [days, setDays] = useState<Day[]>([]);
   const [live, setLive] = useState(0);
+  // undefined while looking; null when this build or phone has no health store (Expo Go, web, older Android)
+  const [store, setStore] = useState<HealthStore | null | undefined>(undefined);
+  const [healthStatus, setHealthStatus] = useState<"checking" | "ok" | "denied" | "error">("checking");
+  const wantsHealth = prefs.source === "health";
+  const useHealth = wantsHealth && store?.status === "available";
+  const waitingForStore = wantsHealth && store === undefined;
 
   useEffect(() => {
     if (!prefs.enabled || Platform.OS === "web") return;
+    let alive = true;
+    getHealthStore()
+      .then((found) => alive && setStore(found))
+      .catch(() => alive && setStore(null));
+    return () => {
+      alive = false;
+    };
+  }, [prefs.enabled]);
+
+  useEffect(() => {
+    if (!prefs.enabled || !useHealth || !store) return;
+    let alive = true;
+    setDays([]);
+    setHealthStatus("checking");
+    void (async () => {
+      if (!(await store.requestAccess().catch(() => false))) return alive && setHealthStatus("denied");
+      const totals = await store.dailySteps(7).catch(() => null);
+      if (!alive) return;
+      if (!totals) return setHealthStatus("error");
+      const today = new Date();
+      setDays(
+        totals.map((steps, i) => {
+          const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (totals.length - 1 - i));
+          return { label: day.toLocaleDateString(locale, { weekday: "short" }), steps };
+        }),
+      );
+      setHealthStatus("ok");
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [prefs.enabled, useHealth, store, locale]);
+
+  useEffect(() => {
+    // The motion sensor, as before, unless the person chose their health store (and it can be used here)
+    if (!prefs.enabled || Platform.OS === "web" || useHealth || waitingForStore) return;
     let alive = true;
     let subscription: { remove: () => void } | null = null;
     void (async () => {
@@ -150,7 +200,7 @@ export function StepsCard() {
       alive = false;
       subscription?.remove();
     };
-  }, [prefs.enabled, locale]);
+  }, [prefs.enabled, locale, useHealth, waitingForStore]);
 
   if (!loaded || Platform.OS === "web") return null;
   const max = Math.max(1, ...days.map((d) => d.steps));
@@ -159,10 +209,33 @@ export function StepsCard() {
     <Card>
       <Txt variant="h2">{t("steps.title")}</Txt>
       <Txt variant="small">{t("steps.intro")}</Txt>
-      <Toggle label={t("steps.enable")} value={prefs.enabled} onChange={(enabled) => setPrefs({ enabled })} />
-      {prefs.enabled && status === "unavailable" ? <Txt variant="small">{t("steps.unavailable")}</Txt> : null}
-      {prefs.enabled && status === "denied" ? <Txt variant="small">{t("steps.denied")}</Txt> : null}
-      {prefs.enabled && status === "ok" && days.length ? (
+      <Toggle label={t("steps.enable")} value={prefs.enabled} onChange={(enabled) => setPrefs({ ...prefs, enabled })} />
+      {prefs.enabled && store ? (
+        <>
+          <Toggle
+            label={t("steps.useHealth", { source: store.name })}
+            value={wantsHealth}
+            onChange={(on) => {
+              setDays([]);
+              setPrefs({ enabled: true, source: on ? "health" : undefined });
+            }}
+          />
+          <Txt variant="muted">{t("steps.healthHelp")}</Txt>
+        </>
+      ) : null}
+      {prefs.enabled && wantsHealth && store?.status === "needs-install" ? (
+        <>
+          <Txt variant="small">{t("steps.healthInstall", { source: store.name })}</Txt>
+          {store.installUrl ? (
+            <Button variant="ghost" icon="download-outline" label={t("steps.healthGet", { source: store.name })} onPress={() => void Linking.openURL(store.installUrl!)} />
+          ) : null}
+        </>
+      ) : null}
+      {prefs.enabled && useHealth && healthStatus === "denied" ? <Txt variant="small">{t("steps.healthDenied", { source: store!.name })}</Txt> : null}
+      {prefs.enabled && useHealth && healthStatus === "error" ? <Txt variant="small">{t("steps.healthError", { source: store!.name })}</Txt> : null}
+      {prefs.enabled && !useHealth && status === "unavailable" ? <Txt variant="small">{t("steps.unavailable")}</Txt> : null}
+      {prefs.enabled && !useHealth && status === "denied" ? <Txt variant="small">{t("steps.denied")}</Txt> : null}
+      {prefs.enabled && (useHealth ? healthStatus === "ok" : status === "ok") && days.length ? (
         <>
           <Txt>{t("steps.today", { n: formatNumber(locale, days.at(-1)?.steps ?? 0) })}</Txt>
           <View
@@ -180,7 +253,7 @@ export function StepsCard() {
           <Txt variant="small">{t("steps.average", { n: formatNumber(locale, average) })}</Txt>
         </>
       ) : null}
-      {prefs.enabled && status === "ok" && Platform.OS === "android" ? (
+      {prefs.enabled && !useHealth && status === "ok" && Platform.OS === "android" ? (
         <>
           <Txt>{t("steps.sinceOpened", { n: formatNumber(locale, live) })}</Txt>
           <Txt variant="muted">{t("steps.liveOnly")}</Txt>
