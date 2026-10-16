@@ -67,7 +67,10 @@ describe("encrypted sync", () => {
     const keys = deriveSyncKeys(generateSyncCode(random));
     const payload: SyncPayload = { v: 1, plan: [item("p1", ["2026-W40"])], profile: { country: "PT", audience: "after_treatment" }, questions: null };
     const sealed = encryptPayload(keys, payload, random);
-    expect(sealed).not.toContain("PT");
+    // Not the plaintext in another encoding. (A two-letter check such as "PT" matches random base64 ~8% of the time.)
+    const plain = base64url(utf8(JSON.stringify(payload)));
+    for (let i = 0; i + 16 <= plain.length; i += 16) expect(sealed).not.toContain(plain.slice(i, i + 16));
+    expect(sealed).not.toContain("after_treatment");
     expect(decryptPayload(keys, sealed)).toEqual(payload);
     const raw = fromBase64url(sealed);
     raw[raw.length - 1]! ^= 1; // flip one bit of the authentication tag
