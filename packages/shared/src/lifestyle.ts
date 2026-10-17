@@ -44,7 +44,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "ECAC",
     question: {
       en: "Do you smoke or use any form of tobacco?",
-      fr: "Fumez-vous ou consommez-vous du tabac sous une forme quelconque ?",
+      fr: "Fumez-vous ou consommez-vous du tabac sous une forme quelconque ?",
       es: "¿Fumas o consumes tabaco en alguna forma?",
       pt: "Fuma ou consome tabaco de alguma forma?",
       de: "Rauchen Sie oder konsumieren Sie Tabak in irgendeiner Form?",
@@ -53,7 +53,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Not using tobacco is the most effective single step to lower cancer risk. Stopping helps at any age, and counselling and medication make quitting more likely to succeed.",
-      fr: "Ne pas consommer de tabac est la mesure la plus efficace pour réduire le risque de cancer. Arrêter est bénéfique à tout âge ; un accompagnement et des traitements augmentent les chances de réussite.",
+      fr: "Ne pas consommer de tabac est la mesure la plus efficace pour réduire le risque de cancer. Arrêter est bénéfique à tout âge ; un accompagnement et des traitements augmentent les chances de réussite.",
       es: "No consumir tabaco es la medida más eficaz para reducir el riesgo de cáncer. Dejarlo ayuda a cualquier edad, y el apoyo profesional y los medicamentos aumentan las probabilidades de éxito.",
       pt: "Não consumir tabaco é a medida mais eficaz para reduzir o risco de cancro. Deixar ajuda em qualquer idade, e o aconselhamento e a medicação aumentam a probabilidade de sucesso.",
       de: "Auf Tabak zu verzichten ist der wirksamste einzelne Schritt gegen Krebs. Aufhören hilft in jedem Alter; Beratung und Medikamente erhöhen die Erfolgschancen.",
@@ -73,7 +73,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "ECAC",
     question: {
       en: "Are you regularly around other people's tobacco smoke (home, car, work)?",
-      fr: "Êtes-vous régulièrement exposé·e à la fumée de tabac des autres (domicile, voiture, travail) ?",
+      fr: "Êtes-vous régulièrement exposé·e à la fumée de tabac des autres (domicile, voiture, travail) ?",
       es: "¿Estás a menudo expuesto/a al humo de tabaco de otras personas (casa, coche, trabajo)?",
       pt: "Está regularmente exposto/a ao fumo de tabaco de outras pessoas (casa, carro, trabalho)?",
       de: "Sind Sie regelmäßig dem Tabakrauch anderer ausgesetzt (Zuhause, Auto, Arbeit)?",
@@ -82,7 +82,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Keep your home, car and workplace smoke-free; second-hand smoke also causes cancer.",
-      fr: "Gardez votre domicile, votre voiture et votre lieu de travail sans tabac : la fumée passive cause aussi des cancers.",
+      fr: "Gardez votre domicile, votre voiture et votre lieu de travail sans tabac : la fumée passive cause aussi des cancers.",
       es: "Mantén tu casa, tu coche y tu trabajo libres de humo: el humo ajeno también causa cáncer.",
       pt: "Mantenha a casa, o carro e o local de trabalho sem fumo: o fumo passivo também causa cancro.",
       de: "Halten Sie Wohnung, Auto und Arbeitsplatz rauchfrei – auch Passivrauch verursacht Krebs.",
@@ -101,7 +101,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How many alcoholic drinks do you have in a typical week?",
-      fr: "Combien de verres d'alcool buvez-vous au cours d'une semaine habituelle ?",
+      fr: "Combien de verres d'alcool buvez-vous au cours d'une semaine habituelle ?",
       es: "¿Cuántas bebidas alcohólicas tomas en una semana normal?",
       pt: "Quantas bebidas alcoólicas toma numa semana habitual?",
       de: "Wie viele alkoholische Getränke trinken Sie in einer typischen Woche?",
@@ -130,10 +130,10 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WHO",
     question: {
       en: "How many minutes of moderate activity (e.g. brisk walking, cycling) do you do in a typical week?",
-      fr: "Combien de minutes d'activité modérée (marche rapide, vélo…) pratiquez-vous au cours d'une semaine habituelle ?",
+      fr: "Combien de minutes d'activité modérée (marche rapide, vélo…) pratiquez-vous au cours d'une semaine habituelle ?",
       es: "¿Cuántos minutos de actividad moderada (caminar rápido, bicicleta…) haces en una semana normal?",
       pt: "Quantos minutos de atividade moderada (caminhada rápida, bicicleta…) faz numa semana habitual?",
-      de: "Wie viele Minuten mäßige Bewegung (z. B. zügiges Gehen, Radfahren) haben Sie in einer typischen Woche?",
+      de: "Wie viele Minuten bewegen Sie sich in einer typischen Woche mäßig intensiv (z. B. zügiges Gehen, Radfahren)?",
       it: "Quanti minuti di attività moderata (per esempio camminata veloce, bicicletta) fai in una settimana tipica?",
       ar: "كم دقيقة من النشاط المعتدل (مثل المشي السريع أو ركوب الدراجة) تمارس في أسبوع عادي؟",
     },
@@ -159,12 +159,12 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WHO",
     question: {
       en: "On a typical day, how many hours do you spend sitting (outside of sleep)?",
-      fr: "Un jour habituel, combien d'heures passez-vous assis·e (hors sommeil) ?",
+      fr: "Un jour habituel, combien d'heures passez-vous assis·e (hors sommeil) ?",
       es: "En un día normal, ¿cuántas horas pasas sentado/a (sin contar el sueño)?",
       pt: "Num dia habitual, quantas horas passa sentado/a (sem contar o sono)?",
       de: "Wie viele Stunden sitzen Sie an einem typischen Tag (ohne Schlaf)?",
       it: "In una giornata tipica, quante ore passi seduto (escluso il sonno)?",
-      ar: "في يوم عادي، كم ساعة تقضيها جالسًا (باستثناء النوم)؟",
+      ar: "في يوم عادي، كم ساعة تقضيها في الجلوس (باستثناء النوم)؟",
     },
     advice: {
       en: "Limit time spent sitting and break up long periods with light movement.",
@@ -187,7 +187,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "Which best describes your weight (body mass index)?",
-      fr: "Qu'est-ce qui décrit le mieux votre poids (indice de masse corporelle) ?",
+      fr: "Qu'est-ce qui décrit le mieux votre poids (indice de masse corporelle) ?",
       es: "¿Qué describe mejor tu peso (índice de masa corporal)?",
       pt: "O que descreve melhor o seu peso (índice de massa corporal)?",
       de: "Was beschreibt Ihr Gewicht (Body-Mass-Index) am besten?",
@@ -196,7 +196,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Keeping a healthy weight lowers the risk of several cancers. Sustainable changes in eating and activity help; a professional can give personalised support.",
-      fr: "Garder un poids de forme réduit le risque de plusieurs cancers. Des changements durables d'alimentation et d'activité aident ; un professionnel peut vous accompagner.",
+      fr: "Garder un poids de forme réduit le risque de plusieurs cancers. Des changements durables d'alimentation et d'activité aident ; un professionnel peut vous accompagner.",
       es: "Mantener un peso saludable reduce el riesgo de varios cánceres. Ayudan los cambios sostenibles en alimentación y actividad; un profesional puede darte apoyo personalizado.",
       pt: "Manter um peso saudável reduz o risco de vários cancros. Mudanças sustentáveis na alimentação e atividade ajudam; um profissional pode dar apoio personalizado.",
       de: "Ein gesundes Gewicht senkt das Risiko mehrerer Krebsarten. Nachhaltige Veränderungen bei Ernährung und Bewegung helfen; Fachleute können Sie individuell begleiten.",
@@ -217,7 +217,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How many portions of vegetables and fruit do you eat on a typical day?",
-      fr: "Combien de portions de légumes et de fruits mangez-vous un jour habituel ?",
+      fr: "Combien de portions de légumes et de fruits mangez-vous un jour habituel ?",
       es: "¿Cuántas raciones de verduras y frutas comes en un día normal?",
       pt: "Quantas porções de legumes e fruta come num dia habitual?",
       de: "Wie viele Portionen Gemüse und Obst essen Sie an einem typischen Tag?",
@@ -245,7 +245,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How often do you eat whole grains, beans, lentils or other high-fibre foods?",
-      fr: "À quelle fréquence mangez-vous des céréales complètes, haricots, lentilles ou autres aliments riches en fibres ?",
+      fr: "À quelle fréquence mangez-vous des céréales complètes, haricots, lentilles ou autres aliments riches en fibres ?",
       es: "¿Con qué frecuencia comes cereales integrales, alubias, lentejas u otros alimentos ricos en fibra?",
       pt: "Com que frequência come cereais integrais, feijão, lentilhas ou outros alimentos ricos em fibra?",
       de: "Wie oft essen Sie Vollkorn, Bohnen, Linsen oder andere ballaststoffreiche Lebensmittel?",
@@ -254,7 +254,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Include whole grains and pulses in most meals; dietary fibre is linked to a lower risk of colorectal cancer.",
-      fr: "Intégrez céréales complètes et légumineuses à la plupart des repas ; les fibres sont associées à un risque plus faible de cancer colorectal.",
+      fr: "Intégrez céréales complètes et légumineuses à la plupart des repas ; les fibres sont associées à un risque plus faible de cancer colorectal.",
       es: "Incluye cereales integrales y legumbres en la mayoría de las comidas; la fibra se asocia a un menor riesgo de cáncer colorrectal.",
       pt: "Inclua cereais integrais e leguminosas na maioria das refeições; a fibra está associada a menor risco de cancro colorretal.",
       de: "Bauen Sie Vollkorn und Hülsenfrüchte in die meisten Mahlzeiten ein; Ballaststoffe gehen mit einem geringeren Darmkrebsrisiko einher.",
@@ -273,12 +273,12 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How often do you eat processed meat (ham, bacon, sausages, salami)?",
-      fr: "À quelle fréquence mangez-vous de la viande transformée (jambon, bacon, saucisses, salami) ?",
+      fr: "À quelle fréquence mangez-vous de la viande transformée (jambon, bacon, saucisses, salami) ?",
       es: "¿Con qué frecuencia comes carne procesada (jamón, beicon, salchichas, salami)?",
       pt: "Com que frequência come carne processada (fiambre, bacon, salsichas, salame)?",
       de: "Wie oft essen Sie verarbeitetes Fleisch (Schinken, Speck, Würstchen, Salami)?",
       it: "Quanto spesso mangi carne lavorata (prosciutto, pancetta, salsicce, salame)?",
-      ar: "كم مرة تتناول اللحوم المصنعة (لحم الخنزير المقدد، النقانق، السلامي، اللحوم الباردة)؟",
+      ar: "كم مرة تتناول اللحوم المصنعة (مثل النقانق والسلامي والبسطرمة واللحوم الباردة)؟",
     },
     advice: {
       en: "Eat little, if any, processed meat.",
@@ -301,7 +301,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How many portions of red meat (beef, pork, lamb) do you eat per week?",
-      fr: "Combien de portions de viande rouge (bœuf, porc, agneau) mangez-vous par semaine ?",
+      fr: "Combien de portions de viande rouge (bœuf, porc, agneau) mangez-vous par semaine ?",
       es: "¿Cuántas raciones de carne roja (ternera, cerdo, cordero) comes a la semana?",
       pt: "Quantas porções de carne vermelha (vaca, porco, borrego) come por semana?",
       de: "Wie viele Portionen rotes Fleisch (Rind, Schwein, Lamm) essen Sie pro Woche?",
@@ -329,7 +329,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "How often do you have sugar-sweetened drinks (sodas, sweetened juices, energy drinks)?",
-      fr: "À quelle fréquence buvez-vous des boissons sucrées (sodas, jus sucrés, boissons énergisantes) ?",
+      fr: "À quelle fréquence buvez-vous des boissons sucrées (sodas, jus sucrés, boissons énergisantes) ?",
       es: "¿Con qué frecuencia tomas bebidas azucaradas (refrescos, zumos azucarados, bebidas energéticas)?",
       pt: "Com que frequência bebe bebidas açucaradas (refrigerantes, sumos açucarados, bebidas energéticas)?",
       de: "Wie oft trinken Sie zuckergesüßte Getränke (Limonaden, gesüßte Säfte, Energydrinks)?",
@@ -338,7 +338,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Limit sugar-sweetened drinks; water and unsweetened drinks are better everyday choices.",
-      fr: "Limitez les boissons sucrées ; l'eau et les boissons non sucrées sont de meilleurs choix au quotidien.",
+      fr: "Limitez les boissons sucrées ; l'eau et les boissons non sucrées sont de meilleurs choix au quotidien.",
       es: "Limita las bebidas azucaradas; el agua y las bebidas sin azúcar son mejores opciones diarias.",
       pt: "Limite as bebidas açucaradas; a água e as bebidas sem açúcar são melhores escolhas no dia a dia.",
       de: "Begrenzen Sie zuckergesüßte Getränke; Wasser und ungesüßte Getränke sind die bessere Alltagswahl.",
@@ -357,7 +357,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "ECAC",
     question: {
       en: "How do you protect your skin from the sun, and do you use sunbeds?",
-      fr: "Comment protégez-vous votre peau du soleil, et utilisez-vous des cabines de bronzage ?",
+      fr: "Comment protégez-vous votre peau du soleil, et utilisez-vous des cabines de bronzage ?",
       es: "¿Cómo proteges tu piel del sol? ¿Usas camas solares?",
       pt: "Como protege a pele do sol? Usa solários?",
       de: "Wie schützen Sie Ihre Haut vor der Sonne, und nutzen Sie Solarien?",
@@ -366,7 +366,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Avoid sunburn: seek shade, wear protective clothing and sunscreen, and do not use sunbeds.",
-      fr: "Évitez les coups de soleil : recherchez l'ombre, portez des vêtements couvrants et de la crème solaire, et n'utilisez pas de cabines de bronzage.",
+      fr: "Évitez les coups de soleil : recherchez l'ombre, portez des vêtements couvrants et de la crème solaire, et n'utilisez pas de cabines de bronzage.",
       es: "Evita las quemaduras solares: busca la sombra, usa ropa protectora y protector solar, y no uses camas solares.",
       pt: "Evite queimaduras solares: procure a sombra, use roupa protetora e protetor solar, e não use solários.",
       de: "Vermeiden Sie Sonnenbrand: Schatten suchen, schützende Kleidung und Sonnenschutz tragen, keine Solarien nutzen.",
@@ -385,7 +385,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "WCRF",
     question: {
       en: "Do you take dietary supplements to prevent cancer?",
-      fr: "Prenez-vous des compléments alimentaires pour prévenir le cancer ?",
+      fr: "Prenez-vous des compléments alimentaires pour prévenir le cancer ?",
       es: "¿Tomas suplementos dietéticos para prevenir el cáncer?",
       pt: "Toma suplementos alimentares para prevenir o cancro?",
       de: "Nehmen Sie Nahrungsergänzungsmittel zur Krebsvorbeugung?",
@@ -394,7 +394,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Supplements are not recommended for cancer prevention; aim to meet your needs through food unless a clinician prescribes them for a medical reason.",
-      fr: "Les compléments ne sont pas recommandés pour prévenir le cancer ; privilégiez l'alimentation, sauf prescription médicale.",
+      fr: "Les compléments ne sont pas recommandés pour prévenir le cancer ; privilégiez l'alimentation, sauf prescription médicale.",
       es: "No se recomiendan suplementos para prevenir el cáncer; cubre tus necesidades con la alimentación salvo prescripción médica.",
       pt: "Os suplementos não são recomendados para prevenir o cancro; procure satisfazer as necessidades pela alimentação, salvo prescrição médica.",
       de: "Nahrungsergänzungsmittel werden zur Krebsvorbeugung nicht empfohlen; decken Sie Ihren Bedarf über die Ernährung, außer bei ärztlicher Verordnung.",
@@ -413,12 +413,12 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "ECAC",
     question: {
       en: "Are you (or your children) vaccinated against hepatitis B and, if eligible, HPV?",
-      fr: "Êtes-vous (vous ou vos enfants) vacciné·e contre l'hépatite B et, si éligible, contre le HPV ?",
+      fr: "Vous (ou vos enfants) êtes-vous vacciné·es contre l'hépatite B et, le cas échéant, contre le HPV ?",
       es: "¿Estás vacunado/a (tú o tus hijos) contra la hepatitis B y, si corresponde, contra el VPH?",
       pt: "Está (ou os seus filhos estão) vacinado/a contra a hepatite B e, se elegível, contra o HPV?",
       de: "Sind Sie (oder Ihre Kinder) gegen Hepatitis B und, falls empfohlen, gegen HPV geimpft?",
       it: "Tu (o i tuoi figli) siete vaccinati contro l'epatite B e, se previsto, contro l'HPV?",
-      ar: "هل أنت (أو أطفالك) مطعّمون ضد التهاب الكبد B، وضد فيروس الورم الحليمي البشري إن كنتم مؤهلين؟",
+      ar: "هل تلقيت أنت (أو أطفالك) لقاح التهاب الكبد B، ولقاح فيروس الورم الحليمي البشري إن كنتم مؤهلين له؟",
     },
     advice: {
       en: "Vaccination against hepatitis B and HPV prevents infections that cause cancer. Ask your doctor what is recommended for you and your children.",
@@ -431,7 +431,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     options: [
       o("yes", "aligned", { en: "Yes", fr: "Oui", es: "Sí", pt: "Sim", de: "Ja", it: "Sì", ar: "نعم" }),
-      o("unsure", "info", { en: "Not sure", fr: "Je ne sais pas", es: "No estoy seguro/a", pt: "Não tenho a certeza", de: "Nicht sicher", it: "Non sono sicuro", ar: "لست متأكدًا" }),
+      o("unsure", "info", { en: "Not sure", fr: "Je ne sais pas", es: "No estoy seguro/a", pt: "Não tenho a certeza", de: "Nicht sicher", it: "Non sono sicuro", ar: "لا أعرف" }),
       o("no", "info", { en: "No", fr: "Non", es: "No", pt: "Não", de: "Nein", it: "No", ar: "لا" }),
     ],
   },
@@ -441,7 +441,7 @@ export const CHECK_ITEMS: CheckItem[] = [
     framework: "ECAC",
     question: {
       en: "Are you up to date with the cancer screening offered for your age in your country (breast, cervical, colorectal)?",
-      fr: "Êtes-vous à jour des dépistages proposés pour votre âge dans votre pays (sein, col de l'utérus, côlon-rectum) ?",
+      fr: "Êtes-vous à jour des dépistages proposés pour votre âge dans votre pays (sein, col de l'utérus, côlon-rectum) ?",
       es: "¿Estás al día con el cribado de cáncer ofrecido para tu edad en tu país (mama, cuello uterino, colorrectal)?",
       pt: "Tem em dia os rastreios de cancro oferecidos para a sua idade no seu país (mama, colo do útero, colorretal)?",
       de: "Nehmen Sie die für Ihr Alter angebotenen Krebsfrüherkennungen wahr (Brust, Gebärmutterhals, Darm)?",
@@ -450,16 +450,16 @@ export const CHECK_ITEMS: CheckItem[] = [
     },
     advice: {
       en: "Take part in organised screening programmes for your age; ask your doctor which ones apply to you. See a doctor for any new symptom, whatever your screening status.",
-      fr: "Participez aux programmes de dépistage organisés pour votre âge ; demandez à votre médecin lesquels vous concernent. Consultez pour tout nouveau symptôme, quel que soit votre dépistage.",
+      fr: "Participez aux programmes de dépistage organisés pour votre âge ; demandez à votre médecin lesquels vous concernent. Consultez pour tout nouveau symptôme, quel que soit votre dépistage.",
       es: "Participa en los programas de cribado para tu edad; pregunta a tu médico cuáles te corresponden. Consulta por cualquier síntoma nuevo, aunque estés al día.",
       pt: "Participe nos programas de rastreio para a sua idade; pergunte ao seu médico quais se aplicam a si. Consulte o médico perante qualquer sintoma novo, mesmo com os rastreios em dia.",
-      de: "Nehmen Sie an den Früherkennungsprogrammen für Ihr Alter teil; fragen Sie, welche für Sie gelten. Gehen Sie bei neuen Beschwerden immer zum Arzt – unabhängig von der Früherkennung.",
+      de: "Nehmen Sie an den Früherkennungsprogrammen für Ihr Alter teil und fragen Sie Ihre Ärztin oder Ihren Arzt, welche für Sie gelten. Lassen Sie neue Beschwerden immer ärztlich abklären – unabhängig von der Früherkennung.",
       it: "Partecipa ai programmi di screening organizzati per la tua età e chiedi al tuo medico quali ti riguardano. Per qualsiasi sintomo nuovo rivolgiti a un medico, indipendentemente dagli screening fatti.",
       ar: "شارك في برامج الكشف المبكر المنظمة المناسبة لعمرك، واسأل طبيبك عن البرامج التي تنطبق عليك. راجع الطبيب عند ظهور أي عرض جديد، بغض النظر عن نتائج فحوصاتك.",
     },
     options: [
       o("yes", "aligned", { en: "Yes", fr: "Oui", es: "Sí", pt: "Sim", de: "Ja", it: "Sì", ar: "نعم" }),
-      o("unsure", "info", { en: "Not sure / not yet eligible", fr: "Je ne sais pas / pas encore concerné·e", es: "No lo sé / aún no me corresponde", pt: "Não sei / ainda não elegível", de: "Unsicher / noch nicht berechtigt", it: "Non lo so / non ancora previsto per me", ar: "لست متأكدًا / لست مؤهلًا بعد" }),
+      o("unsure", "info", { en: "Not sure / not yet eligible", fr: "Je ne sais pas / pas encore concerné·e", es: "No lo sé / aún no me corresponde", pt: "Não sei / ainda não elegível", de: "Weiß nicht / noch nicht an der Reihe", it: "Non lo so / non ancora previsto per me", ar: "لا أعرف / لم يحن موعدها بعد" }),
       o("no", "partly", { en: "No", fr: "Non", es: "No", pt: "Não", de: "Nein", it: "No", ar: "لا" }),
     ],
   },

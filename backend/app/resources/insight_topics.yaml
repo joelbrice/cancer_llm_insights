@@ -19,7 +19,7 @@ topics:
     title: {en: "Tobacco and cancer", fr: "Tabac et cancer", es: "Tabaco y cáncer", pt: "Tabaco e cancro", de: "Tabak und Krebs", it: "Tabacco e cancro", ar: "التبغ والسرطان"}
     question:
       en: "How does smoking or using tobacco affect cancer risk?"
-      fr: "Comment le tabac influence-t-il le risque de cancer ?"
+      fr: "Comment le tabac influence-t-il le risque de cancer ?"
       es: "¿Cómo afecta fumar o consumir tabaco al riesgo de cáncer?"
       pt: "Como é que fumar ou consumir tabaco afeta o risco de cancro?"
       de: "Wie beeinflusst Rauchen oder Tabakkonsum das Krebsrisiko?"
@@ -41,7 +41,7 @@ topics:
     title: {en: "Benefits of quitting smoking", fr: "Bénéfices de l'arrêt du tabac", es: "Beneficios de dejar de fumar", pt: "Benefícios de deixar de fumar", de: "Vorteile des Rauchstopps", it: "Benefici di smettere di fumare", ar: "فوائد الإقلاع عن التدخين"}
     question:
       en: "What happens to cancer risk after stopping smoking, and what helps people quit?"
-      fr: "Que devient le risque de cancer après l'arrêt du tabac, et qu'est-ce qui aide à arrêter ?"
+      fr: "Que devient le risque de cancer après l'arrêt du tabac, et qu'est-ce qui aide à arrêter ?"
       es: "¿Qué ocurre con el riesgo de cáncer al dejar de fumar y qué ayuda a conseguirlo?"
       pt: "O que acontece ao risco de cancro depois de deixar de fumar e o que ajuda a parar?"
       de: "Was passiert mit dem Krebsrisiko nach einem Rauchstopp, und was hilft beim Aufhören?"
@@ -64,7 +64,7 @@ topics:
     title: {en: "Second-hand smoke", fr: "Tabagisme passif", es: "Humo ajeno", pt: "Fumo passivo", de: "Passivrauchen", it: "Fumo passivo", ar: "التدخين السلبي"}
     question:
       en: "Does breathing other people's tobacco smoke increase cancer risk?"
-      fr: "Respirer la fumée de tabac des autres augmente-t-il le risque de cancer ?"
+      fr: "Respirer la fumée de tabac des autres augmente-t-il le risque de cancer ?"
       es: "¿Respirar el humo del tabaco de otras personas aumenta el riesgo de cáncer?"
       pt: "Respirar o fumo do tabaco de outras pessoas aumenta o risco de cancro?"
       de: "Erhöht das Einatmen von fremdem Tabakrauch das Krebsrisiko?"
@@ -86,7 +86,7 @@ topics:
     title: {en: "E-cigarettes and vaping", fr: "Cigarette électronique et vapotage", es: "Cigarrillos electrónicos y vapeo", pt: "Cigarros eletrónicos e vaping", de: "E-Zigaretten und Vaping", it: "Sigarette elettroniche e svapo", ar: "السجائر الإلكترونية"}
     question:
       en: "What does the evidence say about e-cigarettes, cancer risk and quitting smoking?"
-      fr: "Que disent les données sur la cigarette électronique, le risque de cancer et l'arrêt du tabac ?"
+      fr: "Que disent les données sur la cigarette électronique, le risque de cancer et l'arrêt du tabac ?"
       es: "¿Qué dice la evidencia sobre los cigarrillos electrónicos, el riesgo de cáncer y dejar de fumar?"
       pt: "O que diz a evidência sobre cigarros eletrónicos, risco de cancro e deixar de fumar?"
       de: "Was sagt die Evidenz zu E-Zigaretten, Krebsrisiko und Rauchstopp?"
@@ -108,7 +108,7 @@ topics:
     title: {en: "Alcohol and cancer", fr: "Alcool et cancer", es: "Alcohol y cáncer", pt: "Álcool e cancro", de: "Alkohol und Krebs", it: "Alcol e cancro", ar: "الكحول والسرطان"}
     question:
       en: "How does drinking alcohol affect cancer risk, and is any amount safe?"
-      fr: "Comment la consommation d'alcool influence-t-elle le risque de cancer, et existe-t-il une dose sans risque ?"
+      fr: "Comment la consommation d'alcool influence-t-elle le risque de cancer, et existe-t-il une dose sans risque ?"
       es: "¿Cómo afecta el consumo de alcohol al riesgo de cáncer? ¿Hay alguna cantidad segura?"
       pt: "Como é que o consumo de álcool afeta o risco de cancro? Existe alguma quantidade segura?"
       de: "Wie beeinflusst Alkohol das Krebsrisiko, und gibt es eine unbedenkliche Menge?"
@@ -130,7 +130,7 @@ topics:
     title: {en: "Body weight and cancer", fr: "Poids et cancer", es: "Peso corporal y cáncer", pt: "Peso corporal e cancro", de: "Körpergewicht und Krebs", it: "Peso corporeo e cancro", ar: "وزن الجسم والسرطان"}
     question:
       en: "How is excess body weight linked to cancer, and does losing weight help?"
-      fr: "Quel est le lien entre l'excès de poids et le cancer, et perdre du poids aide-t-il ?"
+      fr: "Quel est le lien entre l'excès de poids et le cancer, et perdre du poids aide-t-il ?"
       es: "¿Qué relación hay entre el exceso de peso y el cáncer? ¿Ayuda perder peso?"
       pt: "Qual a relação entre o excesso de peso e o cancro? Perder peso ajuda?"
       de: "Wie hängt Übergewicht mit Krebs zusammen, und hilft Abnehmen?"
@@ -152,7 +152,7 @@ topics:
     title: {en: "Physical activity to lower cancer risk", fr: "Activité physique et prévention du cancer", es: "Actividad física para reducir el riesgo de cáncer", pt: "Atividade física para reduzir o risco de cancro", de: "Bewegung zur Senkung des Krebsrisikos", it: "Attività fisica per ridurre il rischio di cancro", ar: "النشاط البدني لتقليل خطر السرطان"}
     question:
       en: "How much does physical activity lower cancer risk, and how much activity is recommended?"
-      fr: "Dans quelle mesure l'activité physique réduit-elle le risque de cancer, et quelle quantité est recommandée ?"
+      fr: "Dans quelle mesure l'activité physique réduit-elle le risque de cancer, et quelle quantité est recommandée ?"
       es: "¿Cuánto reduce la actividad física el riesgo de cáncer y cuánta se recomienda?"
       pt: "Quanto é que a atividade física reduz o risco de cancro e quanta é recomendada?"
       de: "Wie stark senkt körperliche Aktivität das Krebsrisiko, und wie viel wird empfohlen?"
@@ -174,7 +174,7 @@ topics:
     title: {en: "Sitting time", fr: "Temps assis et sédentarité", es: "Tiempo sentado", pt: "Tempo sentado", de: "Sitzzeit", it: "Il tempo passato seduti", ar: "الجلوس لفترات طويلة"}
     question:
       en: "Is spending a lot of time sitting linked to cancer, independently of exercise?"
-      fr: "Passer beaucoup de temps assis est-il lié au cancer, indépendamment de l'activité physique ?"
+      fr: "Passer beaucoup de temps assis est-il lié au cancer, indépendamment de l'activité physique ?"
       es: "¿Pasar mucho tiempo sentado se relaciona con el cáncer, independientemente del ejercicio?"
       pt: "Passar muito tempo sentado está associado ao cancro, independentemente do exercício?"
       de: "Ist viel Sitzen unabhängig von Bewegung mit Krebs verbunden?"
@@ -196,7 +196,7 @@ topics:
     title: {en: "Processed and red meat", fr: "Viandes transformées et viande rouge", es: "Carnes procesadas y carne roja", pt: "Carnes processadas e carne vermelha", de: "Verarbeitetes und rotes Fleisch", it: "Carne lavorata e carne rossa", ar: "اللحوم المصنعة والحمراء"}
     question:
       en: "How do processed meat and red meat affect cancer risk, and how much is too much?"
-      fr: "Comment les viandes transformées et la viande rouge influencent-elles le risque de cancer, et à partir de quelle quantité ?"
+      fr: "Comment les viandes transformées et la viande rouge influencent-elles le risque de cancer, et à partir de quelle quantité ?"
       es: "¿Cómo afectan las carnes procesadas y la carne roja al riesgo de cáncer y cuánto es demasiado?"
       pt: "Como é que as carnes processadas e a carne vermelha afetam o risco de cancro e quanto é demasiado?"
       de: "Wie beeinflussen verarbeitetes und rotes Fleisch das Krebsrisiko, und wie viel ist zu viel?"
@@ -218,7 +218,7 @@ topics:
     title: {en: "Whole grains, fibre, vegetables and fruit", fr: "Céréales complètes, fibres, légumes et fruits", es: "Cereales integrales, fibra, verduras y frutas", pt: "Cereais integrais, fibra, legumes e fruta", de: "Vollkorn, Ballaststoffe, Gemüse und Obst", it: "Cereali integrali, fibre, verdura e frutta", ar: "الحبوب الكاملة والألياف والخضار والفاكهة"}
     question:
       en: "Do whole grains, fibre, vegetables and fruit lower cancer risk?"
-      fr: "Les céréales complètes, les fibres, les légumes et les fruits réduisent-ils le risque de cancer ?"
+      fr: "Les céréales complètes, les fibres, les légumes et les fruits réduisent-ils le risque de cancer ?"
       es: "¿Los cereales integrales, la fibra, las verduras y las frutas reducen el riesgo de cáncer?"
       pt: "Os cereais integrais, a fibra, os legumes e a fruta reduzem o risco de cancro?"
       de: "Senken Vollkorn, Ballaststoffe, Gemüse und Obst das Krebsrisiko?"
@@ -240,7 +240,7 @@ topics:
     title: {en: "Sugary drinks and ultra-processed foods", fr: "Boissons sucrées et aliments ultra-transformés", es: "Bebidas azucaradas y ultraprocesados", pt: "Bebidas açucaradas e ultraprocessados", de: "Zuckergetränke und hochverarbeitete Lebensmittel", it: "Bevande zuccherate e cibi ultra-processati", ar: "المشروبات السكرية والأطعمة فائقة المعالجة"}
     question:
       en: "Are sugary drinks, fast food and ultra-processed foods linked to cancer?"
-      fr: "Les boissons sucrées, la restauration rapide et les aliments ultra-transformés sont-ils liés au cancer ?"
+      fr: "Les boissons sucrées, la restauration rapide et les aliments ultra-transformés sont-ils liés au cancer ?"
       es: "¿Las bebidas azucaradas, la comida rápida y los ultraprocesados se relacionan con el cáncer?"
       pt: "As bebidas açucaradas, a comida rápida e os ultraprocessados estão associados ao cancro?"
       de: "Hängen Zuckergetränke, Fast Food und hochverarbeitete Lebensmittel mit Krebs zusammen?"
@@ -262,7 +262,7 @@ topics:
     title: {en: "Dietary supplements for prevention", fr: "Compléments alimentaires et prévention", es: "Suplementos dietéticos y prevención", pt: "Suplementos alimentares e prevenção", de: "Nahrungsergänzungsmittel zur Vorbeugung", it: "Integratori alimentari per la prevenzione", ar: "المكملات الغذائية للوقاية"}
     question:
       en: "Can vitamin or mineral supplements prevent cancer?"
-      fr: "Les compléments de vitamines ou de minéraux peuvent-ils prévenir le cancer ?"
+      fr: "Les compléments de vitamines ou de minéraux peuvent-ils prévenir le cancer ?"
       es: "¿Pueden los suplementos de vitaminas o minerales prevenir el cáncer?"
       pt: "Os suplementos de vitaminas ou minerais podem prevenir o cancro?"
       de: "Können Vitamin- oder Mineralstoffpräparate Krebs vorbeugen?"
@@ -284,7 +284,7 @@ topics:
     title: {en: "Sun, UV and sunbeds", fr: "Soleil, UV et cabines de bronzage", es: "Sol, rayos UV y camas solares", pt: "Sol, UV e solários", de: "Sonne, UV-Strahlung und Solarien", it: "Sole, raggi UV e lettini abbronzanti", ar: "الشمس والأشعة فوق البنفسجية وأسرّة التسمير"}
     question:
       en: "How can I reduce skin cancer risk from the sun and sunbeds?"
-      fr: "Comment réduire le risque de cancer de la peau lié au soleil et aux cabines de bronzage ?"
+      fr: "Comment réduire le risque de cancer de la peau lié au soleil et aux cabines de bronzage ?"
       es: "¿Cómo puedo reducir el riesgo de cáncer de piel por el sol y las camas solares?"
       pt: "Como posso reduzir o risco de cancro da pele causado pelo sol e pelos solários?"
       de: "Wie kann ich mein Hautkrebsrisiko durch Sonne und Solarien senken?"
@@ -306,7 +306,7 @@ topics:
     title: {en: "HPV vaccination", fr: "Vaccination contre le HPV", es: "Vacunación contra el VPH", pt: "Vacinação contra o HPV", de: "HPV-Impfung", it: "Vaccinazione contro l'HPV", ar: "التطعيم ضد فيروس الورم الحليمي البشري"}
     question:
       en: "How effective is HPV vaccination at preventing cancer, and who should get it?"
-      fr: "Quelle est l'efficacité de la vaccination HPV contre le cancer, et qui devrait se faire vacciner ?"
+      fr: "Quelle est l'efficacité de la vaccination HPV contre le cancer, et qui devrait se faire vacciner ?"
       es: "¿Qué eficacia tiene la vacuna contra el VPH para prevenir el cáncer y quién debería recibirla?"
       pt: "Qual a eficácia da vacina contra o HPV na prevenção do cancro e quem a deve fazer?"
       de: "Wie wirksam ist die HPV-Impfung gegen Krebs, und wer sollte sich impfen lassen?"
@@ -328,7 +328,7 @@ topics:
     title: {en: "Hepatitis B and C", fr: "Hépatites B et C", es: "Hepatitis B y C", pt: "Hepatites B e C", de: "Hepatitis B und C", it: "Epatite B e C", ar: "التهاب الكبد B وC"}
     question:
       en: "How do hepatitis B and C cause liver cancer, and how can this be prevented?"
-      fr: "Comment les hépatites B et C provoquent-elles le cancer du foie, et comment le prévenir ?"
+      fr: "Comment les hépatites B et C provoquent-elles le cancer du foie, et comment le prévenir ?"
       es: "¿Cómo causan las hepatitis B y C el cáncer de hígado y cómo se puede prevenir?"
       pt: "Como é que as hepatites B e C causam cancro do fígado e como se pode prevenir?"
       de: "Wie verursachen Hepatitis B und C Leberkrebs, und wie lässt sich das verhindern?"
@@ -350,7 +350,7 @@ topics:
     title: {en: "Helicobacter pylori and stomach cancer", fr: "Helicobacter pylori et cancer de l'estomac", es: "Helicobacter pylori y cáncer de estómago", pt: "Helicobacter pylori e cancro do estômago", de: "Helicobacter pylori und Magenkrebs", it: "Helicobacter pylori e tumore dello stomaco", ar: "جرثومة المعدة وسرطان المعدة"}
     question:
       en: "Does treating Helicobacter pylori infection reduce stomach cancer risk?"
-      fr: "Traiter une infection à Helicobacter pylori réduit-il le risque de cancer de l'estomac ?"
+      fr: "Traiter une infection à Helicobacter pylori réduit-il le risque de cancer de l'estomac ?"
       es: "¿Tratar la infección por Helicobacter pylori reduce el riesgo de cáncer de estómago?"
       pt: "Tratar a infeção por Helicobacter pylori reduz o risco de cancro do estômago?"
       de: "Senkt die Behandlung einer Helicobacter-pylori-Infektion das Magenkrebsrisiko?"
@@ -372,7 +372,7 @@ topics:
     title: {en: "Cancer screening", fr: "Dépistage des cancers", es: "Cribado del cáncer", pt: "Rastreio do cancro", de: "Krebsfrüherkennung", it: "Screening oncologici", ar: "الكشف المبكر عن السرطان"}
     question:
       en: "Which cancer screening tests are proven to save lives, and who is eligible?"
-      fr: "Quels dépistages des cancers ont prouvé qu'ils sauvent des vies, et pour qui ?"
+      fr: "Quels dépistages des cancers ont prouvé qu'ils sauvent des vies, et pour qui ?"
       es: "¿Qué pruebas de cribado del cáncer han demostrado salvar vidas y a quién se dirigen?"
       pt: "Que exames de rastreio do cancro comprovadamente salvam vidas e a quem se destinam?"
       de: "Welche Krebsfrüherkennungsuntersuchungen retten nachweislich Leben, und für wen?"
@@ -394,7 +394,7 @@ topics:
     title: {en: "Family history and inherited risk", fr: "Antécédents familiaux et risque héréditaire", es: "Antecedentes familiares y riesgo hereditario", pt: "Antecedentes familiares e risco hereditário", de: "Familiengeschichte und erbliches Risiko", it: "Storia familiare e rischio ereditario", ar: "التاريخ العائلي والخطر الوراثي"}
     question:
       en: "When does a family history of cancer suggest inherited risk, and what can be done?"
-      fr: "Quand des antécédents familiaux de cancer évoquent-ils un risque héréditaire, et que faire ?"
+      fr: "Quand des antécédents familiaux de cancer évoquent-ils un risque héréditaire, et que faire ?"
       es: "¿Cuándo sugieren los antecedentes familiares de cáncer un riesgo hereditario y qué se puede hacer?"
       pt: "Quando é que os antecedentes familiares de cancro sugerem um risco hereditário e o que se pode fazer?"
       de: "Wann deutet eine familiäre Krebsgeschichte auf ein erbliches Risiko hin, und was kann man tun?"
@@ -416,7 +416,7 @@ topics:
     title: {en: "Breastfeeding", fr: "Allaitement", es: "Lactancia materna", pt: "Amamentação", de: "Stillen", it: "Allattamento al seno", ar: "الرضاعة الطبيعية"}
     question:
       en: "Does breastfeeding lower the mother's risk of cancer?"
-      fr: "L'allaitement réduit-il le risque de cancer chez la mère ?"
+      fr: "L'allaitement réduit-il le risque de cancer chez la mère ?"
       es: "¿La lactancia materna reduce el riesgo de cáncer de la madre?"
       pt: "A amamentação reduz o risco de cancro da mãe?"
       de: "Senkt Stillen das Krebsrisiko der Mutter?"
@@ -435,10 +435,10 @@ topics:
     audience: [prevention]
     cancer_types: [breast, endometrium, ovary]
     priority: 2
-    title: {en: "Menopausal hormone therapy", fr: "Traitement hormonal de la ménopause", es: "Terapia hormonal de la menopausia", pt: "Terapêutica hormonal da menopausa", de: "Hormonersatztherapie in den Wechseljahren", it: "Terapia ormonale in menopausa", ar: "العلاج الهرموني في سن اليأس"}
+    title: {en: "Menopausal hormone therapy", fr: "Traitement hormonal de la ménopause", es: "Terapia hormonal de la menopausia", pt: "Terapêutica hormonal da menopausa", de: "Hormonersatztherapie in den Wechseljahren", it: "Terapia ormonale in menopausa", ar: "العلاج الهرموني لانقطاع الطمث"}
     question:
       en: "How does menopausal hormone therapy affect cancer risk?"
-      fr: "Comment le traitement hormonal de la ménopause influence-t-il le risque de cancer ?"
+      fr: "Comment le traitement hormonal de la ménopause influence-t-il le risque de cancer ?"
       es: "¿Cómo afecta la terapia hormonal de la menopausia al riesgo de cáncer?"
       pt: "Como é que a terapêutica hormonal da menopausa afeta o risco de cancro?"
       de: "Wie beeinflusst eine Hormonersatztherapie in den Wechseljahren das Krebsrisiko?"
@@ -461,7 +461,7 @@ topics:
     title: {en: "Radon and air pollution", fr: "Radon et pollution de l'air", es: "Radón y contaminación del aire", pt: "Radão e poluição do ar", de: "Radon und Luftverschmutzung", it: "Radon e inquinamento atmosferico", ar: "غاز الرادون وتلوث الهواء"}
     question:
       en: "How do radon at home and outdoor air pollution affect lung cancer risk?"
-      fr: "Comment le radon domestique et la pollution de l'air extérieur influencent-ils le risque de cancer du poumon ?"
+      fr: "Comment le radon domestique et la pollution de l'air extérieur influencent-ils le risque de cancer du poumon ?"
       es: "¿Cómo afectan el radón en el hogar y la contaminación del aire al riesgo de cáncer de pulmón?"
       pt: "Como é que o radão em casa e a poluição do ar afetam o risco de cancro do pulmão?"
       de: "Wie beeinflussen Radon im Haus und Luftverschmutzung das Lungenkrebsrisiko?"
@@ -483,7 +483,7 @@ topics:
     title: {en: "Cancer risks at work", fr: "Risques de cancer au travail", es: "Riesgos de cáncer en el trabajo", pt: "Riscos de cancro no trabalho", de: "Krebsrisiken am Arbeitsplatz", it: "Rischi di cancro sul lavoro", ar: "مخاطر السرطان في مكان العمل"}
     question:
       en: "Which workplace exposures increase cancer risk, and how can workers protect themselves?"
-      fr: "Quelles expositions professionnelles augmentent le risque de cancer, et comment se protéger ?"
+      fr: "Quelles expositions professionnelles augmentent le risque de cancer, et comment se protéger ?"
       es: "¿Qué exposiciones laborales aumentan el riesgo de cáncer y cómo pueden protegerse los trabajadores?"
       pt: "Que exposições no trabalho aumentam o risco de cancro e como se podem os trabalhadores proteger?"
       de: "Welche Belastungen am Arbeitsplatz erhöhen das Krebsrisiko, und wie kann man sich schützen?"
@@ -505,7 +505,7 @@ topics:
     title: {en: "Night shifts and sleep", fr: "Travail de nuit et sommeil", es: "Turnos de noche y sueño", pt: "Trabalho noturno e sono", de: "Nachtschicht und Schlaf", it: "Turni di notte e sonno", ar: "العمل الليلي والنوم"}
     question:
       en: "Are night-shift work and poor sleep linked to cancer risk?"
-      fr: "Le travail de nuit et le manque de sommeil sont-ils liés au risque de cancer ?"
+      fr: "Le travail de nuit et le manque de sommeil sont-ils liés au risque de cancer ?"
       es: "¿El trabajo nocturno y dormir mal se relacionan con el riesgo de cáncer?"
       pt: "O trabalho noturno e a falta de sono estão associados ao risco de cancro?"
       de: "Hängen Nachtschichtarbeit und schlechter Schlaf mit dem Krebsrisiko zusammen?"
@@ -527,7 +527,7 @@ topics:
     title: {en: "Stress and cancer", fr: "Stress et cancer", es: "Estrés y cáncer", pt: "Stress e cancro", de: "Stress und Krebs", it: "Stress e cancro", ar: "التوتر والسرطان"}
     question:
       en: "Does stress cause cancer or make it worse?"
-      fr: "Le stress cause-t-il le cancer ou l'aggrave-t-il ?"
+      fr: "Le stress cause-t-il le cancer ou l'aggrave-t-il ?"
       es: "¿El estrés causa cáncer o lo empeora?"
       pt: "O stress causa cancro ou piora-o?"
       de: "Verursacht Stress Krebs oder verschlimmert er ihn?"
@@ -550,7 +550,7 @@ topics:
     title: {en: "Exercise during cancer treatment", fr: "Activité physique pendant les traitements", es: "Ejercicio durante el tratamiento del cáncer", pt: "Exercício durante o tratamento do cancro", de: "Bewegung während der Krebsbehandlung", it: "Attività fisica durante le cure", ar: "ممارسة الرياضة خلال علاج السرطان"}
     question:
       en: "Is it safe and helpful to exercise during cancer treatment?"
-      fr: "Est-il sûr et bénéfique de faire de l'activité physique pendant un traitement contre le cancer ?"
+      fr: "Est-il sûr et bénéfique de faire de l'activité physique pendant un traitement contre le cancer ?"
       es: "¿Es seguro y útil hacer ejercicio durante el tratamiento del cáncer?"
       pt: "É seguro e útil fazer exercício durante o tratamento do cancro?"
       de: "Ist Bewegung während einer Krebsbehandlung sicher und hilfreich?"
@@ -573,7 +573,7 @@ topics:
     title: {en: "Physical activity after cancer", fr: "Activité physique après un cancer", es: "Actividad física después del cáncer", pt: "Atividade física depois do cancro", de: "Bewegung nach Krebs", it: "Attività fisica dopo il cancro", ar: "النشاط البدني بعد السرطان"}
     question:
       en: "Is physical activity after cancer linked to better survival and lower recurrence?"
-      fr: "L'activité physique après un cancer est-elle associée à une meilleure survie et moins de récidives ?"
+      fr: "L'activité physique après un cancer est-elle associée à une meilleure survie et moins de récidives ?"
       es: "¿La actividad física después del cáncer se asocia con mejor supervivencia y menos recurrencias?"
       pt: "A atividade física depois do cancro está associada a melhor sobrevivência e menos recidivas?"
       de: "Ist Bewegung nach Krebs mit besserem Überleben und weniger Rückfällen verbunden?"
@@ -596,7 +596,7 @@ topics:
     title: {en: "Eating well during treatment", fr: "Bien s'alimenter pendant les traitements", es: "Alimentarse bien durante el tratamiento", pt: "Alimentar-se bem durante o tratamento", de: "Gut essen während der Behandlung", it: "Mangiare bene durante le cure", ar: "التغذية الجيدة أثناء العلاج"}
     question:
       en: "How should people eat during cancer treatment to stay strong and avoid malnutrition?"
-      fr: "Comment s'alimenter pendant un traitement du cancer pour rester fort et éviter la dénutrition ?"
+      fr: "Comment s'alimenter pendant un traitement du cancer pour rester fort et éviter la dénutrition ?"
       es: "¿Cómo alimentarse durante el tratamiento del cáncer para mantenerse fuerte y evitar la desnutrición?"
       pt: "Como alimentar-se durante o tratamento do cancro para se manter forte e evitar a desnutrição?"
       de: "Wie sollte man sich während einer Krebsbehandlung ernähren, um bei Kräften zu bleiben und Mangelernährung zu vermeiden?"
@@ -619,7 +619,7 @@ topics:
     title: {en: "Weight after a cancer diagnosis", fr: "Poids après un diagnostic de cancer", es: "Peso tras un diagnóstico de cáncer", pt: "Peso após um diagnóstico de cancro", de: "Gewicht nach einer Krebsdiagnose", it: "Il peso dopo una diagnosi di cancro", ar: "الوزن بعد تشخيص السرطان"}
     question:
       en: "Does body weight after diagnosis matter for outcomes, and what is a safe approach?"
-      fr: "Le poids après le diagnostic influence-t-il le pronostic, et quelle approche est sûre ?"
+      fr: "Le poids après le diagnostic influence-t-il le pronostic, et quelle approche est sûre ?"
       es: "¿Importa el peso después del diagnóstico para la evolución y cuál es un enfoque seguro?"
       pt: "O peso após o diagnóstico importa para a evolução e qual é uma abordagem segura?"
       de: "Spielt das Gewicht nach der Diagnose eine Rolle für den Verlauf, und was ist ein sicherer Ansatz?"
@@ -642,7 +642,7 @@ topics:
     title: {en: "Quitting smoking after a cancer diagnosis", fr: "Arrêter de fumer après un diagnostic de cancer", es: "Dejar de fumar tras un diagnóstico de cáncer", pt: "Deixar de fumar após um diagnóstico de cancro", de: "Rauchstopp nach einer Krebsdiagnose", it: "Smettere di fumare dopo una diagnosi di cancro", ar: "الإقلاع عن التدخين بعد تشخيص السرطان"}
     question:
       en: "Does quitting smoking after a cancer diagnosis improve treatment results and survival?"
-      fr: "Arrêter de fumer après un diagnostic de cancer améliore-t-il les résultats des traitements et la survie ?"
+      fr: "Arrêter de fumer après un diagnostic de cancer améliore-t-il les résultats des traitements et la survie ?"
       es: "¿Dejar de fumar tras el diagnóstico mejora los resultados del tratamiento y la supervivencia?"
       pt: "Deixar de fumar após o diagnóstico melhora os resultados do tratamento e a sobrevivência?"
       de: "Verbessert ein Rauchstopp nach der Diagnose Behandlungsergebnisse und Überleben?"
@@ -665,7 +665,7 @@ topics:
     title: {en: "Alcohol after cancer", fr: "Alcool après un cancer", es: "Alcohol después del cáncer", pt: "Álcool depois do cancro", de: "Alkohol nach Krebs", it: "Alcol dopo il cancro", ar: "الكحول بعد السرطان"}
     question:
       en: "Should people limit alcohol after a cancer diagnosis?"
-      fr: "Faut-il limiter l'alcool après un diagnostic de cancer ?"
+      fr: "Faut-il limiter l'alcool après un diagnostic de cancer ?"
       es: "¿Conviene limitar el alcohol tras un diagnóstico de cáncer?"
       pt: "Deve limitar-se o álcool após um diagnóstico de cancro?"
       de: "Sollte man Alkohol nach einer Krebsdiagnose einschränken?"
@@ -688,7 +688,7 @@ topics:
     title: {en: "Managing cancer-related fatigue", fr: "Gérer la fatigue liée au cancer", es: "Manejo de la fatiga relacionada con el cáncer", pt: "Gerir a fadiga associada ao cancro", de: "Umgang mit krebsbedingter Erschöpfung (Fatigue)", it: "Gestire la stanchezza legata al cancro", ar: "التعامل مع التعب المرتبط بالسرطان"}
     question:
       en: "What helps with cancer-related fatigue?"
-      fr: "Qu'est-ce qui aide à lutter contre la fatigue liée au cancer ?"
+      fr: "Qu'est-ce qui aide à lutter contre la fatigue liée au cancer ?"
       es: "¿Qué ayuda con la fatiga relacionada con el cáncer?"
       pt: "O que ajuda na fadiga associada ao cancro?"
       de: "Was hilft bei krebsbedingter Erschöpfung (Fatigue)?"
@@ -710,7 +710,7 @@ topics:
     title: {en: "Nausea and loss of appetite", fr: "Nausées et perte d'appétit", es: "Náuseas y pérdida de apetito", pt: "Náuseas e perda de apetite", de: "Übelkeit und Appetitlosigkeit", it: "Nausea e perdita di appetito", ar: "الغثيان وفقدان الشهية"}
     question:
       en: "What helps with nausea and poor appetite during cancer treatment?"
-      fr: "Qu'est-ce qui aide en cas de nausées et de perte d'appétit pendant les traitements ?"
+      fr: "Qu'est-ce qui aide en cas de nausées et de perte d'appétit pendant les traitements ?"
       es: "¿Qué ayuda con las náuseas y la falta de apetito durante el tratamiento?"
       pt: "O que ajuda nas náuseas e na falta de apetite durante o tratamento?"
       de: "Was hilft bei Übelkeit und Appetitlosigkeit während der Behandlung?"
@@ -732,7 +732,7 @@ topics:
     title: {en: "Sleep problems with cancer", fr: "Troubles du sommeil et cancer", es: "Problemas de sueño y cáncer", pt: "Problemas de sono e cancro", de: "Schlafprobleme bei Krebs", it: "Disturbi del sonno con il cancro", ar: "مشكلات النوم مع السرطان"}
     question:
       en: "What helps people with cancer sleep better?"
-      fr: "Qu'est-ce qui aide les personnes atteintes de cancer à mieux dormir ?"
+      fr: "Qu'est-ce qui aide les personnes atteintes de cancer à mieux dormir ?"
       es: "¿Qué ayuda a las personas con cáncer a dormir mejor?"
       pt: "O que ajuda as pessoas com cancro a dormir melhor?"
       de: "Was hilft Menschen mit Krebs, besser zu schlafen?"
@@ -754,7 +754,7 @@ topics:
     title: {en: "Coping with anxiety and low mood", fr: "Faire face à l'anxiété et à la déprime", es: "Afrontar la ansiedad y el ánimo bajo", pt: "Lidar com a ansiedade e o desânimo", de: "Umgang mit Angst und Niedergeschlagenheit", it: "Affrontare ansia e umore basso", ar: "التعامل مع القلق والاكتئاب"}
     question:
       en: "What support helps people living with cancer cope with anxiety and depression?"
-      fr: "Quel soutien aide les personnes atteintes de cancer à faire face à l'anxiété et à la dépression ?"
+      fr: "Quel soutien aide les personnes atteintes de cancer à faire face à l'anxiété et à la dépression ?"
       es: "¿Qué apoyo ayuda a las personas con cáncer a afrontar la ansiedad y la depresión?"
       pt: "Que apoio ajuda as pessoas com cancro a lidar com a ansiedade e a depressão?"
       de: "Welche Unterstützung hilft Menschen mit Krebs bei Angst und Depression?"
@@ -776,7 +776,7 @@ topics:
     title: {en: "Supplements and herbs during treatment", fr: "Compléments et plantes pendant les traitements", es: "Suplementos y hierbas durante el tratamiento", pt: "Suplementos e plantas durante o tratamento", de: "Nahrungsergänzung und Pflanzen während der Behandlung", it: "Integratori ed erbe durante le cure", ar: "المكملات والأعشاب أثناء العلاج"}
     question:
       en: "Are supplements and herbal products safe to take during cancer treatment?"
-      fr: "Les compléments alimentaires et produits à base de plantes sont-ils sûrs pendant un traitement du cancer ?"
+      fr: "Les compléments alimentaires et produits à base de plantes sont-ils sûrs pendant un traitement du cancer ?"
       es: "¿Es seguro tomar suplementos y productos herbales durante el tratamiento del cáncer?"
       pt: "É seguro tomar suplementos e produtos à base de plantas durante o tratamento do cancro?"
       de: "Sind Nahrungsergänzungsmittel und pflanzliche Produkte während einer Krebsbehandlung sicher?"
@@ -799,7 +799,7 @@ topics:
     title: {en: "Evidence-based complementary therapies", fr: "Thérapies complémentaires fondées sur les preuves", es: "Terapias complementarias basadas en la evidencia", pt: "Terapias complementares baseadas na evidência", de: "Evidenzbasierte komplementäre Therapien", it: "Terapie complementari basate sulle prove", ar: "العلاجات التكميلية المثبتة بالأدلة"}
     question:
       en: "Which complementary therapies (like yoga, acupuncture or massage) have evidence for easing symptoms?"
-      fr: "Quelles thérapies complémentaires (yoga, acupuncture, massage…) ont fait leurs preuves pour soulager les symptômes ?"
+      fr: "Quelles thérapies complémentaires (yoga, acupuncture, massage…) ont fait leurs preuves pour soulager les symptômes ?"
       es: "¿Qué terapias complementarias (yoga, acupuntura, masaje…) tienen evidencia para aliviar síntomas?"
       pt: "Que terapias complementares (ioga, acupuntura, massagem…) têm evidência no alívio de sintomas?"
       de: "Welche komplementären Therapien (z. B. Yoga, Akupunktur, Massage) lindern nachweislich Beschwerden?"
@@ -818,10 +818,10 @@ topics:
     audience: [prevention, in_treatment, after_treatment]
     cancer_types: []
     priority: 1
-    title: {en: "Diet myths: sugar, alkaline diets and fasting", fr: "Idées reçues : sucre, régimes alcalins et jeûne", es: "Mitos: azúcar, dietas alcalinas y ayuno", pt: "Mitos: açúcar, dietas alcalinas e jejum", de: "Ernährungsmythen: Zucker, basische Diäten und Fasten", it: "Falsi miti sulla dieta: zucchero, diete alcaline e digiuno", ar: "خرافات غذائية: السكر والأنظمة القلوية والصيام"}
+    title: {en: "Diet myths: sugar, alkaline diets and fasting", fr: "Idées reçues : sucre, régimes alcalins et jeûne", es: "Mitos: azúcar, dietas alcalinas y ayuno", pt: "Mitos: açúcar, dietas alcalinas e jejum", de: "Ernährungsmythen: Zucker, basische Diäten und Fasten", it: "Falsi miti sulla dieta: zucchero, diete alcaline e digiuno", ar: "خرافات غذائية: السكر والأنظمة القلوية والصيام"}
     question:
       en: "Does sugar feed cancer, and can alkaline diets or fasting treat it?"
-      fr: "Le sucre nourrit-il le cancer, et les régimes alcalins ou le jeûne peuvent-ils le soigner ?"
+      fr: "Le sucre nourrit-il le cancer, et les régimes alcalins ou le jeûne peuvent-ils le soigner ?"
       es: "¿El azúcar alimenta el cáncer? ¿Pueden las dietas alcalinas o el ayuno tratarlo?"
       pt: "O açúcar alimenta o cancro? As dietas alcalinas ou o jejum podem tratá-lo?"
       de: "Füttert Zucker den Krebs, und können basische Diäten oder Fasten ihn behandeln?"
@@ -843,7 +843,7 @@ topics:
     title: {en: "Living with the fear of cancer coming back", fr: "Vivre avec la peur de la récidive", es: "Vivir con el miedo a que el cáncer vuelva", pt: "Viver com o medo de o cancro voltar", de: "Mit der Angst vor einem Rückfall leben", it: "Convivere con la paura che il cancro ritorni", ar: "التعايش مع الخوف من عودة السرطان"}
     question:
       en: "What helps people manage the fear of cancer coming back after treatment?"
-      fr: "Qu'est-ce qui aide à gérer la peur que le cancer revienne après les traitements ?"
+      fr: "Qu'est-ce qui aide à gérer la peur que le cancer revienne après les traitements ?"
       es: "¿Qué ayuda a manejar el miedo a que el cáncer vuelva después del tratamiento?"
       pt: "O que ajuda a gerir o medo de o cancro voltar depois do tratamento?"
       de: "Was hilft, mit der Angst vor einem Wiederauftreten der Krebserkrankung nach der Behandlung umzugehen?"
@@ -865,7 +865,7 @@ topics:
     title: {en: "Returning to work and daily life", fr: "Reprendre le travail et la vie quotidienne", es: "Volver al trabajo y a la vida diaria", pt: "Regressar ao trabalho e à vida diária", de: "Rückkehr in Arbeit und Alltag", it: "Tornare al lavoro e alla vita quotidiana", ar: "العودة إلى العمل والحياة اليومية"}
     question:
       en: "What helps people return to work and daily activities during or after cancer treatment?"
-      fr: "Qu'est-ce qui aide à reprendre le travail et les activités quotidiennes pendant ou après un traitement contre le cancer ?"
+      fr: "Qu'est-ce qui aide à reprendre le travail et les activités quotidiennes pendant ou après un traitement contre le cancer ?"
       es: "¿Qué ayuda a volver al trabajo y a las actividades diarias durante o después del tratamiento del cáncer?"
       pt: "O que ajuda a regressar ao trabalho e às atividades diárias durante ou após o tratamento do cancro?"
       de: "Was hilft Menschen, während oder nach einer Krebsbehandlung in Arbeit und Alltag zurückzukehren?"
@@ -885,10 +885,10 @@ topics:
     audience: [in_treatment, after_treatment]
     cancer_types: [breast, gynaecological, melanoma, head_and_neck]
     priority: 2
-    title: {en: "Lymphoedema: exercise and self-care", fr: "Lymphœdème : activité physique et soins personnels", es: "Linfedema: ejercicio y autocuidado", pt: "Linfedema: exercício e autocuidado", de: "Lymphödem: Bewegung und Selbstfürsorge", it: "Linfedema: attività fisica e cura di sé", ar: "الوذمة اللمفية: التمارين والعناية الذاتية"}
+    title: {en: "Lymphoedema: exercise and self-care", fr: "Lymphœdème : activité physique et soins personnels", es: "Linfedema: ejercicio y autocuidado", pt: "Linfedema: exercício e autocuidado", de: "Lymphödem: Bewegung und Selbstfürsorge", it: "Linfedema: attività fisica e cura di sé", ar: "الوذمة اللمفية: التمارين والعناية الذاتية"}
     question:
       en: "Is exercise safe for people with, or at risk of, lymphoedema after cancer treatment, and what self-care helps?"
-      fr: "L'activité physique est-elle sûre en cas de lymphœdème, ou de risque de lymphœdème, après un cancer, et quels soins personnels aident ?"
+      fr: "L'activité physique est-elle sûre en cas de lymphœdème, ou de risque de lymphœdème, après un cancer, et quels soins personnels aident ?"
       es: "¿Es seguro el ejercicio para las personas con linfedema, o en riesgo de padecerlo, tras el tratamiento del cáncer, y qué autocuidado ayuda?"
       pt: "O exercício é seguro para pessoas com linfedema, ou em risco de o ter, após o tratamento do cancro, e que autocuidado ajuda?"
       de: "Ist Bewegung bei einem Lymphödem oder einem Lymphödemrisiko nach einer Krebsbehandlung sicher, und welche Selbstfürsorge hilft?"
@@ -910,7 +910,7 @@ topics:
     title: {en: "Memory and concentration changes (“chemo brain”)", fr: "Troubles de la mémoire et de la concentration (« chimio-cerveau »)", es: "Cambios de memoria y concentración («quimiocerebro»)", pt: "Alterações de memória e concentração («quimiocérebro»)", de: "Gedächtnis- und Konzentrationsprobleme („Chemobrain“)", it: "Problemi di memoria e concentrazione (“chemo brain”)", ar: "تغيرات الذاكرة والتركيز («ضباب الكيماوي»)"}
     question:
       en: "What helps with memory and concentration problems during and after cancer treatment?"
-      fr: "Qu'est-ce qui aide en cas de troubles de la mémoire et de la concentration pendant et après un traitement du cancer ?"
+      fr: "Qu'est-ce qui aide en cas de troubles de la mémoire et de la concentration pendant et après un traitement du cancer ?"
       es: "¿Qué ayuda con los problemas de memoria y concentración durante y después del tratamiento del cáncer?"
       pt: "O que ajuda nos problemas de memória e concentração durante e após o tratamento do cancro?"
       de: "Was hilft bei Gedächtnis- und Konzentrationsproblemen während und nach einer Krebsbehandlung?"
@@ -932,7 +932,7 @@ topics:
     title: {en: "Peer support and support groups", fr: "Soutien par les pairs et groupes de parole", es: "Apoyo entre iguales y grupos de apoyo", pt: "Apoio de pares e grupos de apoio", de: "Unterstützung durch Gleichbetroffene und Selbsthilfegruppen", it: "Sostegno tra pari e gruppi di auto-aiuto", ar: "دعم الأقران ومجموعات الدعم"}
     question:
       en: "Do peer support and support groups help people affected by cancer?"
-      fr: "Le soutien par les pairs et les groupes de parole aident-ils les personnes touchées par le cancer ?"
+      fr: "Le soutien par les pairs et les groupes de parole aident-ils les personnes touchées par le cancer ?"
       es: "¿Ayudan el apoyo entre iguales y los grupos de apoyo a las personas afectadas por el cáncer?"
       pt: "O apoio de pares e os grupos de apoio ajudam as pessoas afetadas pelo cancro?"
       de: "Helfen Peer-Unterstützung und Selbsthilfegruppen Menschen, die von Krebs betroffen sind?"
@@ -954,7 +954,7 @@ topics:
     title: {en: "Looking after yourself as a caregiver", fr: "Prendre soin de soi quand on est aidant", es: "Cuidarse cuando se es cuidador", pt: "Cuidar de si enquanto cuidador", de: "Für sich selbst sorgen als pflegende Angehörige", it: "Prendersi cura di sé quando si assiste qualcuno", ar: "العناية بنفسك كمقدّم رعاية"}
     question:
       en: "What helps caregivers of people with cancer protect their own health and wellbeing?"
-      fr: "Qu'est-ce qui aide les aidants de personnes atteintes de cancer à préserver leur santé et leur bien-être ?"
+      fr: "Qu'est-ce qui aide les aidants de personnes atteintes de cancer à préserver leur santé et leur bien-être ?"
       es: "¿Qué ayuda a los cuidadores de personas con cáncer a proteger su salud y bienestar?"
       pt: "O que ajuda os cuidadores de pessoas com cancro a proteger a sua saúde e bem-estar?"
       de: "Was hilft pflegenden Angehörigen von Menschen mit Krebs, ihre eigene Gesundheit zu schützen?"

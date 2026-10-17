@@ -71,7 +71,7 @@ export const en = {
   disclaimer: {
     short: "Educational information, not medical advice. Always talk with your care team.",
     full:
-      "{app} provides educational information based on published research. It does not diagnose, treat or replace professional care. In an emergency, call your local emergency number.",
+      "{app} provides educational information based on published research. It does not diagnose, treat or replace professional care. In an emergency, call your local emergency number (112 in Europe).",
   },
   home: {
     heroTitle: "Lower your risk. Live well through and beyond cancer.",
@@ -455,7 +455,7 @@ export const en = {
     intro: "Before you start, a few things that matter:",
     evidence: "Everything here comes from research and guidelines, and every statement shows its source and how strong the evidence is.",
     notAdvice: "This is educational information, not medical advice. It does not diagnose or replace your care team.",
-    emergency: "In an emergency, or if you are thinking of harming yourself, call your local emergency number now.",
+    emergency: "In an emergency, or if you are thinking of harming yourself, call your local emergency number (112 in Europe) now.",
     privacy: "Your profile, plan and lifestyle check stay on this device. No account is needed.",
     accept: "I understand",
   },
@@ -590,7 +590,7 @@ export const en = {
     signOut: "Sign out on this device",
     signOutConfirm: "Without your access key you won't be able to sign back in. Sign out?",
     leave: "Delete my account and posts",
-    leaveConfirm: "This permanently deletes your community account and posts. Replies written by others stay, without your words.",
+    leaveConfirm: "This permanently deletes your community account and posts. Replies written by others stay, but your words are removed.",
     left: "Your community account was deleted.",
     unavailable: "The community is not available right now.",
     myModeration: "Your held and removed posts",

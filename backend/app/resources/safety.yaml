@@ -107,9 +107,9 @@ messages:
     fr: "Je suis vraiment désolé·e que vous vous sentiez ainsi. Vous méritez du soutien dès maintenant. Si vous risquez de passer à l'acte, appelez immédiatement les urgences. Vous pouvez aussi joindre une ligne d'écoute — en parler peut aider."
     es: "Siento mucho que te sientas así. Mereces apoyo ahora mismo. Si crees que podrías actuar según estos pensamientos, llama de inmediato al número de emergencias. También puedes contactar una línea de crisis: hablar con alguien puede ayudar."
     pt: "Lamento muito que se sinta assim. Merece apoio agora. Se sentir que pode agir de acordo com estes pensamentos, ligue imediatamente para o número de emergência. Também pode contactar uma linha de apoio — falar com alguém pode ajudar."
-    de: "Es tut mir sehr leid, dass es Ihnen so geht. Sie verdienen jetzt Unterstützung. Wenn Sie befürchten, diesen Gedanken nachzugeben, rufen Sie bitte sofort den Notruf. Sie können sich auch an eine Krisenhotline wenden – Reden kann helfen."
+    de: "Es tut mir sehr leid, dass es Ihnen so geht. Sie verdienen jetzt Unterstützung. Wenn Sie befürchten, diesen Gedanken nachzugeben, rufen Sie bitte sofort den Notruf 112. Sie können sich auch an ein Krisentelefon wenden – Reden kann helfen."
     it: "Mi dispiace davvero che tu ti senta così. Meriti sostegno adesso. Se pensi di poter mettere in atto questi pensieri, chiama subito il numero di emergenza (112). Puoi anche contattare una linea di ascolto: parlarne con qualcuno può aiutare."
-    ar: "يؤسفني حقًا أنك تمر بهذا الشعور. أنت تستحق الدعم الآن. إذا كنت تخشى أن تتصرف بناءً على هذه الأفكار، فاتصل فورًا برقم الطوارئ المحلي. يمكنك أيضًا التواصل مع خط دعم نفسي، فالتحدث مع أحد قد يساعد."
+    ar: "يؤسفني حقًا ما تمر به. من حقك أن تحصل على الدعم الآن. إذا كنت تخشى أن تتصرف بناءً على هذه الأفكار، فاتصل فورًا برقم الطوارئ المحلي (112 في أوروبا). يمكنك أيضًا التواصل مع خط دعم نفسي، فالتحدث مع أحد قد يساعد."
   medical_emergency:
     en: "This may be a medical emergency. Please call your local emergency number now (112 in Europe, 911 in North America) or go to the nearest emergency department. Don't wait for an online answer."
     fr: "Il peut s'agir d'une urgence médicale. Appelez immédiatement les urgences (112 en Europe, 15 en France) ou rendez-vous aux urgences les plus proches. N'attendez pas une réponse en ligne."
@@ -117,10 +117,10 @@ messages:
     pt: "Pode tratar-se de uma emergência médica. Ligue já para o número de emergência (112 na Europa, 192 SAMU no Brasil) ou dirija-se às urgências mais próximas. Não espere por uma resposta online."
     de: "Das könnte ein medizinischer Notfall sein. Rufen Sie bitte sofort den Notruf (112) oder suchen Sie die nächste Notaufnahme auf. Warten Sie nicht auf eine Online-Antwort."
     it: "Potrebbe trattarsi di un'emergenza medica. Chiama subito il numero di emergenza (112 in Europa, 118 in Italia) o recati al pronto soccorso più vicino. Non aspettare una risposta online."
-    ar: "قد تكون هذه حالة طبية طارئة. اتصل الآن برقم الطوارئ المحلي أو توجّه إلى أقرب قسم للطوارئ. لا تنتظر إجابة عبر الإنترنت."
+    ar: "قد تكون هذه حالة طبية طارئة. اتصل الآن برقم الطوارئ المحلي (112 في أوروبا) أو توجّه إلى أقرب قسم للطوارئ. لا تنتظر إجابة عبر الإنترنت."
   oncologic_urgent:
     en: "Some symptoms you describe can be urgent during cancer treatment (for example fever during chemotherapy, or new back pain with leg weakness). Contact your oncology team's 24-hour line or emergency services now — don't wait."
-    fr: "Certains symptômes que vous décrivez peuvent être urgents pendant un traitement du cancer (par exemple de la fièvre sous chimiothérapie, ou une nouvelle douleur dorsale avec faiblesse des jambes). Contactez maintenant la ligne d'urgence de votre équipe d'oncologie ou le 15/112 — n'attendez pas."
+    fr: "Certains symptômes que vous décrivez peuvent être urgents pendant un traitement du cancer (par exemple de la fièvre sous chimiothérapie, ou une nouvelle douleur dorsale avec faiblesse des jambes). Contactez maintenant la ligne d'urgence de votre équipe d'oncologie ou le 112 — n'attendez pas."
     es: "Algunos síntomas que describe pueden ser urgentes durante el tratamiento del cáncer (por ejemplo, fiebre durante la quimioterapia o dolor de espalda nuevo con debilidad en las piernas). Contacte ahora con la línea de 24 horas de su equipo de oncología o con emergencias: no espere."
     pt: "Alguns sintomas que descreve podem ser urgentes durante o tratamento do cancro (por exemplo, febre durante a quimioterapia ou dor nas costas nova com fraqueza nas pernas). Contacte já a linha de 24 horas da sua equipa de oncologia ou os serviços de emergência — não espere."
     de: "Einige der beschriebenen Symptome können während einer Krebsbehandlung dringend sein (z. B. Fieber unter Chemotherapie oder neue Rückenschmerzen mit Beinschwäche). Kontaktieren Sie jetzt die 24-Stunden-Nummer Ihres onkologischen Teams oder den Notruf – warten Sie nicht."
@@ -131,7 +131,7 @@ messages:
     fr: "Je ne peux pas dire si vous avez un cancer ni évaluer votre situation — seul un professionnel de santé qui vous examine le peut. Je peux partager ce que dit la recherche, et il est utile de prendre rendez-vous pour vous faire examiner."
     es: "No puedo decir si tiene cáncer ni evaluar su situación: solo un profesional que le examine puede hacerlo. Puedo compartir lo que dice la investigación, y conviene pedir una cita para revisarlo."
     pt: "Não consigo dizer se tem cancro nem avaliar a sua situação — só um profissional de saúde que o examine pode. Posso partilhar o que diz a investigação, e vale a pena marcar uma consulta para ser avaliado."
-    de: "Ich kann nicht beurteilen, ob Sie Krebs haben – das kann nur eine Ärztin oder ein Arzt nach einer Untersuchung. Ich kann teilen, was die Forschung sagt; ein Termin zur Abklärung ist sinnvoll."
+    de: "Ich kann nicht beurteilen, ob Sie Krebs haben – das kann nur eine Ärztin oder ein Arzt nach einer Untersuchung. Ich kann Ihnen zeigen, was die Forschung sagt; ein Termin zur Abklärung ist sinnvoll."
     it: "Non posso dire se hai un cancro né valutare la tua situazione: può farlo solo un medico che ti visita. Posso condividere ciò che dice la ricerca, ed è utile prenotare una visita per un controllo."
     ar: "لا يمكنني معرفة ما إذا كنت مصابًا بالسرطان أو تقييم حالتك، فهذا لا يستطيعه إلا طبيب يفحصك. يمكنني مشاركة ما تقوله الأبحاث، ومن المفيد حجز موعد لإجراء الفحص."
   treatment_decision:
@@ -139,7 +139,7 @@ messages:
     fr: "Les décisions de commencer, arrêter, reporter un traitement ou d'en modifier la dose doivent être prises avec votre équipe d'oncologie, qui connaît toute votre situation. Je peux partager des données générales pour vous aider à préparer vos questions."
     es: "Las decisiones sobre iniciar, suspender, retrasar o dosificar un tratamiento deben tomarse con su equipo de oncología, que conoce toda su situación. Puedo compartir evidencia general para ayudarle a preparar sus preguntas."
     pt: "As decisões sobre iniciar, parar, adiar ou ajustar a dose de um tratamento devem ser tomadas com a sua equipa de oncologia, que conhece toda a sua situação. Posso partilhar evidência geral para ajudar a preparar perguntas."
-    de: "Entscheidungen über Beginn, Abbruch, Verschiebung oder Dosierung einer Behandlung sollten Sie mit Ihrem onkologischen Team treffen, das Ihre gesamte Situation kennt. Ich kann allgemeine Evidenz teilen, damit Sie Fragen vorbereiten können."
+    de: "Entscheidungen über Beginn, Abbruch, Verschiebung oder Dosierung einer Behandlung sollten Sie mit Ihrem onkologischen Team treffen, das Ihre gesamte Situation kennt. Ich kann Ihnen allgemeine Evidenz zeigen, damit Sie Fragen vorbereiten können."
     it: "Le decisioni su iniziare, interrompere, rimandare una terapia o modificarne la dose vanno prese con la tua équipe oncologica, che conosce tutta la tua situazione. Posso condividere prove generali per aiutarti a preparare le domande."
     ar: "يجب اتخاذ قرارات بدء العلاج أو إيقافه أو تأجيله أو تعديل جرعته مع فريق الأورام المعالج لك، الذي يعرف وضعك كاملًا. يمكنني مشاركة أدلة عامة لمساعدتك في تحضير أسئلتك."
   harmful_alternative:
@@ -147,7 +147,7 @@ messages:
     fr: "Certaines approches mentionnées sont présentées comme des remèdes contre le cancer sans preuve fiable, et certaines peuvent être dangereuses ou nuire à l'efficacité des traitements. Voici ce que montre réellement la recherche."
     es: "Algunos de los enfoques mencionados se promocionan como curas del cáncer sin evidencia fiable, y algunos pueden causar daños graves o interferir con tratamientos eficaces. Esto es lo que muestra realmente la investigación."
     pt: "Algumas das abordagens mencionadas são promovidas como curas para o cancro sem evidência fiável, e algumas podem causar danos graves ou interferir com tratamentos eficazes. Eis o que a investigação realmente mostra."
-    de: "Einige der genannten Ansätze werden ohne verlässliche Evidenz als Krebsheilmittel beworben; manche können ernsthaft schaden oder wirksame Behandlungen beeinträchtigen. Das zeigt die Forschung tatsächlich."
+    de: "Einige der genannten Ansätze werden ohne verlässliche Evidenz als Krebsheilmittel beworben; manche können ernsthaft schaden oder wirksame Behandlungen beeinträchtigen. Hier sehen Sie, was die Forschung tatsächlich zeigt."
     it: "Alcuni degli approcci citati vengono promossi come cure per il cancro senza prove affidabili, e alcuni possono causare danni gravi o interferire con trattamenti efficaci. Ecco cosa mostra davvero la ricerca."
     ar: "يُروَّج لبعض الأساليب المذكورة على أنها علاجات للسرطان دون أدلة موثوقة، وقد يسبب بعضها ضررًا جسيمًا أو يتعارض مع العلاجات الفعالة. إليك ما تُظهره الأبحاث فعلًا."
   supplement_interaction:
