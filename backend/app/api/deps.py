@@ -82,11 +82,14 @@ class RateLimiter:
 _limiter: RateLimiter | None = None
 
 
-def client_key(request: Request, trust_forwarded: bool) -> str:
+def client_key(request: Request, trust_forwarded: bool, hops: int = 1) -> str:
+    """The address rate limits are keyed on. Behind proxies, X-Forwarded-For is read `hops` entries from the
+    right: each proxy appends the address it saw, and anything further left may have been sent by the client to
+    dodge its limit."""
     if trust_forwarded:
-        forwarded = request.headers.get("x-forwarded-for")
-        if forwarded:
-            return forwarded.split(",")[0].strip()
+        entries = [e.strip() for e in request.headers.get("x-forwarded-for", "").split(",") if e.strip()]
+        if entries:
+            return entries[-min(max(hops, 1), len(entries))]
     return request.client.host if request.client else "unknown"
 
 
@@ -97,7 +100,8 @@ def rate_limit(bucket: str):
             _limiter = RateLimiter(container.settings.redis_url)
         s = container.settings
         limit = s.chat_rate_limit_per_minute if bucket == "chat" else s.rate_limit_per_minute
-        allowed, retry = _limiter.allow(f"{bucket}:{client_key(request, s.trust_forwarded_for)}", limit)
+        allowed, retry = _limiter.allow(f"{bucket}:{client_key(request, s.trust_forwarded_for, s.forwarded_for_hops)}",
+                                        limit)
         if not allowed:
             raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "rate limit exceeded",
                                 headers={"Retry-After": str(retry)})

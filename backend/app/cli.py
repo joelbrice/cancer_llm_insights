@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from typing import Annotated
 
 import typer
@@ -29,8 +30,15 @@ def serve(host: str = "0.0.0.0", port: int = 8000, reload: bool = False, workers
     """Run the API server."""
     import uvicorn
 
+    from app.settings import get_settings
+
+    # Forwarded headers (client address, https) are honoured from any peer only when TRUST_FORWARDED_FOR is on,
+    # i.e. the API sits behind a proxy that sets them. Otherwise only from localhost (uvicorn's default), so a
+    # client reaching the API directly cannot pick its own address.
+    trusted = "*" if get_settings().trust_forwarded_for else os.environ.get("FORWARDED_ALLOW_IPS", "127.0.0.1")
+    # uvicorn's access log records client IP addresses; the API logs each request itself without them (app.access).
     uvicorn.run("app.main:app_factory", factory=True, host=host, port=port, reload=reload, workers=workers,
-                proxy_headers=True, forwarded_allow_ips="*")
+                proxy_headers=True, forwarded_allow_ips=trusted, access_log=False)
 
 
 @app.command()

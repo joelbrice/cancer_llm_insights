@@ -101,7 +101,8 @@ def main(argv: list[str] | None = None) -> int:
 
         cfg = load_config(args.config)
         out_dir = cfg.path(cfg.training.output_dir)
-        print(merge(out_dir / "adapter", cfg.base_model, args.out or out_dir / "merged"))
+        print(merge(out_dir / "adapter", cfg.base_model, args.out or out_dir / "merged",
+                    revision=cfg.base_model_revision))
         return 0
     if args.command == "evaluate":
         from stepwell_ml.evaluate import run

@@ -151,7 +151,11 @@ class Settings(BaseSettings):
     ]
     rate_limit_per_minute: int = 120
     chat_rate_limit_per_minute: int = 20
+    max_request_bytes: int = 2 * 1024 * 1024  # larger bodies get 413 (0 = no limit); matches the ingress
     trust_forwarded_for: bool = False
+    # Proxies in front of the API that append to X-Forwarded-For. The client address is read this many
+    # entries from the right, because everything to the left of it can be written by the client itself.
+    forwarded_for_hops: int = Field(default=1, ge=1, le=10)
     store_conversations: bool = False
 
     # ── Community (pseudonymous, members-only, moderated) ──────────────────────

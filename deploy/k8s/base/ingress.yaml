@@ -10,8 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-body-size: 2m
     nginx.ingress.kubernetes.io/limit-rps: "20"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload";
+    # HSTS comes from the web and API responses (and ingress-nginx's own default). No configuration-snippet:
+    # ingress-nginx rejects snippet annotations by default since v1.9.
 spec:
   ingressClassName: nginx
   tls:

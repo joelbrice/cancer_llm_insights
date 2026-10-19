@@ -3,6 +3,7 @@
 # Hardware: one 24 GB GPU (L4, A10G, RTX 4090) — roughly 4–8 h for ~5 000 examples of up to 6 k tokens.
 run_name: stepwell-llama31-8b-qlora
 base_model: meta-llama/Llama-3.1-8B-Instruct
+# base_model_revision: <commit sha>   # pin for release runs (recorded in the run card)
 served_model_name: cancer-insights-llama   # must equal LLM_MODEL in the API settings
 
 data:

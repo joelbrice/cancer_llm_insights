@@ -41,9 +41,12 @@ sources:
   - { id: web, name: "Institutional web (fixtures)", uri: "$FIX/web", defaults: { source_type: institutional_web, credibility: reputable } }
   - { id: blogs, name: "Blogs (fixtures)", uri: "$FIX/blogs", defaults: { source_type: blog, credibility: general } }
 YAML
-export DATA_DIR="$WORK/data" DATA_SOURCES_FILE="$WORK/sources.yaml" DATABASE_URL="sqlite:///$WORK/data/app.db" \
+# E2E_DATABASE_URL runs the stack on PostgreSQL (an empty database) instead of SQLite; E2E_REDIS_URL backs the rate
+# limiter with Redis. Both are how production runs.
+export DATA_DIR="$WORK/data" DATA_SOURCES_FILE="$WORK/sources.yaml" DATABASE_URL="${E2E_DATABASE_URL:-sqlite:///$WORK/data/app.db}" \
        ENVIRONMENT=development RUN_SCHEDULER=false RATE_LIMIT_PER_MINUTE=100000 CHAT_RATE_LIMIT_PER_MINUTE=100000 \
        COMMUNITY_POSTS_PER_HOUR=1000 COMMUNITY_REPLIES_PER_HOUR=1000
+[[ -n "${E2E_REDIS_URL:-}" ]] && export REDIS_URL="$E2E_REDIS_URL"
 PY="${PYTHON:-python}"
 (cd "$ROOT/backend" && "$PY" -m app.cli ingest >"$WORK/ingest.log" 2>&1)
 # `cd` first, then background only the server, so $! is the server's own process group (not a subshell)

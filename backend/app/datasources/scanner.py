@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import io
 import json
 import logging
@@ -34,6 +35,9 @@ class RemoteFile:
     fingerprint: str  # cheap change detector (etag / mtime+size / generation)
     metadata: dict[str, Any] = field(default_factory=dict)  # from manifest + sidecar
     inline_text: str | None = None  # for manifest records that embed their text
+
+    def __post_init__(self) -> None:
+        self.fingerprint = compact_fingerprint(self.fingerprint)
 
     @property
     def extension(self) -> str:
@@ -68,6 +72,17 @@ def matches(path: str, include: list[str], exclude: list[str]) -> bool:
     if any(_glob_regex(p).match(path) for p in exclude):
         return False
     return any(_glob_regex(p).match(path) for p in include)
+
+
+FINGERPRINT_MAX = 128  # documents.file_fingerprint
+
+
+def compact_fingerprint(raw: str) -> str:
+    """Fingerprints with sidecar or manifest metadata (or a long URL) can exceed the database column, which
+    PostgreSQL enforces: those are stored as their SHA-256, so any change to the parts is still detected."""
+    if len(raw) <= FINGERPRINT_MAX:
+        return raw
+    return "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _fingerprint(info: dict[str, Any]) -> str:
@@ -132,7 +147,7 @@ class SourceScanner:
                     metadata.update(self._read_structured(fs, sidecar["_full"], suffix))
                     fingerprint += "|meta:" + _fingerprint(sidecar)
             if rel in manifest:
-                fingerprint += "|manifest:" + json.dumps(manifest[rel], sort_keys=True, default=str)[:200]
+                fingerprint += "|manifest:" + json.dumps(manifest[rel], sort_keys=True, default=str)
             yield RemoteFile(path=rel, location=info["_full"], size=size, fingerprint=fingerprint, metadata=metadata)
 
     def read_bytes(self, spec: SourceSpec, file: RemoteFile) -> bytes:

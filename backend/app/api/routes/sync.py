@@ -67,8 +67,8 @@ def get_blob(sync_id: str, response: Response, authorization: str | None = Heade
 def put_blob(sync_id: str, body: SyncPut, request: Request, response: Response,
              authorization: str | None = Header(default=None), svc: DeviceSyncService = Depends(_service),
              c: Container = Depends(container_dep)) -> SyncBlob:
-    allowed, retry = _writes.allow(f"sync:{sync_id[:64]}:{client_key(request, c.settings.trust_forwarded_for)}",
-                                   c.settings.device_sync_writes_per_minute)
+    client = client_key(request, c.settings.trust_forwarded_for, c.settings.forwarded_for_hops)
+    allowed, retry = _writes.allow(f"sync:{sync_id[:64]}:{client}", c.settings.device_sync_writes_per_minute)
     if not allowed:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "slow_down", headers={"Retry-After": str(retry)})
     try:

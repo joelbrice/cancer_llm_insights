@@ -116,3 +116,27 @@ def test_registry_crud_and_validation(container):
         registry.update("research", {"uri": "/elsewhere"})  # config sources are file-managed
     registry.delete("api-mem")
     assert registry.get("api-mem") is None
+
+
+def test_long_fingerprints_fit_the_database_column():
+    from app.datasources.scanner import FINGERPRINT_MAX, RemoteFile
+
+    short = RemoteFile(path="a.md", location="/x/a.md", size=1, fingerprint="size:1|mtime:2")
+    assert short.fingerprint == "size:1|mtime:2"  # unchanged: no re-index for existing files
+    manifest = 'size:708|mtime:1.5|manifest:{"authors": ["A"], "topics": ["alcohol"], "year": 2019, ' + "x" * 200
+    long_a = RemoteFile(path="a.md", location="/x/a.md", size=1, fingerprint=manifest + "1}")
+    long_b = RemoteFile(path="a.md", location="/x/a.md", size=1, fingerprint=manifest + "2}")
+    assert len(long_a.fingerprint) <= FINGERPRINT_MAX and long_a.fingerprint.startswith("sha256:")
+    assert long_a.fingerprint != long_b.fingerprint  # a change anywhere is still detected
+
+
+def test_document_metadata_is_fitted_to_its_columns():
+    from app.db.models import DocumentRow
+    from app.services.ingestion import fit_columns
+
+    row = DocumentRow(id="d_1", source_id="s", path="p", journal="J" * 600, doi="10." + "9" * 300,
+                      title="Short title", url="https://example.org/" + "a" * 3000)
+    fit_columns(row)
+    assert row.journal == "J" * 500  # text is shortened
+    assert row.doi is None and row.url is None  # identifiers are dropped, never cut
+    assert row.title == "Short title"

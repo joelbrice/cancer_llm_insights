@@ -68,8 +68,24 @@ def _base_path(path: str) -> str:
     return path.split("#", 1)[0]
 
 
+# Identifiers are dropped rather than cut when they do not fit (a truncated DOI or URL points somewhere else).
+_DROP_IF_TOO_LONG = frozenset({"doi", "pmid", "pmcid", "url", "published_date"})
+
+
+def fit_columns(row: DocumentRow) -> None:
+    """Make every text value fit its column. SQLite ignores VARCHAR lengths but PostgreSQL rejects the whole row,
+    which would silently drop the document from the library."""
+    for column in DocumentRow.__table__.columns:
+        limit = getattr(column.type, "length", None)
+        value = getattr(row, column.key, None)
+        if limit and isinstance(value, str) and len(value) > limit:
+            log.warning("document %s: %s longer than %d characters, %s", row.id, column.key, limit,
+                        "dropped" if column.key in _DROP_IF_TOO_LONG else "shortened")
+            setattr(row, column.key, None if column.key in _DROP_IF_TOO_LONG else value[:limit])
+
+
 def document_id(source_id: str, path: str) -> str:
-    return "d_" + hashlib.sha1(f"{source_id}\x00{path}".encode()).hexdigest()[:22]
+    return "d_" + hashlib.sha1(f"{source_id}\x00{path}".encode(), usedforsecurity=False).hexdigest()[:22]
 
 
 class IngestionService:
@@ -210,6 +226,7 @@ class IngestionService:
             row.uri, row.file_fingerprint, row.content_hash = file.location, file.fingerprint, ""
             row.title = row.title or file.path.rsplit("/", 1)[-1]
             row.status, row.error, row.n_chunks = "failed", error[:2000], 0
+            fit_columns(row)
             session.merge(row)
         self.store.delete_documents([doc_id])
 
@@ -279,6 +296,7 @@ class IngestionService:
                 row.status, row.n_chunks, row.error = "failed", 0, "no indexable text"
             else:
                 row.status, row.n_chunks = "indexed", len(chunks)
+            fit_columns(row)
             session.merge(row)
             session.execute(delete(ChunkRow).where(ChunkRow.document_id == doc_id))
             if row.status == "indexed":

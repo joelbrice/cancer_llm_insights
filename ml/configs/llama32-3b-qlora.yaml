@@ -3,6 +3,7 @@
 # Hardware: one 12–16 GB bf16-capable GPU (L4, RTX 3060/4070; on T4 set compute_dtype: float16) — roughly 2–4 h for ~5 000 examples.
 run_name: stepwell-llama32-3b-qlora
 base_model: meta-llama/Llama-3.2-3B-Instruct
+# base_model_revision: <commit sha>   # pin for release runs (recorded in the run card)
 served_model_name: cancer-insights-llama   # must equal LLM_MODEL in the API settings
 
 data:

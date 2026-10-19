@@ -155,6 +155,76 @@ def test_rate_limit(tmp_path, corpus):
     deps._limiter = None
 
 
+
+def test_client_address_cannot_be_chosen_by_the_client():
+    from starlette.requests import Request
+
+    from app.api.deps import client_key
+
+    def req(xff: str | None) -> Request:
+        headers = [(b"x-forwarded-for", xff.encode())] if xff is not None else []
+        return Request({"type": "http", "headers": headers, "client": ("10.0.0.9", 1234)})
+
+    # One proxy appends the address it saw; whatever the client put before it is ignored.
+    assert client_key(req("6.6.6.6, 203.0.113.7"), trust_forwarded=True) == "203.0.113.7"
+    assert client_key(req("203.0.113.7"), trust_forwarded=True) == "203.0.113.7"
+    # Two proxies (e.g. a load balancer and the ingress): the second entry from the right.
+    assert client_key(req("6.6.6.6, 203.0.113.7, 10.1.2.3"), trust_forwarded=True, hops=2) == "203.0.113.7"
+    assert client_key(req("203.0.113.7"), trust_forwarded=True, hops=3) == "203.0.113.7"
+    # Without a proxy the header is not trusted at all.
+    assert client_key(req("6.6.6.6"), trust_forwarded=False) == "10.0.0.9"
+    assert client_key(req(None), trust_forwarded=True) == "10.0.0.9"
+    assert client_key(req(" , "), trust_forwarded=True) == "10.0.0.9"
+
+
+def test_rate_limit_holds_when_the_client_rotates_forwarded_for(tmp_path, corpus):
+    from fastapi.testclient import TestClient
+
+    import app.api.deps as deps
+    from app.main import create_app
+
+    deps._limiter = None
+    settings = make_settings(tmp_path, corpus, rate_limit_per_minute=3, trust_forwarded_for=True)
+    container = Container(settings)
+    with TestClient(create_app(settings, container)) as client:
+        codes = [client.post("/api/v1/search", json={"query": "alcohol"},
+                             headers={"X-Forwarded-For": f"198.51.100.{i}, 203.0.113.7"}).status_code
+                 for i in range(5)]
+        assert codes[:3] == [200, 200, 200] and codes[-1] == 429
+    container.close()
+    deps._limiter = None
+
+
+def test_request_log_has_no_client_address(client, caplog):
+    import logging
+
+    with caplog.at_level(logging.INFO, logger="app.access"):
+        client.get("/api/v1/meta", headers={"X-Forwarded-For": "203.0.113.7"})
+        client.get("/healthz")
+    lines = [r.getMessage() for r in caplog.records if r.name == "app.access"]
+    assert lines and all("203.0.113.7" not in line for line in lines)
+    assert any(line.startswith("GET ") and "/meta 200" in line for line in lines)
+    assert not any("/healthz" in line for line in lines)
+
+
+def test_oversized_request_bodies_are_rejected(tmp_path, corpus):
+    from fastapi.testclient import TestClient
+
+    from app.main import create_app
+
+    settings = make_settings(tmp_path, corpus, max_request_bytes=4096)
+    container = Container(settings)
+    with TestClient(create_app(settings, container)) as client:
+        big = json.dumps({"query": "alcohol " * 1000})
+        declared = client.post("/api/v1/search", content=big, headers={"Content-Type": "application/json"})
+        assert declared.status_code == 413
+        chunked = client.post("/api/v1/search", content=iter([big[:3000].encode(), big[3000:].encode()]),
+                              headers={"Content-Type": "application/json"})
+        assert chunked.status_code == 413
+        assert chunked.json()["error"]["code"] == 413
+        assert client.post("/api/v1/search", json={"query": "alcohol"}).status_code == 200
+    container.close()
+
 def test_streamed_final_event_is_always_complete(built_client):
     """Regression: abstained/safety-blocked finals must carry every ChatResponse field (clients read them)."""
     for question in ["I have crushing chest pain and can't breathe", "Is radon at home a cause of lung cancer?"]:

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import os
 import shutil
+import uuid
 from pathlib import Path
 
 import pytest
@@ -11,6 +13,39 @@ from app.settings import Settings
 
 FIXTURES = Path(__file__).parent / "fixtures"
 CORPUS = FIXTURES / "corpus"
+
+# TEST_DATABASE_URL=postgresql+psycopg://user@host:5432/db runs every test on PostgreSQL (as production does), each
+# in its own throwaway schema. PostgreSQL enforces column lengths and types that SQLite ignores.
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
+_SCHEMAS: list[str] = []
+
+
+def _database_url(data: Path) -> str:
+    if not TEST_DATABASE_URL:
+        return f"sqlite:///{data / 'test.db'}"
+    from sqlalchemy import create_engine, text
+
+    schema = f"t_{uuid.uuid4().hex[:12]}"
+    engine = create_engine(TEST_DATABASE_URL)
+    with engine.begin() as conn:
+        conn.execute(text(f'create schema "{schema}"'))
+    engine.dispose()
+    _SCHEMAS.append(schema)
+    sep = "&" if "?" in TEST_DATABASE_URL else "?"
+    return f"{TEST_DATABASE_URL}{sep}options=-csearch_path%3D{schema}"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _drop_test_schemas():
+    yield
+    if TEST_DATABASE_URL and _SCHEMAS:
+        from sqlalchemy import create_engine, text
+
+        engine = create_engine(TEST_DATABASE_URL)
+        with engine.begin() as conn:
+            for schema in _SCHEMAS:
+                conn.execute(text(f'drop schema if exists "{schema}" cascade'))
+        engine.dispose()
 
 
 def write_sources(path: Path, corpus: Path) -> None:
@@ -37,7 +72,7 @@ def make_settings(tmp: Path, corpus: Path, **overrides) -> Settings:
     sources = tmp / "sources.yaml"
     write_sources(sources, corpus)
     values = dict(
-        environment="test", data_dir=data, data_sources_file=sources, database_url=f"sqlite:///{data / 'test.db'}",
+        environment="test", data_dir=data, data_sources_file=sources, database_url=_database_url(data),
         sync_interval_seconds=0, run_scheduler=False, embedding_provider="hashing", llm_provider="extractive",
         insight_languages=["en", "fr"], insight_min_sources=2, rate_limit_per_minute=10_000,
         chat_rate_limit_per_minute=10_000, admin_api_key=None, log_level="WARNING",

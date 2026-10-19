@@ -5,7 +5,12 @@ import { NextResponse, type NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const first = pathname.split("/")[1];
-  if (isLocale(first)) return NextResponse.next();
+  if (isLocale(first)) {
+    const response = NextResponse.next();
+    // NOINDEX=true (staging, previews): every page asks search engines not to index it.
+    if (process.env.NOINDEX === "true") response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return response;
+  }
   const saved = request.cookies.get("NEXT_LOCALE")?.value;
   const locale = isLocale(saved) ? saved : negotiateLocale(request.headers.get("accept-language"));
   const url = request.nextUrl.clone();

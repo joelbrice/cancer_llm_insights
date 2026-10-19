@@ -3,6 +3,7 @@
 # Hardware: one 80 GB GPU (A100/H100) with 4-bit weights; serve with tensor parallelism (2× 80 GB for bf16).
 run_name: stepwell-llama33-70b-qlora
 base_model: meta-llama/Llama-3.3-70B-Instruct
+# base_model_revision: <commit sha>   # pin for release runs (recorded in the run card)
 served_model_name: cancer-insights-llama   # must equal LLM_MODEL in the API settings
 
 data:

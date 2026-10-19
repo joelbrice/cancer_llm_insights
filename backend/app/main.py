@@ -16,12 +16,15 @@ from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from app.api.routes import admin, community, public, sync
 from app.container import Container, get_container, set_container
+from app.core.body_limit import BodyLimitMiddleware
 from app.core.logging import configure_logging, request_id_var
 from app.core.metrics import HTTP_LATENCY, HTTP_REQUESTS
 from app.settings import Settings, get_settings
 from app.workers.scheduler import SyncScheduler
 
 log = logging.getLogger("app")
+access_log = logging.getLogger("app.access")
+_PROBES = frozenset({"/healthz", "/readyz", "/metrics"})
 
 
 def create_app(settings: Settings | None = None, container: Container | None = None) -> FastAPI:
@@ -76,6 +79,8 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         max_age=600,
     )
 
+    app.add_middleware(BodyLimitMiddleware, max_bytes=settings.max_request_bytes)
+
     @app.middleware("http")
     async def observability(request: Request, call_next):
         rid = request.headers.get("x-request-id") or uuid.uuid4().hex[:16]
@@ -88,6 +93,9 @@ def create_app(settings: Settings | None = None, container: Container | None = N
         finally:
             request_id_var.reset(token)
         elapsed = time.perf_counter() - start
+        # Route template, not the raw path or query, and no client address (§10.1: no IP storage in logs).
+        if route not in _PROBES:
+            access_log.info("%s %s %s %.0fms", request.method, route, response.status_code, elapsed * 1000)
         HTTP_REQUESTS.labels(request.method, route, str(response.status_code)).inc()
         HTTP_LATENCY.labels(request.method, route).observe(elapsed)
         response.headers["X-Request-ID"] = rid

@@ -78,6 +78,9 @@ class GateConfig:
 class Config:
     run_name: str = "stepwell-llama"
     base_model: str = "meta-llama/Llama-3.1-8B-Instruct"
+    # Hugging Face commit of the base model. Pin it for release runs so a changed upstream repository cannot alter
+    # what was reviewed; None downloads the latest revision.
+    base_model_revision: str | None = None
     served_model_name: str = "cancer-insights-llama"
     data: DataConfig = field(default_factory=DataConfig)
     quantization: QuantConfig = field(default_factory=QuantConfig)

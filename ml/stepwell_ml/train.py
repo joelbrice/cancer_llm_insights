@@ -59,7 +59,8 @@ def prepare(cfg: Config, allow_unreviewed: bool = False) -> dict[str, Any]:
 def train(cfg: Config, *, allow_unreviewed: bool = False, dry_run: bool = False, resume: bool = False) -> dict[str, Any]:
     plan = prepare(cfg, allow_unreviewed)
     out_dir = cfg.path(cfg.training.output_dir)
-    summary = {"run_name": cfg.run_name, "base_model": cfg.base_model, "output_dir": str(out_dir),
+    summary = {"run_name": cfg.run_name, "base_model": cfg.base_model, "base_model_revision": cfg.base_model_revision,
+               "output_dir": str(out_dir),
                "train_examples": len(plan["train"]), "val_examples": len(plan["val"]),
                "train_report": plan["train_report"], "reviews": plan["reviews"]}
     if dry_run:
@@ -80,7 +81,7 @@ def train(cfg: Config, *, allow_unreviewed: bool = False, dry_run: bool = False,
     )
 
     transformers.set_seed(cfg.training.seed)
-    tokenizer = AutoTokenizer.from_pretrained(cfg.base_model, use_fast=True)
+    tokenizer = AutoTokenizer.from_pretrained(cfg.base_model, revision=cfg.base_model_revision, use_fast=True)
     if tokenizer.pad_token is None:
         reserved = "<|finetune_right_pad_id|>"  # Llama 3.1+ reserves a dedicated padding token
         tokenizer.pad_token = reserved if reserved in tokenizer.get_vocab() else tokenizer.eos_token
@@ -107,7 +108,8 @@ def train(cfg: Config, *, allow_unreviewed: bool = False, dry_run: bool = False,
         quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type=cfg.quantization.quant_type,
                                    bnb_4bit_use_double_quant=cfg.quantization.double_quant,
                                    bnb_4bit_compute_dtype=dtype)
-    model = AutoModelForCausalLM.from_pretrained(cfg.base_model, quantization_config=quant, dtype=dtype,
+    model = AutoModelForCausalLM.from_pretrained(cfg.base_model, revision=cfg.base_model_revision,
+                                                 quantization_config=quant, dtype=dtype,
                                                  attn_implementation=cfg.training.attn_implementation,
                                                  device_map="auto")
     model.config.use_cache = False

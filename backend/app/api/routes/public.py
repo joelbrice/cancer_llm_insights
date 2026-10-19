@@ -36,7 +36,7 @@ router = APIRouter()
 def cached_json(request: Request, payload: Any, max_age: int = 60) -> Response:
     """JSON with a strong ETag and CDN-friendly caching (304 when unchanged)."""
     body = json.dumps(payload, ensure_ascii=False, default=str, separators=(",", ":")).encode()
-    etag = '"' + hashlib.sha1(body).hexdigest() + '"'
+    etag = '"' + hashlib.sha1(body, usedforsecurity=False).hexdigest() + '"'
     headers = {"ETag": etag, "Cache-Control": f"public, max-age={max_age}, stale-while-revalidate={max_age * 10}",
                "Vary": "Accept-Language"}
     if request.headers.get("if-none-match") == etag:
