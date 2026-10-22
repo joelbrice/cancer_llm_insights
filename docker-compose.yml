@@ -1,0 +1,171 @@
+# Stepwell — full stack on one machine.
+#   cp .env.example .env   # set strong secrets
+#   docker compose up -d --build            # web :3000, API :8000
+#   docker compose --profile bucket up -d   # + MinIO (S3-compatible bucket to link research from)
+#   docker compose --profile llm up -d      # + vLLM serving the fine-tuned Llama (NVIDIA GPU)
+#   docker compose --profile ollama up -d   # + Ollama (CPU / Apple silicon / small GPU)
+# Put your documents in ./data/raw/... (or link a bucket in data/sources.yaml) and press "Sync now" in /en/admin.
+
+x-api-env: &api-env
+  ENVIRONMENT: production
+  DATA_DIR: /data
+  DATABASE_URL: postgresql+psycopg://stepwell:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/stepwell
+  VECTOR_STORE: qdrant
+  QDRANT_URL: http://qdrant:6333
+  QDRANT_API_KEY: ${QDRANT_API_KEY:?set QDRANT_API_KEY}
+  QUEUE_BACKEND: rq
+  REDIS_URL: redis://redis:6379/0
+  ADMIN_API_KEY: ${ADMIN_API_KEY:?set ADMIN_API_KEY}
+  CORS_ORIGINS: ${PUBLIC_SITE_URL:-http://localhost:3000}
+  TRUST_FORWARDED_FOR: "true"
+  EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-sentence_transformers}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-intfloat/multilingual-e5-base}
+  LLM_PROVIDER: ${LLM_PROVIDER:-extractive}
+  LLM_BASE_URL: ${LLM_BASE_URL:-http://vllm:8001/v1}
+  LLM_MODEL: ${LLM_MODEL:-cancer-insights-llama}
+  LLM_API_KEY: ${LLM_API_KEY:-}
+  LLM_CANARY_MODEL: ${LLM_CANARY_MODEL:-}
+  LLM_CANARY_PERCENT: ${LLM_CANARY_PERCENT:-0}
+  INSIGHT_REVIEW_REQUIRED: ${INSIGHT_REVIEW_REQUIRED:-false}
+  DEVICE_SYNC_ENABLED: ${DEVICE_SYNC_ENABLED:-true}
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+  AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-}
+  HF_TOKEN: ${HF_TOKEN:-}
+  # Legal pages: operator details (.env.example, docs/LAUNCH.md)
+  LEGAL_OPERATOR_NAME: ${LEGAL_OPERATOR_NAME:-}
+  LEGAL_OPERATOR_ADDRESS: ${LEGAL_OPERATOR_ADDRESS:-}
+  LEGAL_CONTACT_EMAIL: ${LEGAL_CONTACT_EMAIL:-}
+  LEGAL_CONTACT_PHONE: ${LEGAL_CONTACT_PHONE:-}
+  LEGAL_REPRESENTATIVE: ${LEGAL_REPRESENTATIVE:-}
+  LEGAL_REGISTER: ${LEGAL_REGISTER:-}
+  LEGAL_VAT_ID: ${LEGAL_VAT_ID:-}
+  LEGAL_CONTENT_RESPONSIBLE: ${LEGAL_CONTENT_RESPONSIBLE:-}
+  LEGAL_DPO_CONTACT: ${LEGAL_DPO_CONTACT:-}
+  LEGAL_SUPERVISORY_AUTHORITY: ${LEGAL_SUPERVISORY_AUTHORITY:-}
+  LEGAL_HOSTING: ${LEGAL_HOSTING:-}
+  LEGAL_ACCESSIBILITY_AUTHORITY: ${LEGAL_ACCESSIBILITY_AUTHORITY:-}
+  LEGAL_EFFECTIVE_DATE: ${LEGAL_EFFECTIVE_DATE:-}
+  LEGAL_APPROVED: ${LEGAL_APPROVED:-false}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: stepwell
+      POSTGRES_USER: stepwell
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes: [postgres:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stepwell -d stepwell"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes: [redis:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.15.4
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY:?set QDRANT_API_KEY}
+    volumes: [qdrant:/qdrant/storage]
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./backend
+      args: { EXTRAS: "${API_EXTRAS:-prod,models}" }
+    image: stepwell-api:local
+    environment: *api-env
+    volumes:
+      - ./data:/data
+      - models:/models
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      qdrant: { condition: service_started }
+    restart: unless-stopped
+
+  worker:
+    image: stepwell-api:local
+    command: ["python", "-m", "app.workers.worker"]
+    environment: *api-env
+    volumes:
+      - ./data:/data
+      - models:/models
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        API_INTERNAL_URL: http://api:8000
+        NEXT_PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:3000}
+    environment:
+      API_INTERNAL_URL: http://api:8000
+    ports: ["3000:3000"]
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+  # ── optional ────────────────────────────────────────────────────────────────────────────────────────────────
+  minio:
+    profiles: [bucket]
+    image: minio/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID:-stepwell}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:-change-me-please}
+    ports: ["9000:9000", "9001:9001"]
+    volumes: [minio:/data]
+
+  vllm:
+    profiles: [llm]
+    image: vllm/vllm-openai:latest
+    command:
+      - --model=${BASE_MODEL:-meta-llama/Llama-3.1-8B-Instruct}
+      - --enable-lora
+      - --lora-modules=cancer-insights-llama=/adapters/adapter
+      - --max-lora-rank=64
+      - --max-model-len=8192
+      - --port=8001
+      - --api-key=${VLLM_API_KEY:?set VLLM_API_KEY}
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - models:/root/.cache/huggingface
+      - ./models/stepwell-llama31-8b-qlora:/adapters:ro
+    deploy:
+      resources:
+        reservations:
+          devices: [{ driver: nvidia, count: 1, capabilities: [gpu] }]
+    ipc: host
+
+  ollama:
+    profiles: [ollama]
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+      - ./ml/serve/ollama:/import:ro
+    ports: ["11434:11434"]
+
+volumes:
+  postgres:
+  redis:
+  qdrant:
+  models:
+  minio:
+  ollama:

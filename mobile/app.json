@@ -1,0 +1,95 @@
+{
+  "expo": {
+    "name": "Stepwell",
+    "slug": "stepwell",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "stepwell",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.stepwell.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
+    },
+    "android": {
+      "package": "org.stepwell.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0f6e64"
+      },
+      "allowBackup": false,
+      "permissions": [
+        "android.permission.health.READ_STEPS"
+      ]
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "fr": "./locales/fr.json",
+      "es": "./locales/es.json",
+      "pt": "./locales/pt.json",
+      "de": "./locales/de.json",
+      "it": "./locales/it.json",
+      "ar": "./locales/ar.json"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0f6e64",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 96
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#0f6e64"
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Stepwell counts your steps on this phone to show them next to your plan. Your steps never leave your device."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "Stepwell reads your daily step count from Apple Health to show it next to your plan, only if you turn this on. Your steps stay on your phone.",
+          "NSHealthUpdateUsageDescription": false,
+          "background": false
+        }
+      ],
+      "react-native-health-connect"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "apiUrl": "http://localhost:8000"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/icon.png",
+      "name": "Stepwell",
+      "themeColor": "#0f6e64"
+    }
+  }
+}

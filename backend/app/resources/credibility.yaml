@@ -1,0 +1,107 @@
+# Publisher / domain credibility registry used when a document has no explicit `credibility`.
+# Matching is by registrable domain suffix (e.g. "who.int" matches "iarc.who.int" unless a more
+# specific entry exists) and by publisher/journal name patterns. Reviewed by the clinical lead;
+# extend it as the corpus grows. Tiers: authoritative > peer_reviewed > reputable > general > unverified.
+domains:
+  # International agencies
+  who.int: {credibility: authoritative, publisher: World Health Organization}
+  iarc.who.int: {credibility: authoritative, publisher: International Agency for Research on Cancer (IARC)}
+  monographs.iarc.who.int: {credibility: authoritative, publisher: IARC Monographs}
+  cancer-code-europe.iarc.who.int: {credibility: authoritative, publisher: European Code Against Cancer (IARC)}
+  uicc.org: {credibility: authoritative, publisher: Union for International Cancer Control}
+  europa.eu: {credibility: authoritative, publisher: European Union}
+  # United States
+  cancer.gov: {credibility: authoritative, publisher: National Cancer Institute}
+  nih.gov: {credibility: authoritative, publisher: National Institutes of Health}
+  ncbi.nlm.nih.gov: {credibility: peer_reviewed, publisher: NCBI / PubMed}
+  pubmed.ncbi.nlm.nih.gov: {credibility: peer_reviewed, publisher: PubMed}
+  cdc.gov: {credibility: authoritative, publisher: Centers for Disease Control and Prevention}
+  uspreventiveservicestaskforce.org: {credibility: authoritative, publisher: US Preventive Services Task Force}
+  cancer.org: {credibility: authoritative, publisher: American Cancer Society}
+  asco.org: {credibility: authoritative, publisher: American Society of Clinical Oncology}
+  cancer.net: {credibility: authoritative, publisher: Cancer.Net (ASCO)}
+  nccn.org: {credibility: authoritative, publisher: National Comprehensive Cancer Network}
+  aicr.org: {credibility: authoritative, publisher: American Institute for Cancer Research}
+  acsm.org: {credibility: authoritative, publisher: American College of Sports Medicine}
+  # International research funds & societies
+  wcrf.org: {credibility: authoritative, publisher: World Cancer Research Fund}
+  esmo.org: {credibility: authoritative, publisher: European Society for Medical Oncology}
+  mascc.org: {credibility: authoritative, publisher: Multinational Association of Supportive Care in Cancer}
+  integrativeonc.org: {credibility: reputable, publisher: Society for Integrative Oncology}
+  # United Kingdom
+  nhs.uk: {credibility: authoritative, publisher: NHS}
+  nice.org.uk: {credibility: authoritative, publisher: NICE}
+  cancerresearchuk.org: {credibility: authoritative, publisher: Cancer Research UK}
+  macmillan.org.uk: {credibility: reputable, publisher: Macmillan Cancer Support}
+  # France
+  e-cancer.fr: {credibility: authoritative, publisher: Institut national du cancer (INCa)}
+  has-sante.fr: {credibility: authoritative, publisher: Haute Autorité de Santé}
+  santepubliquefrance.fr: {credibility: authoritative, publisher: Santé publique France}
+  ligue-cancer.net: {credibility: reputable, publisher: Ligue contre le cancer}
+  gustaveroussy.fr: {credibility: reputable, publisher: Gustave Roussy}
+  curie.fr: {credibility: reputable, publisher: Institut Curie}
+  # Spain / Latin America
+  seom.org: {credibility: authoritative, publisher: Sociedad Española de Oncología Médica}
+  contraelcancer.es: {credibility: reputable, publisher: Asociación Española Contra el Cáncer}
+  sanidad.gob.es: {credibility: authoritative, publisher: Ministerio de Sanidad (España)}
+  # Portugal / Brazil
+  inca.gov.br: {credibility: authoritative, publisher: Instituto Nacional de Câncer (INCA)}
+  gov.br: {credibility: authoritative, publisher: Governo do Brasil}
+  dgs.pt: {credibility: authoritative, publisher: Direção-Geral da Saúde}
+  ligacontracancro.pt: {credibility: reputable, publisher: Liga Portuguesa Contra o Cancro}
+  # Germany
+  krebsinformationsdienst.de: {credibility: authoritative, publisher: Krebsinformationsdienst (DKFZ)}
+  dkfz.de: {credibility: authoritative, publisher: Deutsches Krebsforschungszentrum}
+  krebshilfe.de: {credibility: reputable, publisher: Deutsche Krebshilfe}
+  leitlinienprogramm-onkologie.de: {credibility: authoritative, publisher: Leitlinienprogramm Onkologie}
+  # Italy
+  salute.gov.it: {credibility: authoritative, publisher: Ministero della Salute}
+  iss.it: {credibility: authoritative, publisher: Istituto Superiore di Sanità}
+  airc.it: {credibility: reputable, publisher: Fondazione AIRC per la ricerca sul cancro}
+  aimac.it: {credibility: reputable, publisher: AIMaC — Associazione Italiana Malati di Cancro}
+  # Middle East and North Africa
+  moh.gov.sa: {credibility: authoritative, publisher: Ministry of Health (Saudi Arabia)}
+  kfshrc.edu.sa: {credibility: reputable, publisher: King Faisal Specialist Hospital & Research Centre}
+  khcc.jo: {credibility: reputable, publisher: King Hussein Cancer Center}
+  # Africa
+  cansa.org.za: {credibility: reputable, publisher: Cancer Association of South Africa}
+  # Cancer centres
+  mskcc.org: {credibility: reputable, publisher: Memorial Sloan Kettering Cancer Center}
+  mdanderson.org: {credibility: reputable, publisher: MD Anderson Cancer Center}
+  dana-farber.org: {credibility: reputable, publisher: Dana-Farber Cancer Institute}
+  mayoclinic.org: {credibility: reputable, publisher: Mayo Clinic}
+  hopkinsmedicine.org: {credibility: reputable, publisher: Johns Hopkins Medicine}
+  # Evidence syntheses & journals
+  cochranelibrary.com: {credibility: peer_reviewed, publisher: Cochrane Library}
+  cochrane.org: {credibility: peer_reviewed, publisher: Cochrane}
+  thelancet.com: {credibility: peer_reviewed, publisher: The Lancet}
+  nejm.org: {credibility: peer_reviewed, publisher: New England Journal of Medicine}
+  jamanetwork.com: {credibility: peer_reviewed, publisher: JAMA Network}
+  bmj.com: {credibility: peer_reviewed, publisher: BMJ}
+  nature.com: {credibility: peer_reviewed, publisher: Nature Portfolio}
+  ascopubs.org: {credibility: peer_reviewed, publisher: ASCO Publications}
+  acsjournals.onlinelibrary.wiley.com: {credibility: peer_reviewed, publisher: ACS Journals}
+  onlinelibrary.wiley.com: {credibility: peer_reviewed, publisher: Wiley}
+  academic.oup.com: {credibility: peer_reviewed, publisher: Oxford University Press}
+  sciencedirect.com: {credibility: peer_reviewed, publisher: Elsevier}
+  link.springer.com: {credibility: peer_reviewed, publisher: Springer}
+  aacrjournals.org: {credibility: peer_reviewed, publisher: AACR Journals}
+  plos.org: {credibility: peer_reviewed, publisher: PLOS}
+  frontiersin.org: {credibility: peer_reviewed, publisher: Frontiers}
+  mdpi.com: {credibility: peer_reviewed, publisher: MDPI}
+  biomedcentral.com: {credibility: peer_reviewed, publisher: BioMed Central}
+  # Generic health media (secondary sources)
+  medicalnewstoday.com: {credibility: general, publisher: Medical News Today}
+  healthline.com: {credibility: general, publisher: Healthline}
+  webmd.com: {credibility: general, publisher: WebMD}
+
+# Name patterns (case-insensitive regex) matched against publisher / journal / author fields.
+publishers:
+  - {pattern: "world health organi[sz]ation|organisation mondiale de la santé|\\bWHO\\b|\\bOMS\\b", credibility: authoritative}
+  - {pattern: "international agency for research on cancer|\\bIARC\\b|\\bCIRC\\b", credibility: authoritative}
+  - {pattern: "world cancer research fund|\\bWCRF\\b|american institute for cancer research|\\bAICR\\b", credibility: authoritative}
+  - {pattern: "national cancer institute|institut national du cancer|instituto nacional de c[aâ]ncer", credibility: authoritative}
+  - {pattern: "american cancer society|cancer research uk|deutsche[sn]? krebsforschungszentrum", credibility: authoritative}
+  - {pattern: "\\bESMO\\b|\\bASCO\\b|\\bNCCN\\b|\\bNICE\\b|haute autorit[ée] de sant[ée]", credibility: authoritative}
+  - {pattern: "cochrane", credibility: peer_reviewed}
+  - {pattern: "lancet|new england journal|\\bJAMA\\b|\\bBMJ\\b|journal of clinical oncology|ca: a cancer journal|cancer epidemiology|annals of oncology|journal of the national cancer institute|international journal of cancer|british journal of cancer|nature|plos|frontiers|nutrients|cancers \\(basel\\)|\\bMDPI\\b|BMC ", credibility: peer_reviewed}
