@@ -27,5 +27,5 @@ export async function noHorizontalOverflow(page: Page) {
 export const LOCALES = ["en", "fr", "es", "pt", "de", "it", "ar"] as const;
 export const PAGES = [
   "", "/ask", "/insights", "/community", "/community/guidelines", "/check", "/plan", "/library", "/methodology", "/profile",
-  "/about", "/admin", "/appointment", "/transparency",
+  "/about", "/admin", "/appointment", "/transparency", "/privacy", "/terms", "/imprint", "/accessibility",
 ];

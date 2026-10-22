@@ -243,3 +243,48 @@ def test_quality_and_safety_metrics_are_exported(built_client):
     assert 'safety_triggers_total{language="en",rule="medical_emergency",surface="chat"}' in text
     assert 'chat_answers_total{language="en",mode="extractive"}' in text
     assert "chat_grounded_ratio_count" in text
+
+
+def test_legal_details_come_from_settings(tmp_path, corpus):
+    from fastapi.testclient import TestClient
+
+    from app.main import create_app
+
+    blank = make_settings(tmp_path / "a", corpus)
+    container = Container(blank)
+    with TestClient(create_app(blank, container)) as client:
+        data = client.get("/api/v1/legal").json()
+        assert data["approved"] is False and data["operator"]["name"] is None
+        assert set(data["missing"]) >= {"name", "address", "email"}
+    container.close()
+
+    filled = make_settings(tmp_path / "b", corpus, legal_operator_name="Stepwell gGmbH",
+                           legal_operator_address="Musterstraße 1 | 10115 Berlin | Germany",
+                           legal_contact_email="hello@example.org", legal_content_responsible="A. Example",
+                           legal_supervisory_authority="Berliner Beauftragte für Datenschutz",
+                           legal_hosting="Hosting: Example Cloud, Frankfurt (EU)", legal_approved=True,
+                           legal_effective_date="2026-11-01")
+    container = Container(filled)
+    with TestClient(create_app(filled, container)) as client:
+        r = client.get("/api/v1/legal")
+        data = r.json()
+        assert data["operator"]["address"] == ["Musterstraße 1", "10115 Berlin", "Germany"]
+        assert data["missing"] == [] and data["approved"] is True and data["effective_date"] == "2026-11-01"
+        assert "ETag" in r.headers
+    container.close()
+
+
+def test_public_status_hides_source_locations_in_production(tmp_path, corpus):
+    from fastapi.testclient import TestClient
+
+    from app.main import create_app
+
+    settings = make_settings(tmp_path, corpus, environment="production", admin_api_key="k" * 32)
+    container = Container(settings)
+    with TestClient(create_app(settings, container)) as client:
+        sources = client.get("/api/v1/status").json()["sources"]
+        assert sources and all(s["uri"] == f"{s['kind']}://…" for s in sources)
+        assert str(corpus) not in client.get("/api/v1/status").text
+        admin = client.get("/api/v1/admin/sources", headers={"X-Admin-Key": "k" * 32}).json()
+        assert str(corpus) in json.dumps(admin)  # operators still see where data comes from
+    container.close()

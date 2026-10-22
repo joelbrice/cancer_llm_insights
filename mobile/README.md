@@ -60,3 +60,10 @@ pnpm --filter @stepwell/mobile exec eas build --profile preview       # signed b
 
 Store submission checklist (privacy labels, medical disclaimer, crisis-line verification per country) lives in
 `docs/BUILD_SPEC.md` §11.
+
+- **Store texts** in 7 languages: `store.config.json` for the App Store (`eas metadata:push`) and
+  `store/google-play/<locale>/` for Google Play.
+- **Privacy questionnaire answers, review notes and screenshots:** `docs/STORE_LISTING.md`.
+- **Build profiles:** `eas.json` points `preview` at staging and `production` at the production site.
+- **Legal pages:** Me → the legal links (`src/app/legal/[page].tsx`). They read the operator's details from the API
+  and still show their text offline.

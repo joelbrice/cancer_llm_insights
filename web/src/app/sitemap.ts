@@ -3,7 +3,8 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const pages = ["", "/ask", "/insights", "/library", "/check", "/appointment", "/methodology", "/transparency", "/about"];
+  const pages = ["", "/ask", "/insights", "/library", "/check", "/appointment", "/methodology", "/transparency", "/about",
+    "/privacy", "/terms", "/imprint", "/accessibility"];
   return LOCALES.flatMap((lang) =>
     pages.map((page) => ({
       url: `${site}/${lang}${page}`,

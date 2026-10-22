@@ -42,8 +42,8 @@ def _drop_test_schemas():
         from sqlalchemy import create_engine, text
 
         engine = create_engine(TEST_DATABASE_URL)
-        with engine.begin() as conn:
-            for schema in _SCHEMAS:
+        for schema in _SCHEMAS:  # one transaction each: dropping them all at once exhausts the lock table
+            with engine.begin() as conn:
                 conn.execute(text(f'drop schema if exists "{schema}" cascade'))
         engine.dispose()
 

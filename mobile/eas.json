@@ -9,11 +9,11 @@
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://staging-api.example.org" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://staging.stepwell.example" }
     },
     "production": {
       "autoIncrement": true,
-      "env": { "EXPO_PUBLIC_API_URL": "https://api.example.org" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://app.stepwell.example" }
     }
   },
   "submit": { "production": {} }

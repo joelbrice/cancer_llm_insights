@@ -373,6 +373,9 @@ export function JoinCommunity({ meta, onToken }: { meta: CommunityMeta; onToken:
           <Pressable onPress={() => router.push("/guidelines")} accessibilityRole="link">
             <Txt style={{ color: colors.brand, fontWeight: "600" }}>{t("community.guidelinesTitle")} →</Txt>
           </Pressable>
+          <Pressable onPress={() => router.push("/legal/privacy")} accessibilityRole="link">
+            <Txt style={{ color: colors.brand }}>{t("legal.readPrivacy")}</Txt>
+          </Pressable>
           <Button label={t("community.join")} onPress={() => void join()} disabled={busy || handle.trim().length < 3 || !(checks.age && checks.rules && checks.consent)} />
           <Button variant="ghost" icon="key-outline" label={t("community.haveKey")} onPress={() => (setRestoring(true), setError(null))} />
         </>

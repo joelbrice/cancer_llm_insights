@@ -50,6 +50,7 @@ import type {
   SourceCreate,
   TopicStatus,
 } from "./types";
+import type { LegalInfo } from "./legal/types";
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -141,6 +142,11 @@ export class StepwellClient {
 
   meta(signal?: AbortSignal) {
     return this.request<Meta>("GET", "/meta", undefined, { signal });
+  }
+
+  /** Who runs this deployment, for the privacy policy, terms, legal notice and accessibility statement. */
+  legal(signal?: AbortSignal) {
+    return this.request<LegalInfo>("GET", "/legal", undefined, { signal });
   }
 
   insights(query: InsightQuery = {}, signal?: AbortSignal) {

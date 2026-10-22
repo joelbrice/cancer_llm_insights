@@ -42,9 +42,11 @@ mobile/           Expo SDK 57 app (iOS, Android, web)
 packages/shared/  TypeScript client, types, i18n, evidence/lifestyle/plan/community logic shared by web + mobile
 ml/               Llama fine-tuning: RAFT data checks, clinical review gate, QLoRA, serving, release gates
 data/             The reserved evidence folder + sources.yaml (the link to local data or online buckets)
-deploy/k8s/       Kubernetes (kustomize): API, workers, web, HPA, PDB, network policies, ingress
+deploy/k8s/       Kubernetes (kustomize): API, workers, web, HPA, PDB, network policies, ingress;
+                  production and staging overlays; nightly backup component
 deploy/monitoring/ Prometheus alert rules (safety, answer quality, service health)
-docs/             BUILD_SPEC.md · ARCHITECTURE.md · OPERATIONS.md
+scripts/          e2e stack, backup / restore / restore drill, load test, launch readiness check
+docs/             BUILD_SPEC · ARCHITECTURE · OPERATIONS · LAUNCH · SECURITY_REVIEW · LOAD_TEST · STORE_LISTING
 ```
 
 ## Quick start (development)
@@ -70,7 +72,8 @@ cp .env.example .env && docker compose up -d --build    # Postgres, Redis, Qdran
 docker compose --profile llm up -d                      # + vLLM serving the fine-tuned Llama (GPU)
 ```
 
-Kubernetes: `kubectl apply -k deploy/k8s/overlays/production` (see `docs/OPERATIONS.md`).
+Kubernetes: `kubectl apply -k deploy/k8s/overlays/staging`, then `…/production` (see `docs/OPERATIONS.md`).
+Before launch: `python3 scripts/launch_check.py https://<site>` and the manual steps in `docs/LAUNCH.md`.
 
 ## Quality
 
@@ -80,13 +83,17 @@ make typecheck   # shared, web, mobile
 make e2e         # Playwright journeys + axe (WCAG 2.2 AA) on every page in every language, phone and desktop
 ```
 
-CI runs all of these, the web production build, a Metro bundle of the mobile app, and both container builds.
+CI runs all of these, the engine tests again on PostgreSQL, the end-to-end suite on PostgreSQL and Redis, the web
+production build, a Metro bundle of the mobile app, both container builds, dependency audits and validation of the
+Kubernetes manifests.
 
 ## Documentation
 
 - [Build specification](docs/BUILD_SPEC.md): product, journeys, evidence framework, AI, clinical safety (hazard
   log), community governance, privacy and regulation, accessibility, NFRs, launch criteria.
-- [Architecture](docs/ARCHITECTURE.md) · [Operations](docs/OPERATIONS.md) · [Data folder](data/README.md) ·
+- [Launch checklist](docs/LAUNCH.md): what is built, and every remaining manual step before going live.
+- [Architecture](docs/ARCHITECTURE.md) · [Operations](docs/OPERATIONS.md) · [Security review](docs/SECURITY_REVIEW.md) ·
+  [Load test](docs/LOAD_TEST.md) · [App store submission](docs/STORE_LISTING.md) · [Data folder](data/README.md) ·
   [Model pipeline](ml/README.md) · [Mobile](mobile/README.md)
 
 ## Licence

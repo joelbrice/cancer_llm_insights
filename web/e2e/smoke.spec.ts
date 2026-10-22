@@ -47,3 +47,23 @@ test("Italian and Arabic browsers land in their language, and Arabic reads right
     await ctx.close();
   }
 });
+
+test("legal pages are linked from every page and stay marked as drafts until approved", async ({ page, errors }) => {
+  await page.goto("/de", { waitUntil: "networkidle" });
+  const footer = page.getByRole("contentinfo");
+  for (const [label, heading] of [
+    ["Datenschutz", "Datenschutzerklärung"],
+    ["Nutzungsbedingungen", "Nutzungsbedingungen"],
+    ["Impressum", "Impressum"],
+    ["Barrierefreiheit", "Erklärung zur Barrierefreiheit"],
+  ] as const) {
+    await footer.getByRole("link", { name: label, exact: true }).click();
+    await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();
+    await expect(page.getByRole("note")).toContainText("Entwurf zur rechtlichen Prüfung");
+  }
+  // The test stack sets no operator details: they are flagged, never silently empty.
+  await expect(page.getByText("[Name des Anbieters: noch zu ergänzen]").first()).toBeVisible();
+  await page.goto("/ar/privacy", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { level: 1, name: "سياسة الخصوصية" })).toBeVisible();
+  expect(errors).toEqual([]);
+});

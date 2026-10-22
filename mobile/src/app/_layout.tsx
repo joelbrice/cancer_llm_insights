@@ -41,6 +41,7 @@ function Navigator() {
         <Stack.Screen name="guidelines" options={{ title: t("community.guidelinesTitle") }} />
         <Stack.Screen name="appointment" options={{ title: t("nav.appointment") }} />
         <Stack.Screen name="transparency" options={{ title: t("transparency.title") }} />
+        <Stack.Screen name="legal/[page]" options={{ title: t("legal.title") }} />
       </Stack>
       <WelcomeNotice />
       <SyncAgent />

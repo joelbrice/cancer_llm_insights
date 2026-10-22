@@ -819,6 +819,33 @@ export const en = {
       other: "Something else",
     },
   },
+  legal: {
+    title: "Legal",
+    privacy: "Privacy policy",
+    terms: "Terms of use",
+    imprint: "Legal notice",
+    accessibility: "Accessibility",
+    draft: "Draft for legal review: this text has not been approved yet and may change before launch.",
+    version: "Version of {date}",
+    missing: "[{field}: to be completed]",
+    readPrivacy: "How we handle your data: privacy policy",
+    unavailable: "The operator's details could not be loaded, so some details are missing. Please try again later.",
+    fields: {
+      operator: "operator name",
+      address: "postal address",
+      email: "email address",
+      phone: "phone number",
+      representative: "authorised representative",
+      register: "register entry",
+      vatId: "VAT number",
+      contentResponsible: "person responsible for content",
+      dpo: "data protection officer",
+      authority: "supervisory authority",
+      hosting: "hosting providers",
+      accessibilityAuthority: "enforcement body",
+      date: "date",
+    },
+  },
 } as const;
 
 type Widen<T> = T extends string ? string : { [K in keyof T]: Widen<T[K]> };

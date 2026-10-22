@@ -49,7 +49,9 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
         <p className="mt-2 text-ink-2">{t("about.safety")}</p>
       </section>
       <p className="text-sm text-ink-3">
-        {brandName()} · {t("about.version", { version: status.data?.version ?? "1.0.0" })} · {t("about.openSource")}{" "}
+        {brandName()} · {t("about.version", { version: status.data?.version ?? "1.0.0" })}
+        {/* Llama licence: "Built with Llama" is shown whenever answers come from the fine-tuned model. */}
+        {status.data && status.data.llm.provider !== "extractive" ? " · Built with Llama" : ""} · {t("about.openSource")}{" "}
         <a className="text-brand underline underline-offset-2" href={BRAND.repository} rel="noopener noreferrer" target="_blank">
           GitHub
         </a>

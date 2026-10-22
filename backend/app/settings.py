@@ -178,6 +178,24 @@ class Settings(BaseSettings):
     device_sync_writes_per_minute: int = 10   # per sync id (clients debounce their writes)
     device_sync_retention_days: int = 400     # blobs untouched for this long are deleted
 
+    # ── Legal pages: who runs this deployment (docs/LAUNCH.md). Shown in the privacy policy, terms, legal notice
+    # (Impressum, § 5 DDG) and accessibility statement on web and mobile. Missing values appear as visible
+    # "to be completed" placeholders, and every page carries a draft notice until LEGAL_APPROVED=true.
+    legal_operator_name: str | None = None            # legal name of the person or organisation (the controller)
+    legal_operator_address: str | None = None         # postal address; separate lines with "|"
+    legal_contact_email: str | None = None
+    legal_contact_phone: str | None = None
+    legal_representative: str | None = None           # who may represent the organisation (e.g. managing director)
+    legal_register: str | None = None                 # register court and number, e.g. "Amtsgericht …, HRB …"
+    legal_vat_id: str | None = None
+    legal_content_responsible: str | None = None      # responsible for content (§ 18 (2) MStV): name and address
+    legal_dpo_contact: str | None = None              # data protection officer, if one is appointed
+    legal_supervisory_authority: str | None = None    # data protection authority responsible for the operator
+    legal_hosting: str | None = None                  # processors, e.g. "Hosting: <provider>, <EU region>"
+    legal_accessibility_authority: str | None = None  # where people can turn if an accessibility request fails
+    legal_effective_date: str | None = None           # date of the current version, YYYY-MM-DD
+    legal_approved: bool = False                      # counsel has approved the texts: hides the draft notice
+
     # ── Retention (docs/BUILD_SPEC.md §10.1) ──────────────────────────────────
     community_removed_retention_days: int = 90
     feedback_retention_days: int = 365

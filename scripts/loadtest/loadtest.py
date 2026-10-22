@@ -159,17 +159,33 @@ async def join_community(client: httpx.AsyncClient) -> str | None:
     return r.json().get("token") if r.status_code == 201 else None
 
 
+class ApiRouting(httpx.AsyncHTTPTransport):
+    """Send /api/… to a separate API origin, as the Kubernetes ingress does (pages still go to the web server)."""
+
+    def __init__(self, api_base: str | None, **kw) -> None:
+        super().__init__(**kw)
+        self.api = httpx.URL(api_base) if api_base else None
+
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+        if self.api is not None and request.url.path.startswith("/api/"):
+            request.url = request.url.copy_with(scheme=self.api.scheme, host=self.api.host, port=self.api.port)
+            request.headers["Host"] = self.api.netloc.decode()
+        return await super().handle_async_request(request)
+
+
 async def run(args: argparse.Namespace) -> int:
     limits = httpx.Limits(max_connections=args.users * 2, max_keepalive_connections=args.users)
     timeout = httpx.Timeout(30.0, connect=10.0)
-    async with httpx.AsyncClient(base_url=args.base.rstrip("/"), limits=limits, timeout=timeout,
+    transport = ApiRouting(args.api, limits=limits)
+    async with httpx.AsyncClient(base_url=args.base.rstrip("/"), transport=transport, timeout=timeout,
                                  headers={"User-Agent": "stepwell-loadtest"}) as client:
         ids = await discover(client)
         token = await join_community(client)
         print(f"insights per language: { {k: len(v) for k, v in ids.items()} }; community member: {bool(token)}",
               file=sys.stderr)
         stats = Stats()
-        names, weights = zip(*MIX, strict=True)
+        mix = [(n, w) for n, w in MIX if not args.steps or any(n.startswith(p) for p in args.steps.split(","))]
+        names, weights = zip(*mix, strict=True)
         deadline = time.perf_counter() + args.duration
         started = time.perf_counter()
 
@@ -209,7 +225,8 @@ def report(stats: Stats, elapsed: float, args: argparse.Namespace) -> int:
     if error_rate > 0.01:
         failed.append(f"error rate {error_rate:.2%} > 1%")
     lines = [
-        f"Load test: {args.users} virtual users for {elapsed:.0f} s against {args.base} "
+        f"Load test: {args.users} virtual users for {elapsed:.0f} s against {args.base}"
+        f"{f' (API at {args.api})' if args.api else ''} "
         f"(think time {args.think:.1f} s).",
         "",
         f"Requests: {total_ok + total_err} ({(total_ok + total_err) / elapsed:.1f}/s), errors {total_err} "
@@ -236,6 +253,9 @@ def report(stats: Stats, elapsed: float, args: argparse.Namespace) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--base", default="http://localhost:3000", help="site URL (web, with /api routed to the API)")
+    parser.add_argument("--api", help="API origin for /api/… requests (default: through --base, like Compose); "
+                                     "e.g. http://localhost:8000 to mirror the Kubernetes ingress")
+    parser.add_argument("--steps", help="only steps starting with these prefixes, e.g. api_,chat_ or page_")
     parser.add_argument("--users", type=int, default=50)
     parser.add_argument("--duration", type=float, default=60.0, help="seconds")
     parser.add_argument("--ramp", type=float, default=10.0, help="seconds to start all users")

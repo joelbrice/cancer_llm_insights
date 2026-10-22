@@ -134,6 +134,11 @@ export function JoinCommunity({ meta, onToken }: { meta: CommunityMeta; onToken:
               {t("community.guidelinesTitle")} <TextArrow />
             </Link>
           </p>
+          <p className="text-sm">
+            <Link href={`/${lang}/privacy`} className="text-brand hover:underline">
+              {t("legal.readPrivacy")} <TextArrow />
+            </Link>
+          </p>
           <div className="flex flex-wrap items-center gap-2">
             <button type="submit" className="btn btn-primary" disabled={busy || handle.trim().length < 3 || !(age && rules && consent)}>
               {t("community.join")}

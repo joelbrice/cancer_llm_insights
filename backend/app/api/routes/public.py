@@ -47,7 +47,12 @@ def cached_json(request: Request, payload: Any, max_age: int = 60) -> Response:
 @router.get("/status", response_model=PlatformStatus, tags=["platform"])
 async def status(c: Container = Depends(container_dep)) -> PlatformStatus:
     available = await c.llm.health() if c.llm else None
-    return c.platform.status(llm_available=available)
+    result = c.platform.status(llm_available=available)
+    if c.settings.environment in ("production", "staging"):
+        # Public endpoint: do not reveal bucket names or server paths. The admin API has the full locations.
+        for source in result.sources:
+            source.uri = f"{source.kind}://…"
+    return result
 
 
 @router.get("/meta", tags=["platform"])
@@ -69,6 +74,36 @@ def meta(request: Request, c: Container = Depends(container_dep)) -> Response:
         "audiences": [{"id": k, "label": v} for k, v in AUDIENCES.items()],
     }
     return cached_json(request, payload, max_age=3600)
+
+
+LEGAL_FIELDS = {
+    "name": "legal_operator_name", "address": "legal_operator_address", "email": "legal_contact_email",
+    "phone": "legal_contact_phone", "representative": "legal_representative", "register": "legal_register",
+    "vat_id": "legal_vat_id", "content_responsible": "legal_content_responsible", "dpo": "legal_dpo_contact",
+    "supervisory_authority": "legal_supervisory_authority", "hosting": "legal_hosting",
+    "accessibility_authority": "legal_accessibility_authority",
+}
+# Needed before launch in any case; the others depend on the operator (a register entry only for companies, etc.).
+LEGAL_REQUIRED = ("name", "address", "email", "content_responsible", "supervisory_authority", "hosting")
+
+
+@router.get("/legal", tags=["platform"])
+def legal(request: Request, c: Container = Depends(container_dep)) -> Response:
+    """Operator details for the privacy policy, terms, legal notice and accessibility statement."""
+    s = c.settings
+    operator: dict[str, Any] = {}
+    for key, attr in LEGAL_FIELDS.items():
+        value = (getattr(s, attr) or "").strip()
+        operator[key] = value or None
+    if operator["address"]:
+        operator["address"] = [line.strip() for line in operator["address"].split("|") if line.strip()]
+    payload = {
+        "operator": operator,
+        "effective_date": s.legal_effective_date,
+        "approved": s.legal_approved,
+        "missing": [k for k in LEGAL_REQUIRED if not operator.get(k)],
+    }
+    return cached_json(request, payload, max_age=600)
 
 
 @router.post("/chat", tags=["assistant"], response_model=ChatResponse,

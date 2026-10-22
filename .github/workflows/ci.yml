@@ -32,7 +32,7 @@ jobs:
     services:
       postgres:
         image: postgres:17-alpine
-        env: { POSTGRES_USER: stepwell, POSTGRES_PASSWORD: ci-only, POSTGRES_DB: stepwell_test }
+        env: { POSTGRES_USER: stepwell, POSTGRES_HOST_AUTH_METHOD: trust, POSTGRES_DB: stepwell_test }
         ports: ["5432:5432"]
         options: --health-cmd "pg_isready -U stepwell" --health-interval 5s --health-timeout 3s --health-retries 20
     steps:
@@ -42,7 +42,7 @@ jobs:
       - run: pip install -e ".[dev,postgres]"
       # Production runs on PostgreSQL, which enforces column lengths and types that SQLite ignores.
       - run: pytest
-        env: { TEST_DATABASE_URL: "postgresql+psycopg://stepwell:ci-only@localhost:5432/stepwell_test" }
+        env: { TEST_DATABASE_URL: "postgresql+psycopg://stepwell@localhost:5432/stepwell_test" }
 
   ml:
     name: Model pipeline (lint + tests)
@@ -82,7 +82,7 @@ jobs:
     services:
       postgres:
         image: postgres:17-alpine
-        env: { POSTGRES_USER: stepwell, POSTGRES_PASSWORD: ci-only, POSTGRES_DB: stepwell }
+        env: { POSTGRES_USER: stepwell, POSTGRES_HOST_AUTH_METHOD: trust, POSTGRES_DB: stepwell }
         ports: ["5432:5432"]
         options: --health-cmd "pg_isready -U stepwell" --health-interval 5s --health-timeout 3s --health-retries 20
       redis:
@@ -90,7 +90,7 @@ jobs:
         ports: ["6379:6379"]
         options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 20
     env:
-      E2E_DATABASE_URL: postgresql+psycopg://stepwell:ci-only@localhost:5432/stepwell
+      E2E_DATABASE_URL: postgresql+psycopg://stepwell@localhost:5432/stepwell
       E2E_REDIS_URL: redis://localhost:6379/0
     steps:
       - uses: actions/checkout@v4
@@ -145,6 +145,8 @@ jobs:
       # the app or the web server) are listed under pnpm.auditConfig in package.json; see docs/SECURITY_REVIEW.md.
       - name: JavaScript dependencies (known vulnerabilities)
         run: pnpm audit --prod --audit-level high
+      - name: App store texts within the stores' length limits
+        run: python scripts/check_store_listing.py
       - name: Kubernetes manifests (kustomize build + schema validation)
         run: |
           curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz | tar xz

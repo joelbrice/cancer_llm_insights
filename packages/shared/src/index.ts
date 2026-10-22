@@ -5,6 +5,7 @@ export * from "./community";
 export * from "./evidence";
 export * from "./i18n";
 export * from "./journeys";
+export * from "./legal";
 export * from "./lifestyle";
 export * from "./offline";
 export * from "./plan";

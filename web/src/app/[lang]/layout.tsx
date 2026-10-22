@@ -1,6 +1,6 @@
 import "../globals.css";
 
-import { brandName, BRAND, createTranslator, localeDirection, LOCALES } from "@stepwell/shared";
+import { brandName, BRAND, createTranslator, LEGAL_PAGES, localeDirection, LOCALES } from "@stepwell/shared";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -71,6 +71,9 @@ export default async function RootLayout({ children, params }: { children: React
                 <Link className="hover:underline" href={href(lang, "/library")}>{t("nav.library")}</Link>
                 <Link className="hover:underline" href={href(lang, "/transparency")}>{t("nav.transparency")}</Link>
                 <Link className="hover:underline" href={href(lang, "/about")}>{t("nav.about")}</Link>
+                {LEGAL_PAGES.map((page) => (
+                  <Link key={page} className="hover:underline" href={href(lang, `/${page}`)}>{t(`legal.${page}`)}</Link>
+                ))}
                 <Link className="hover:underline" href={href(lang, "/admin")}>{t("nav.admin")}</Link>
               </nav>
             </div>

@@ -23,6 +23,16 @@ data:
   INSIGHT_REVIEW_REQUIRED: "false" # set "true" so rebuilt insights wait for clinical sign-off (recommended)
   DEVICE_SYNC_ENABLED: "true"
   SYNC_INTERVAL_SECONDS: "300"
+  # Legal pages (docs/LAUNCH.md): set these in the overlay. Empty values show as "to be completed", and every page
+  # says "draft" until LEGAL_APPROVED is "true". Separate address lines with "|".
+  LEGAL_OPERATOR_NAME: ""
+  LEGAL_OPERATOR_ADDRESS: ""
+  LEGAL_CONTACT_EMAIL: ""
+  LEGAL_CONTENT_RESPONSIBLE: ""
+  LEGAL_SUPERVISORY_AUTHORITY: ""
+  LEGAL_HOSTING: ""
+  LEGAL_EFFECTIVE_DATE: ""
+  LEGAL_APPROVED: "false"
 ---
 # Where the evidence library lives. In Kubernetes, link buckets (S3/GCS/Azure) — not local folders.
 apiVersion: v1

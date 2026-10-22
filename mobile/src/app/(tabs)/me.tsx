@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { brandName, deleteRemoteCopy, LOCALE_NAMES, LOCALES, STORAGE_KEYS, type SyncState } from "@stepwell/shared";
+import { brandName, deleteRemoteCopy, LEGAL_PAGES, LOCALE_NAMES, LOCALES, STORAGE_KEYS, type LegalPageId, type SyncState } from "@stepwell/shared";
 import Constants from "expo-constants";
 import { router, type Href } from "expo-router";
 import { useState } from "react";
@@ -10,12 +10,21 @@ import { Button, Card, Chip, Disclaimer, mirrorStyle, Screen, Txt, type IconName
 import { offlinePackKeys } from "@/lib/offline";
 import { cancelWeeklyReminder } from "@/lib/reminders";
 import { API_URL_KEY, useSettings } from "@/lib/settings";
+import { useApi } from "@/lib/useApi";
 import { readJSON, removeKeys } from "@/lib/storage";
 import { radius, space } from "@/lib/theme";
+
+const LEGAL_ICONS: Record<LegalPageId, IconName> = {
+  privacy: "lock-closed-outline",
+  terms: "document-text-outline",
+  imprint: "business-outline",
+  accessibility: "accessibility-outline",
+};
 
 export default function Me() {
   const { t, locale, setLocale, themePref, setThemePref, apiUrl, setApiUrl, colors, api, rtl } = useSettings();
   const [url, setUrl] = useState(apiUrl);
+  const status = useApi(() => api.status(), [api]); // for the "Built with Llama" notice
   const links: { href: Href; icon: IconName; label: string }[] = [
     { href: "/plan", icon: "checkbox-outline", label: t("nav.plan") },
     { href: "/check", icon: "clipboard-outline", label: t("nav.check") },
@@ -56,6 +65,21 @@ export default function Me() {
           >
             <Ionicons name={l.icon} size={22} color={colors.brand} />
             <Txt style={{ flex: 1 }}>{l.label}</Txt>
+            <Ionicons name="chevron-forward" size={18} color={colors.ink3} style={mirrorStyle(rtl, "chevron-forward")} />
+          </Pressable>
+        ))}
+      </Card>
+
+      <Card style={{ padding: 0, gap: 0 }}>
+        {LEGAL_PAGES.map((page, i) => (
+          <Pressable
+            key={page}
+            onPress={() => router.push(`/legal/${page}`)}
+            accessibilityRole="link"
+            style={{ flexDirection: "row", alignItems: "center", gap: 12, minHeight: 48, paddingHorizontal: space(4), borderTopWidth: i ? 1 : 0, borderTopColor: colors.border }}
+          >
+            <Ionicons name={LEGAL_ICONS[page]} size={20} color={colors.ink2} />
+            <Txt style={{ flex: 1 }}>{t(`legal.${page}`)}</Txt>
             <Ionicons name="chevron-forward" size={18} color={colors.ink3} style={mirrorStyle(rtl, "chevron-forward")} />
           </Pressable>
         ))}
@@ -113,7 +137,8 @@ export default function Me() {
         <Txt style={{ fontWeight: "600" }}>{t("about.safetyTitle")}</Txt>
         <Txt variant="small">{t("about.safety")}</Txt>
         <Txt variant="muted">
-          {brandName()} · {t("about.version", { version: Constants.expoConfig?.version ?? "0.1.0" })} · {t("about.openSource")}
+          {brandName()} · {t("about.version", { version: Constants.expoConfig?.version ?? "0.1.0" })}
+          {status.data && status.data.llm.provider !== "extractive" ? " · Built with Llama" : ""} · {t("about.openSource")}
         </Txt>
       </Card>
       <Button variant="danger" icon="trash-outline" label={t("profile.clear")} onPress={clearAll} />

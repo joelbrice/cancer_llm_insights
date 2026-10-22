@@ -646,9 +646,13 @@ below 5 are shown as "fewer than 5".
 **Network and HTTP:**
 
 - TLS everywhere, with HSTS.
-- Security headers: `nosniff`, `DENY` framing, referrer policy and permissions policy.
+- Security headers: Content-Security-Policy (web), `nosniff`, `DENY` framing, referrer policy and permissions
+  policy.
 - CORS allow-list.
-- Rate limits per client, backed by Redis across replicas.
+- Rate limits per client, backed by Redis across replicas. Behind proxies the client address is read from the right
+  of `X-Forwarded-For` (`FORWARDED_FOR_HOPS`), so clients cannot choose their own.
+- Request bodies over 2 MiB are rejected, at the ingress and in the API.
+- Logs carry no client IP addresses; the public status hides where the library is stored.
 
 **Access and secrets:**
 
@@ -669,7 +673,9 @@ below 5 are shown as "fewer than 5".
 
 **Process:**
 
-- Dependency updates and image scanning in CI.
+- Dependency audits in CI (pip-audit, `pnpm audit`), weekly Dependabot updates, and kustomize/schema validation
+  of the deployment manifests.
+- Internal security review before launch (`docs/SECURITY_REVIEW.md`).
 - Annual penetration test plus one before launch.
 - Backups: Postgres PITR (RPO ≤ 15 min), Qdrant snapshots (daily) and immutable object storage for the library.
 
@@ -762,6 +768,9 @@ Usability tests include people with low vision, older adults and people with lim
 - [ ] Age rating 17+/18+ because of the community, with the age gate in the app.
 - [ ] Crisis lines verified for every launch country.
 - [ ] Accessibility statement and support URL; privacy policy URL; account deletion in the app (Apple 5.1.1(v)).
+  Drafts of the privacy policy, terms, legal notice and accessibility statement are built into web and mobile in
+  all 7 languages, waiting for counsel (`docs/LAUNCH.md`). Store texts, privacy questionnaire answers and review
+  notes: `docs/STORE_LISTING.md`.
 - [ ] Screenshots in seven languages (Arabic right to left); no real patient images.
 - [ ] Permissions explained in context and only requested when the feature is turned on: notifications (weekly
   reminder) and motion / physical activity (step counts). The motion text is translated in `mobile/locales/`.
@@ -811,7 +820,9 @@ See `docs/ARCHITECTURE.md` for diagrams and components. In summary:
 |---|---|---|
 | Engine | Unit and integration tests: ingestion, retrieval, grading, verification, safety (including multilingual crisis phrasing and false-alarm cases), chat streaming, insights, jobs, community (screening, privacy rights, CORS) | `backend/tests` (CI) |
 | Shared | i18n completeness and placeholders, client (SSE, community headers), lifestyle check, plan streaks | `packages/shared/test` (CI) |
-| Web / mobile | Type-checking; production build; Metro bundle; Playwright end-to-end journeys and axe accessibility checks on every page in every language, phone and desktop | CI |
+| Web / mobile | Type-checking; production build; Metro bundle; Playwright end-to-end journeys and axe accessibility checks on every page in every language, phone and desktop, on PostgreSQL and Redis | CI |
+| Production parity | The engine test suite also runs on PostgreSQL (`TEST_DATABASE_URL`), which enforces column types and lengths that SQLite ignores | CI |
+| Load | `scripts/loadtest/loadtest.py` against the §12 targets (`docs/LOAD_TEST.md`) | Staging, before each major release |
 | Model | Data validation, review gate, behavioural metrics, release gates | `ml/tests` (CI); `stepwell-ml evaluate` |
 | Platform evaluation | Golden questions per journey and language (`data/eval/`): recall@k, MRR, groundedness, citation precision, abstention, safety flags | Admin console → *Run evaluation* |
 | Human | Clinical review of insights; native-speaker review; usability tests per journey (5 participants per journey per round); accessibility audit; penetration test | Before launch and each major release |
@@ -825,7 +836,7 @@ See `docs/ARCHITECTURE.md` for diagrams and components. In summary:
 | Environment | Runs on | Notes |
 |---|---|---|
 | Development | Laptop | SQLite, local index, inline jobs, extractive or Ollama |
-| Staging | Kubernetes or Compose | Production-like with a staging library; used for clinical review of new insights |
+| Staging | Kubernetes (`deploy/k8s/overlays/staging`) or Compose | Production-like with a staging library; insights wait for clinical review; not indexed; nightly backups and restore drills |
 | Production | Kubernetes | `deploy/k8s/overlays/production` |
 
 ### 14.2 Release
@@ -877,6 +888,9 @@ behave exactly as in v1.0, and the end-to-end and regression suites check this.
 ---
 
 ## 16. Launch acceptance criteria (definition of done)
+
+Status and the remaining manual steps are tracked in `docs/LAUNCH.md`. `scripts/launch_check.py` verifies a running
+deployment.
 
 - [ ] All CI suites green. Model release gates pass. The platform evaluation meets its targets: safety 100 %,
   groundedness ≥ 0.95, abstention correctness ≥ 0.9.
