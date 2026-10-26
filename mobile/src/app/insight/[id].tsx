@@ -210,7 +210,7 @@ export default function InsightScreen() {
       <Feedback targetType="insight" targetId={insight.id} />
       <Button variant="ghost" icon="chatbubbles-outline" label={t("insights.askFollowUp")} onPress={() => router.push({ pathname: "/ask", params: { q: insight.question } })} />
       <Txt variant="muted">
-        {t("insights.generated", { date: formatDate(locale, insight.generated_at), version: insight.version })} · {insight.model}
+        {t("insights.aiGenerated")} {t("insights.generated", { date: formatDate(locale, insight.generated_at), version: insight.version })} · {insight.model}
       </Txt>
       <Disclaimer />
     </Screen>

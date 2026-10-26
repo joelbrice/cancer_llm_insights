@@ -92,6 +92,9 @@ Kubernetes manifests.
 - [Build specification](docs/BUILD_SPEC.md): product, journeys, evidence framework, AI, clinical safety (hazard
   log), community governance, privacy and regulation, accessibility, NFRs, launch criteria.
 - [Launch checklist](docs/LAUNCH.md): what is built, and every remaining manual step before going live.
+- Compliance drafts for the DPO and counsel: [DPIA](docs/compliance/DPIA.md) ·
+  [Records of processing](docs/compliance/RECORDS_OF_PROCESSING.md) ·
+  [Medical device qualification memo](docs/compliance/MDR_QUALIFICATION.md)
 - [Architecture](docs/ARCHITECTURE.md) · [Operations](docs/OPERATIONS.md) · [Security review](docs/SECURITY_REVIEW.md) ·
   [Load test](docs/LOAD_TEST.md) · [App store submission](docs/STORE_LISTING.md) · [Data folder](data/README.md) ·
   [Model pipeline](ml/README.md) · [Mobile](mobile/README.md)

@@ -116,6 +116,7 @@ export const en = {
   ask: {
     title: "Ask {app}",
     subtitle: "Answers come only from the evidence library, with citations you can check.",
+    aiNotice: "Answers are written by AI from the evidence library only. AI can make mistakes, so check the sources.",
     placeholder: "Ask about prevention, treatment or life after cancer…",
     send: "Send",
     stop: "Stop",
@@ -175,6 +176,7 @@ export const en = {
     timeline: "Publication years",
     askFollowUp: "Ask a follow-up question",
     generated: "Generated {date} · version {version}",
+    aiGenerated: "Written with AI from the cited research.",
     quote: "Quoted passage",
     openSource: "Open source",
     context: "Full passage",

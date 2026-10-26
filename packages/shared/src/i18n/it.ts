@@ -119,6 +119,7 @@ export const it: Dictionary = {
   ask: {
     title: "Chiedi a {app}",
     subtitle: "Le risposte provengono solo dalla biblioteca delle prove, con citazioni che puoi verificare.",
+    aiNotice: "Le risposte sono scritte dall'IA, solo a partire dalla biblioteca delle prove. L'IA può sbagliare, quindi controlla le fonti.",
     placeholder: "Chiedi sulla prevenzione, sulle cure o sulla vita dopo il cancro…",
     send: "Invia",
     stop: "Interrompi",
@@ -178,6 +179,7 @@ export const it: Dictionary = {
     timeline: "Anni di pubblicazione",
     askFollowUp: "Fai un'altra domanda",
     generated: "Generata il {date} · versione {version}",
+    aiGenerated: "Scritto con l'IA a partire dalle ricerche citate.",
     quote: "Passaggio citato",
     openSource: "Apri la fonte",
     context: "Passaggio completo",

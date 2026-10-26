@@ -2,6 +2,7 @@ import { expect, test } from "./fixtures";
 
 test("ask: streamed, cited answer with a quoted source", async ({ page, errors }) => {
   await page.goto("/en/ask", { waitUntil: "networkidle" });
+  await expect(page.getByText("Answers are written by AI")).toBeVisible(); // EU AI Act Art. 50(1)
   await page.locator("#ask-input").fill("Does physical activity lower the risk of colon cancer?");
   await page.keyboard.press("Enter");
   const cite = page.getByRole("button", { name: /^Sources 1:/ }).first();

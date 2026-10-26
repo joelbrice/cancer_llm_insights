@@ -120,6 +120,7 @@ export const de: Dictionary = {
   ask: {
     title: "{app} fragen",
     subtitle: "Antworten stammen ausschließlich aus der Evidenzbibliothek – mit überprüfbaren Belegen.",
+    aiNotice: "Die Antworten schreibt eine KI ausschließlich aus der Evidenzbibliothek. KI kann Fehler machen – prüfen Sie die Quellen.",
     placeholder: "Fragen zu Vorbeugung, Behandlung oder dem Leben nach Krebs…",
     send: "Senden",
     stop: "Stoppen",
@@ -179,6 +180,7 @@ export const de: Dictionary = {
     timeline: "Erscheinungsjahre",
     askFollowUp: "Eine Anschlussfrage stellen",
     generated: "Erstellt am {date} · Version {version}",
+    aiGenerated: "Mit KI aus der zitierten Forschung erstellt.",
     quote: "Zitierte Passage",
     openSource: "Quelle öffnen",
     context: "Vollständige Passage",

@@ -141,6 +141,8 @@ export function ChatView({ initialQuestion }: { initialQuestion?: string }) {
         <div>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{t("ask.title")}</h1>
           <p className="mt-1 text-ink-2">{t("ask.subtitle")}</p>
+          {/* EU AI Act Art. 50(1): people are told they are reading AI-generated answers. */}
+          <p className="mt-1 text-sm text-ink-3">{t("ask.aiNotice")}</p>
         </div>
         {turns.length ? (
           <button

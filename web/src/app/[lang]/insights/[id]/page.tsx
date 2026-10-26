@@ -195,6 +195,7 @@ export default async function InsightPage({ params }: Props) {
             </Link>
           </div>
           <p className="text-xs text-ink-3">
+            {t("insights.aiGenerated")}{" "}
             {t("insights.generated", { date: formatDate(lang, insight.generated_at), version: insight.version })} · {insight.model} · prompt{" "}
             {insight.prompt_version}
           </p>

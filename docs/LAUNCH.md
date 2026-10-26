@@ -20,6 +20,8 @@ Use `--staging` for staging. It must pass before launch.
 | Stores | App Store and Google Play texts in 7 languages; draft privacy questionnaire answers; review notes; health-data declarations | `mobile/store.config.json`, `mobile/store/`, `docs/STORE_LISTING.md` |
 | Accessibility | Automated WCAG 2.2 AA checks (axe) on every page in every language, phone and desktop | `web/e2e/a11y.spec.ts` |
 | Licence | "Built with Llama" shown when the fine-tuned model answers | About page (web, mobile) |
+| AI Act | AI notice on the Ask screen and on every insight (Art. 50), in all 7 languages | Web and mobile |
+| Compliance drafts | DPIA, records of processing and medical-device qualification memo, written from the code, for the DPO and counsel to complete and sign | `docs/compliance/` |
 
 ## Part 2: needs people
 
@@ -67,14 +69,17 @@ Roughly in this order. Each item says who does it and how to tell it is done.
   3. Set `LEGAL_EFFECTIVE_DATE` and `LEGAL_APPROVED=true`.
 - [ ] **Data protection officer.** Health data is processed as a core activity, so a DPO is probably required
   (Art. 37(1)(c) GDPR, § 38 BDSG). Appoint one and set `LEGAL_DPO_CONTACT`.
-- [ ] **DPIA and records of processing.**
-  - A data protection impact assessment (Art. 35) covering health data, the community, AI-generated answers and
-    encrypted sync.
-  - Records of processing (Art. 30), based on BUILD_SPEC §10.1.
-- [ ] **Medical device qualification.** A regulatory memo confirming that Stepwell is not a medical device under
-  MDR / MDCG 2019-11, for the intended purpose in BUILD_SPEC §10.4.
-- [ ] **AI Act.** Confirm the transparency obligations (Art. 50) are met: answers say they are AI-generated, and
-  insights are clinically reviewed.
+- [ ] **DPIA and records of processing.** Drafts written from the code are ready for the DPO:
+  - `docs/compliance/DPIA.md` (Art. 35): processing, necessity, a risk table and measures, plus three recommended
+    measures to decide on;
+  - `docs/compliance/RECORDS_OF_PROCESSING.md` (Art. 30): bracketed fields for the operator to complete.
+
+  Review them, complete the organisational parts, decide on the residual risks and sign.
+- [ ] **Medical device qualification.** `docs/compliance/MDR_QUALIFICATION.md` is a draft memo for regulatory
+  counsel: the MDCG 2019-11 steps, design boundaries, changes that would require re-qualification, and points to
+  confirm (including the store subtitle).
+- [ ] **AI Act.** The Ask screen and every insight now say the text is written with AI (Art. 50). Counsel to
+  confirm this, and whether clinical sign-off of insights meets the Art. 50(4) exception (see the memo).
 - [ ] **Export compliance** for encrypted sync, before the first store build that includes it
   (`docs/STORE_LISTING.md`).
 - [ ] **Trademark and domain.** Clearance search for "Stepwell" in the launch countries.

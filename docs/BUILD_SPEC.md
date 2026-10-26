@@ -635,8 +635,9 @@ below 5 are shown as "fewer than 5".
 | Encrypted sync (optional): ciphertext of plan and profile, version, SHA-256 of the write secret | Server; **unreadable by Stepwell** (the key never leaves the person's devices) | Until sync is turned off; deleted after 400 days without an update | Art. 9(2)(a) explicit consent (turning sync on) |
 | Operational logs | Server, no bodies, no IP storage beyond rate-limit memory | 30 days | Art. 6(1)(f) |
 
-- A **DPIA** is mandatory before launch because of health data and the community.
-- Records of processing are kept.
+- A **DPIA** is mandatory before launch because of health data and the community (draft:
+  `docs/compliance/DPIA.md`).
+- Records of processing are kept (draft: `docs/compliance/RECORDS_OF_PROCESSING.md`).
 - Processors are under data processing agreements (cloud, model hosting). The default deployment self-hosts the
   model, so no third-party LLM sees user questions.
 - There is no advertising, no third-party analytics and no cross-site tracking.
@@ -709,7 +710,7 @@ Design choices that support non-device status:
 | EU | MDR 2017/745 and MDCG 2019-11 | Qualification of software |
 | UK | MHRA guidance on software and AI as a medical device | Qualification of software |
 | US | FDA *General Wellness* guidance (2019) and the 21st Century Cures Act software provisions | Qualification of software |
-| EU | AI Act | Transparency obligations: users are told they interact with AI-generated content; the model card is published |
+| EU | AI Act | Transparency obligations (Art. 50): the Ask screen and every insight say the text is written with AI; the model card is published. Not high-risk while not a medical device (`docs/compliance/MDR_QUALIFICATION.md`) |
 
 Any future feature that personalises clinical decisions requires re-qualification **before** development.
 

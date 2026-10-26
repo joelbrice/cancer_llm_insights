@@ -122,6 +122,7 @@ export const fr: Dictionary = {
   ask: {
     title: "Interroger {app}",
     subtitle: "Les réponses proviennent uniquement de la bibliothèque de preuves, avec des citations vérifiables.",
+    aiNotice: "Les réponses sont rédigées par une IA, uniquement à partir de la bibliothèque de preuves. Une IA peut se tromper ; vérifiez les sources.",
     placeholder: "Posez une question sur la prévention, les traitements ou la vie après un cancer…",
     send: "Envoyer",
     stop: "Arrêter",
@@ -181,6 +182,7 @@ export const fr: Dictionary = {
     timeline: "Années de publication",
     askFollowUp: "Poser une question complémentaire",
     generated: "Généré le {date} · version {version}",
+    aiGenerated: "Rédigé par IA à partir des recherches citées.",
     quote: "Passage cité",
     openSource: "Ouvrir la source",
     context: "Passage complet",

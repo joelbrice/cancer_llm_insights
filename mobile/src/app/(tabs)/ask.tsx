@@ -154,6 +154,8 @@ export default function Ask() {
             <View style={{ flex: 1 }}>
               <Txt variant="title">{t("ask.title")}</Txt>
               <Txt variant="small">{t("ask.subtitle")}</Txt>
+              {/* EU AI Act Art. 50(1): people are told they are reading AI-generated answers. */}
+              <Txt variant="muted">{t("ask.aiNotice")}</Txt>
             </View>
             {turns.length ? (
               <Pressable onPress={() => (abort.current?.abort(), setTurns([]))} accessibilityRole="button" accessibilityLabel={t("ask.newChat")} hitSlop={8}>
