@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@stepwell/shared": "workspace:*",
-    "next": "16.3.8",
+    "next": "16.4.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "server-only": "^0.0.1"

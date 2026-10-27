@@ -29,6 +29,8 @@ An internal review of the whole platform before launch. It does not replace the 
 | 9 | Info | The base model was downloaded without a pinned revision, so a changed upstream repository could alter a reviewed model. | Optional `base_model_revision`, recorded in the run card. |
 | 10 | Info | SHA-1 is used for ETags and document ids. This is not a security use, but it is flagged by scanners and FIPS systems. | Marked `usedforsecurity=False`; values are unchanged. |
 | 11 | Info | Llama licence: the "Built with Llama" notice was not shown. | Shown on the About page (web and mobile) when the fine-tuned model answers. |
+| 12 | Critical | **Next.js advisories published on 26 October 2026** (found by the new CI audit). Next.js 16.0–16.4.0 has two unauthenticated remote code execution flaws (Image Optimization API: GHSA-2464-fhr4-w9xw; `use cache`: GHSA-673q-mjm6-r5xr) and a Server Actions denial of service (GHSA-p3m5-59mp-jv5r). | The web app is upgraded from 16.3.8 to 16.4.2. |
+| 13 | High | **pypdf advisory (CVE-2026-115572)** in the PDF reader that parses documents from linked buckets, which are untrusted input. | The minimum version is raised to 6.21.2 in `backend/pyproject.toml`. certifi (PYSEC-2026-4320) is updated automatically on a fresh install. |
 
 ## Reviewed and found sound
 
@@ -81,6 +83,9 @@ An internal review of the whole platform before launch. It does not replace the 
   - node-forge (GHSA-86w9-cpqp-85rv) and braces (GHSA-vfj7-8cjw-p6xm) have no patched release yet. They are used
     only at build time and are not in the app bundle or the web server. They are listed under
     `pnpm.auditConfig.ignoreGhsas` in `package.json`; remove them when Expo ships fixed versions.
+  - zod 3.x (GHSA-mrhx-c7xc-m3w5: memory exhaustion on oversized input) is likewise used only by `@expo/cli` to
+    validate local project configuration. The fix exists only in zod 4, which `@expo/cli` does not support yet.
+    Listed with the others.
   - Two moderate advisories (uuid, decode-uri-component) are also in Expo tooling and URL parsing on the device.
 - **Compose behind a reverse proxy.** The Next.js server passes the client's `X-Forwarded-For` through unchanged.
   A Compose deployment must therefore:
