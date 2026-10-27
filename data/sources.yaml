@@ -1,0 +1,120 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Data source registry — the link between the platform and your corpus
+# ─────────────────────────────────────────────────────────────────────────────
+#
+#  Every source is a URI. The same code path handles all of them (fsspec):
+#
+#    ./data/raw/research            local folder (relative to the repo root)
+#    file:///mnt/corpus/cancer      local folder (absolute)
+#    s3://bucket/prefix/            AWS S3, MinIO, Cloudflare R2, Wasabi, Ceph …  (pip install ".[s3]")
+#    gs://bucket/prefix/            Google Cloud Storage                         (pip install ".[gcs]")
+#    az://container/prefix/         Azure Blob Storage / ADLS Gen2               (pip install ".[azure]")
+#    https://host/corpus/manifest.jsonl   HTTP(S) manifest listing remote files
+#
+#  Secrets are NEVER written in this file. Reference environment variables with
+#  ${VAR} or ${VAR:-default}; they are resolved at runtime and redacted in logs/API.
+#
+#  Quick alternative without editing this file:  DATA_SOURCE_URI=s3://bucket/prefix
+#  Sources can also be added at runtime from the Admin screen (/admin) or the API
+#  (POST /api/v1/admin/sources).
+#
+#  The platform polls enabled sources every SYNC_INTERVAL_SECONDS and ingests new,
+#  changed and removed files automatically — just drop data in and wait.
+# ─────────────────────────────────────────────────────────────────────────────
+version: 1
+
+defaults:
+  include:
+    - "**/*.pdf"
+    - "**/*.html"
+    - "**/*.htm"
+    - "**/*.md"
+    - "**/*.txt"
+    - "**/*.json"
+    - "**/*.jsonl"
+    - "**/*.csv"
+    - "**/*.docx"
+    - "**/*.xml"
+  exclude:
+    - "**/.*"
+    - "**/.*/**"
+    - "**/_drafts/**"
+    - "**/*.meta.json"
+    - "**/*.meta.yaml"
+    - "**/*.meta.yml"
+    - "**/manifest.jsonl"
+    - "**/manifest.csv"
+    - "**/_manifest.jsonl"
+
+sources:
+  # Peer-reviewed research: meta-analyses, RCTs, cohort studies … (PDF, JATS/PubMed XML, JSONL abstracts)
+  - id: local-research
+    name: Research articles
+    uri: ./data/raw/research
+    enabled: true
+    defaults:
+      source_type: auto          # study design detected from metadata / text
+      credibility: peer_reviewed
+
+  # Guidelines and position statements from authoritative bodies (WHO, IARC, NCI, WCRF, ESMO …)
+  - id: local-guidelines
+    name: Clinical & public-health guidelines
+    uri: ./data/raw/guidelines
+    enabled: true
+    defaults:
+      source_type: guideline
+      credibility: authoritative
+
+  # Institutional patient-information pages (cancer centres, national cancer institutes …)
+  - id: local-web
+    name: Institutional web pages
+    uri: ./data/raw/web
+    enabled: true
+    defaults:
+      source_type: institutional_web
+      credibility: reputable
+
+  # Expert web blogs — lowest weight in evidence grading, never sole support for a "High" grade
+  - id: local-blogs
+    name: Expert blogs
+    uri: ./data/raw/blogs
+    enabled: true
+    defaults:
+      source_type: blog
+      credibility: general
+
+  # ── Online bucket examples (disabled until you fill the environment variables) ──
+  # - id: s3-corpus
+  #   name: Research corpus on S3 / MinIO
+  #   uri: s3://my-bucket/cancer-corpus/
+  #   enabled: true
+  #   storage_options:
+  #     key: ${AWS_ACCESS_KEY_ID}
+  #     secret: ${AWS_SECRET_ACCESS_KEY}
+  #     client_kwargs:
+  #       endpoint_url: ${S3_ENDPOINT_URL:-}
+  #       region_name: ${AWS_REGION:-eu-west-1}
+  #   defaults:
+  #     source_type: auto
+  #     credibility: peer_reviewed
+  #
+  # - id: gcs-guidelines
+  #   name: Guidelines on GCS
+  #   uri: gs://my-bucket/guidelines/
+  #   enabled: true
+  #   storage_options:
+  #     token: ${GOOGLE_APPLICATION_CREDENTIALS}
+  #   defaults:
+  #     source_type: guideline
+  #     credibility: authoritative
+  #
+  # - id: azure-blogs
+  #   name: Blog exports on Azure
+  #   uri: az://corpus/blogs/
+  #   enabled: true
+  #   storage_options:
+  #     account_name: ${AZURE_STORAGE_ACCOUNT}
+  #     account_key: ${AZURE_STORAGE_KEY}
+  #   defaults:
+  #     source_type: blog
+  #     credibility: general
