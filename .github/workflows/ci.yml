@@ -139,8 +139,10 @@ jobs:
           pip install pip-audit -e "backend[prod]" -e ml
           pip-audit --skip-editable
       - uses: pnpm/action-setup@v4
+      # No pnpm cache: this job only reads the lockfile (`pnpm audit`) and installs nothing, so there is no store to
+      # save (saving a missing store fails the job when the lockfile changes).
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: pnpm }
+        with: { node-version: 22 }
       # High and critical advisories fail the build. Two unpatched advisories in Expo's command-line tooling (not in
       # the app or the web server) are listed under pnpm.auditConfig in package.json; see docs/SECURITY_REVIEW.md.
       - name: JavaScript dependencies (known vulnerabilities)
