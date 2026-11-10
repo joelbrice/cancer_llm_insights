@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE">
+      <PMID>99000001</PMID>
+      <Article>
+        <Journal><Title>Test Fixture Journal of Oncology</Title><JournalIssue><PubDate><Year>2022</Year></PubDate></JournalIssue></Journal>
+        <ArticleTitle>[Test fixture] Smoking cessation and lung cancer risk over time: a meta-analysis</ArticleTitle>
+        <Abstract>
+          <AbstractText Label="BACKGROUND">Tobacco smoking is the leading preventable cause of lung cancer.</AbstractText>
+          <AbstractText Label="RESULTS">Lung cancer risk decreased progressively with the number of years since quitting smoking. Former smokers had a substantially lower risk of lung cancer than people who continued to smoke.</AbstractText>
+          <AbstractText Label="CONCLUSIONS">Quitting smoking at any age is beneficial and lowers the risk of lung cancer compared with continued smoking.</AbstractText>
+        </Abstract>
+        <AuthorList><Author><LastName>Fixture</LastName><Initials>D</Initials></Author></AuthorList>
+        <Language>eng</Language>
+        <PublicationTypeList><PublicationType>Journal Article</PublicationType><PublicationType>Meta-Analysis</PublicationType></PublicationTypeList>
+        <ELocationID EIdType="doi">10.99999/fixture.0001</ELocationID>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE">
+      <PMID>99000002</PMID>
+      <Article>
+        <Journal><Title>Test Fixture Journal of Oncology</Title><JournalIssue><PubDate><Year>2023</Year></PubDate></JournalIssue></Journal>
+        <ArticleTitle>[Test fixture] Smoking cessation after a cancer diagnosis and overall survival</ArticleTitle>
+        <Abstract>
+          <AbstractText Label="RESULTS">Patients who stopped smoking after a cancer diagnosis had better overall survival than patients who continued to smoke. Continued smoking during treatment was associated with more treatment complications.</AbstractText>
+          <AbstractText Label="CONCLUSIONS">Smoking cessation support should be offered to all patients who smoke at the time of a cancer diagnosis.</AbstractText>
+        </Abstract>
+        <AuthorList><Author><LastName>Fixture</LastName><Initials>E</Initials></Author></AuthorList>
+        <Language>eng</Language>
+        <PublicationTypeList><PublicationType>Journal Article</PublicationType><PublicationType>Observational Study</PublicationType></PublicationTypeList>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+</PubmedArticleSet>

@@ -1,0 +1,9 @@
+# Nightly logical backups (kustomize component). Enabled in staging; add it to production once a restore drill on
+# staging has passed (docs/OPERATIONS.md → Backups):
+#   components: [../../components/backup]
+# This is the second line of defence. Point-in-time recovery (RPO ≤ 15 min) is configured on the database service
+# itself (managed PostgreSQL PITR, or CloudNativePG / pgBackRest WAL archiving to EU object storage).
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - backup.yaml

@@ -1,0 +1,28 @@
+{
+  "name": "stepwell",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Stepwell \u2014 evidence-based lifestyle insights for cancer prevention and living well with cancer",
+  "license": "MIT",
+  "packageManager": "pnpm@10.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter @stepwell/web dev",
+    "build:web": "pnpm --filter @stepwell/web build",
+    "dev:mobile": "pnpm --filter @stepwell/mobile start",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  },
+  "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-86w9-cpqp-85rv",
+        "GHSA-vfj7-8cjw-p6xm",
+        "GHSA-mrhx-c7xc-m3w5"
+      ]
+    }
+  }
+}

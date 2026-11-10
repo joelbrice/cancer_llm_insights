@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cancer-insights-backend"
+version = "1.0.0"
+description = "Evidence-grounded, multilingual LLM engine for cancer prevention and living-with-cancer insights"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "Joel Tiogo" }]
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "sqlalchemy>=2.0.30",
+  "httpx>=0.27",
+  "numpy>=1.26",
+  "fsspec>=2024.6",
+  "pyyaml>=6.0",
+  "pypdf>=6.21.2",   # earlier versions: CVE-2026-115572 (PDFs from linked buckets are untrusted input)
+  "beautifulsoup4>=4.12",
+  "lxml>=5.2",
+  "python-docx>=1.1",
+  "prometheus-client>=0.20",
+  "typer>=0.12",
+  "snowballstemmer>=2.2",
+]
+
+[project.optional-dependencies]
+# Storage connectors — the "link" to online buckets
+s3 = ["s3fs>=2024.6"]
+gcs = ["gcsfs>=2024.6"]
+azure = ["adlfs>=2024.4"]
+buckets = ["s3fs>=2024.6", "gcsfs>=2024.6", "adlfs>=2024.4"]
+# Production infrastructure
+postgres = ["psycopg[binary]>=3.1"]
+qdrant = ["qdrant-client>=1.10"]
+queue = ["redis>=5.0", "rq>=1.16"]
+# Local neural models (embeddings, reranker, NLI verifier). Pulls PyTorch.
+models = ["sentence-transformers>=3.0"]
+prod = [
+  "psycopg[binary]>=3.1",
+  "qdrant-client>=1.10",
+  "redis>=5.0",
+  "rq>=1.16",
+  "s3fs>=2024.6",
+  "gcsfs>=2024.6",
+  "adlfs>=2024.4",
+]
+dev = ["pytest>=8.2", "ruff>=0.5", "mypy>=1.10", "types-PyYAML"]
+
+[project.scripts]
+cancer-insights = "app.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+app = ["resources/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning", "ignore:Using `httpx` with `starlette.testclient`"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501", "B008", "RUF001", "RUF002", "RUF003", "RUF012"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true

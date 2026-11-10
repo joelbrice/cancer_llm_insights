@@ -1,0 +1,152 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "© 2026 [operator name]",
+    "categories": [
+      "HEALTH_AND_FITNESS"
+    ],
+    "info": {
+      "en-US": {
+        "title": "Stepwell",
+        "subtitle": "Cancer prevention & support",
+        "promoText": "Ask about lifestyle and cancer and get answers that show their sources and how strong the evidence is. Free, private, no account needed.",
+        "description": "Stepwell helps you understand what research says about lifestyle and cancer: whether you want to lower your risk, are going through treatment, are living well after cancer or are caring for someone.\n\nASK AND READ\n• Ask questions in your own words. Answers come only from a curated library of research and guidelines.\n• Every statement links to the passage it comes from and shows how strong the evidence is.\n• Read short insights on physical activity, alcohol, smoking, nutrition, sleep, fatigue, screening, fear of recurrence and more, for your situation.\n\nTAKE SMALL STEPS\n• Build a personal plan from the insights and tick off what you did each week.\n• Take a lifestyle check that compares your habits with public recommendations. It is not a risk score.\n• Prepare questions for your next appointment and take notes during the visit.\n• Optional weekly reminders, read-aloud, offline reading and step counts.\n\nSUPPORT EACH OTHER\n• A small, moderated community for encouragement: pseudonymous, members only, and every post is checked before it appears.\n\nPRIVATE BY DESIGN\n• No account needed. Your profile, plan and lifestyle check stay on your device.\n• No advertising, no tracking, no sale of data.\n• Optional end-to-end-encrypted sync between your devices.\n\nIn English, Français, Español, Português, Deutsch, Italiano and العربية.\n\nIMPORTANT\nStepwell provides general health information. It does not diagnose or treat, and it does not replace your care team. In an emergency, call 112 in Europe or your local emergency number.",
+        "keywords": [
+          "cancer",
+          "prevention",
+          "survivorship",
+          "lifestyle",
+          "evidence",
+          "exercise",
+          "nutrition",
+          "alcohol",
+          "caregiver",
+          "support"
+        ],
+        "marketingUrl": "https://app.stepwell.example/en",
+        "supportUrl": "https://app.stepwell.example/en/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/en/privacy"
+      },
+      "de-DE": {
+        "title": "Stepwell",
+        "subtitle": "Krebsvorbeugung & Begleitung",
+        "promoText": "Fragen Sie zu Lebensstil und Krebs – mit Antworten, die ihre Quellen und die Stärke der Evidenz zeigen. Kostenlos, privat, ohne Konto.",
+        "description": "Stepwell hilft Ihnen zu verstehen, was die Forschung über Lebensstil und Krebs sagt: ob Sie Ihr Risiko senken möchten, gerade in Behandlung sind, nach einer Krebserkrankung gut leben möchten oder jemanden begleiten.\n\nFRAGEN UND LESEN\n• Stellen Sie Fragen in Ihren eigenen Worten. Die Antworten stammen nur aus einer kuratierten Bibliothek von Studien und Leitlinien.\n• Jede Aussage verweist auf die Textstelle, aus der sie stammt, und zeigt, wie belastbar die Evidenz ist.\n• Lesen Sie kurze Erkenntnisse zu Bewegung, Alkohol, Rauchen, Ernährung, Schlaf, Erschöpfung, Früherkennung, Angst vor einem Rückfall und mehr – passend zu Ihrer Situation.\n\nKLEINE SCHRITTE\n• Stellen Sie aus den Erkenntnissen einen persönlichen Plan zusammen und haken Sie jede Woche ab, was Sie geschafft haben.\n• Der Lebensstil-Check vergleicht Ihre Gewohnheiten mit öffentlichen Empfehlungen. Er ist keine Risikoberechnung.\n• Bereiten Sie Fragen für Ihren nächsten Arzttermin vor und machen Sie sich während des Gesprächs Notizen.\n• Auf Wunsch: wöchentliche Erinnerungen, Vorlesen, Lesen ohne Verbindung und Schrittzähler.\n\nGEGENSEITIGE UNTERSTÜTZUNG\n• Eine kleine, moderierte Gemeinschaft zur Ermutigung: mit Spitznamen, nur für Mitglieder, und jeder Beitrag wird vor der Veröffentlichung geprüft.\n\nDATENSCHUTZ VON ANFANG AN\n• Kein Konto nötig. Ihr Profil, Ihr Plan und Ihr Lebensstil-Check bleiben auf Ihrem Gerät.\n• Keine Werbung, kein Tracking, kein Verkauf von Daten.\n• Auf Wunsch Ende-zu-Ende-verschlüsselte Synchronisierung zwischen Ihren Geräten.\n\nAuf Deutsch, English, Français, Español, Português, Italiano und العربية.\n\nWICHTIG\nStepwell bietet allgemeine Gesundheitsinformationen. Es stellt keine Diagnosen, behandelt nicht und ersetzt nicht Ihr Behandlungsteam. Im Notfall rufen Sie die 112 an.",
+        "keywords": [
+          "Krebs",
+          "Vorbeugung",
+          "Prävention",
+          "Lebensstil",
+          "Bewegung",
+          "Ernährung",
+          "Alkohol",
+          "Angehörige",
+          "Studien",
+          "Nachsorge"
+        ],
+        "marketingUrl": "https://app.stepwell.example/de",
+        "supportUrl": "https://app.stepwell.example/de/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/de/privacy"
+      },
+      "fr-FR": {
+        "title": "Stepwell",
+        "subtitle": "Prévention et soutien cancer",
+        "promoText": "Posez vos questions sur le mode de vie et le cancer : chaque réponse montre ses sources et le niveau de preuve. Gratuit, privé, sans compte.",
+        "description": "Stepwell vous aide à comprendre ce que dit la recherche sur le mode de vie et le cancer : que vous souhaitiez réduire votre risque, que vous soyez en traitement, que vous viviez après un cancer ou que vous accompagniez un proche.\n\nDEMANDER ET LIRE\n• Posez vos questions avec vos propres mots. Les réponses proviennent uniquement d'une bibliothèque sélectionnée de recherches et de recommandations.\n• Chaque affirmation renvoie au passage dont elle est tirée et indique le niveau de preuve.\n• Lisez de courts repères sur l'activité physique, l'alcool, le tabac, l'alimentation, le sommeil, la fatigue, le dépistage, la peur de la récidive et bien plus, adaptés à votre situation.\n\nAVANCER PAS À PAS\n• Composez votre plan personnel à partir des repères et cochez chaque semaine ce que vous avez fait.\n• Le bilan d'hygiène de vie compare vos habitudes aux recommandations officielles. Ce n'est pas un score de risque.\n• Préparez vos questions pour votre prochain rendez-vous et prenez des notes pendant la consultation.\n• En option : rappels hebdomadaires, lecture à voix haute, lecture hors ligne et nombre de pas.\n\nS'ENTRAIDER\n• Une petite communauté modérée pour s'encourager : sous pseudonyme, réservée aux membres, et chaque message est vérifié avant d'être publié.\n\nCONFIDENTIEL PAR CONCEPTION\n• Aucun compte nécessaire. Votre profil, votre plan et votre bilan restent sur votre appareil.\n• Ni publicité, ni pistage, ni vente de données.\n• Synchronisation chiffrée de bout en bout entre vos appareils, si vous le souhaitez.\n\nEn français, English, Español, Português, Deutsch, Italiano et العربية.\n\nIMPORTANT\nStepwell fournit des informations de santé générales. Il ne pose pas de diagnostic, ne soigne pas et ne remplace pas votre équipe soignante. En cas d'urgence, appelez le 112.",
+        "keywords": [
+          "cancer",
+          "prévention",
+          "hygiène de vie",
+          "activité physique",
+          "nutrition",
+          "alcool",
+          "aidant",
+          "soutien",
+          "preuves"
+        ],
+        "marketingUrl": "https://app.stepwell.example/fr",
+        "supportUrl": "https://app.stepwell.example/fr/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/fr/privacy"
+      },
+      "ar-SA": {
+        "title": "Stepwell",
+        "subtitle": "الوقاية من السرطان والدعم",
+        "promoText": "اسأل عن نمط الحياة والسرطان واحصل على إجابات تُظهر مصادرها ومدى قوة الأدلة. مجاني وخاص ومن دون حساب.",
+        "description": "يساعدك Stepwell على فهم ما تقوله الأبحاث عن نمط الحياة والسرطان: سواء أردت تقليل خطر الإصابة، أو كنت تتلقى العلاج، أو تعيش بعد السرطان، أو ترعى شخصًا عزيزًا.\n\nاسأل واقرأ\n• اطرح أسئلتك بكلماتك الخاصة. تأتي الإجابات فقط من مكتبة منتقاة من الأبحاث والإرشادات.\n• ترتبط كل عبارة بالمقطع الذي أُخذت منه، وتُظهر مدى قوة الأدلة.\n• اقرأ خلاصات قصيرة عن النشاط البدني والكحول والتدخين والتغذية والنوم والتعب والفحص المبكر والخوف من عودة المرض وغير ذلك، بما يناسب وضعك.\n\nخطوات صغيرة\n• كوّن خطتك الشخصية من الخلاصات، وضع علامة كل أسبوع على ما أنجزته.\n• يقارن فحص نمط الحياة عاداتك بالتوصيات العامة، وهو ليس حسابًا للخطر.\n• جهّز أسئلتك لموعدك الطبي القادم ودوّن ملاحظاتك أثناء الزيارة.\n• ميزات اختيارية: تذكيرات أسبوعية، وقراءة بصوت مسموع، وقراءة من دون اتصال، وعدد الخطوات.\n\nندعم بعضنا بعضًا\n• مجتمع صغير خاضع للإشراف للتشجيع: بأسماء مستعارة، وللأعضاء فقط، ويُفحص كل منشور قبل ظهوره.\n\nالخصوصية أولًا\n• لا حاجة إلى حساب. يبقى ملفك الشخصي وخطتك وفحص نمط الحياة على جهازك.\n• لا إعلانات ولا تتبّع ولا بيع للبيانات.\n• مزامنة اختيارية مشفّرة من طرف إلى طرف بين أجهزتك.\n\nمتوفر بالعربية وEnglish وFrançais وEspañol وPortuguês وDeutsch وItaliano.\n\nمهم\nيقدّم Stepwell معلومات صحية عامة. فهو لا يشخّص ولا يعالج ولا يحل محل فريق رعايتك. في حالات الطوارئ، اتصل بالرقم 112 في أوروبا أو برقم الطوارئ المحلي.",
+        "keywords": [
+          "السرطان",
+          "الوقاية",
+          "نمط الحياة",
+          "النشاط البدني",
+          "التغذية",
+          "الكحول",
+          "مقدمو الرعاية",
+          "الدعم",
+          "الأدلة"
+        ],
+        "marketingUrl": "https://app.stepwell.example/ar",
+        "supportUrl": "https://app.stepwell.example/ar/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/ar/privacy"
+      },
+      "es-ES": {
+        "title": "Stepwell",
+        "subtitle": "Prevención y apoyo en cáncer",
+        "promoText": "Pregunta sobre hábitos de vida y cáncer: cada respuesta muestra sus fuentes y la solidez de la evidencia. Gratis, privado y sin cuenta.",
+        "description": "Stepwell te ayuda a entender lo que dice la investigación sobre los hábitos de vida y el cáncer: tanto si quieres reducir tu riesgo como si estás en tratamiento, vives después del cáncer o cuidas de alguien.\n\nPREGUNTA Y LEE\n• Haz preguntas con tus propias palabras. Las respuestas proceden solo de una biblioteca seleccionada de investigaciones y guías.\n• Cada afirmación enlaza con el fragmento del que procede y muestra la solidez de la evidencia.\n• Lee claves breves sobre actividad física, alcohol, tabaco, alimentación, sueño, cansancio, cribado, miedo a la recaída y mucho más, según tu situación.\n\nPASO A PASO\n• Crea tu plan personal a partir de las claves y marca cada semana lo que has hecho.\n• El chequeo de hábitos compara tus costumbres con las recomendaciones oficiales. No es una puntuación de riesgo.\n• Prepara preguntas para tu próxima cita y toma notas durante la consulta.\n• Opcional: recordatorios semanales, lectura en voz alta, lectura sin conexión y recuento de pasos.\n\nAPOYO MUTUO\n• Una pequeña comunidad moderada para animarse: con apodo, solo para miembros, y cada publicación se revisa antes de aparecer.\n\nPRIVADO DESDE EL DISEÑO\n• No necesitas cuenta. Tu perfil, tu plan y tu chequeo se quedan en tu dispositivo.\n• Sin publicidad, sin seguimiento, sin venta de datos.\n• Sincronización opcional cifrada de extremo a extremo entre tus dispositivos.\n\nEn español, English, Français, Português, Deutsch, Italiano y العربية.\n\nIMPORTANTE\nStepwell ofrece información de salud general. No diagnostica ni trata, y no sustituye a tu equipo sanitario. En una emergencia, llama al 112.",
+        "keywords": [
+          "cáncer",
+          "prevención",
+          "hábitos",
+          "ejercicio",
+          "nutrición",
+          "alcohol",
+          "cuidadores",
+          "apoyo",
+          "evidencia"
+        ],
+        "marketingUrl": "https://app.stepwell.example/es",
+        "supportUrl": "https://app.stepwell.example/es/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/es/privacy"
+      },
+      "pt-PT": {
+        "title": "Stepwell",
+        "subtitle": "Prevenção e apoio no cancro",
+        "promoText": "Pergunte sobre estilo de vida e cancro: cada resposta mostra as fontes e a solidez da evidência. Gratuito, privado e sem conta.",
+        "description": "O Stepwell ajuda-o a perceber o que diz a investigação sobre estilo de vida e cancro: quer queira reduzir o seu risco, esteja em tratamento, viva depois do cancro ou cuide de alguém.\n\nPERGUNTAR E LER\n• Faça perguntas com as suas palavras. As respostas vêm apenas de uma biblioteca selecionada de investigação e orientações.\n• Cada afirmação remete para o excerto de onde vem e mostra a solidez da evidência.\n• Leia destaques curtos sobre atividade física, álcool, tabaco, alimentação, sono, cansaço, rastreio, medo de recidiva e muito mais, adequados à sua situação.\n\nPEQUENOS PASSOS\n• Crie o seu plano pessoal a partir dos destaques e assinale todas as semanas o que fez.\n• A avaliação de hábitos compara os seus hábitos com as recomendações oficiais. Não é uma pontuação de risco.\n• Prepare perguntas para a próxima consulta e tome notas durante a visita.\n• Opcional: lembretes semanais, leitura em voz alta, leitura sem ligação e contagem de passos.\n\nAPOIO MÚTUO\n• Uma pequena comunidade moderada para se encorajarem: com alcunha, só para membros, e cada publicação é verificada antes de aparecer.\n\nPRIVADO DESDE A CONCEÇÃO\n• Não precisa de conta. O seu perfil, o seu plano e a sua avaliação ficam no seu dispositivo.\n• Sem publicidade, sem rastreamento, sem venda de dados.\n• Sincronização opcional cifrada de ponta a ponta entre os seus dispositivos.\n\nEm português, English, Français, Español, Deutsch, Italiano e العربية.\n\nIMPORTANTE\nO Stepwell oferece informação geral de saúde. Não diagnostica nem trata, e não substitui a sua equipa de saúde. Em caso de emergência, ligue para o 112.",
+        "keywords": [
+          "cancro",
+          "prevenção",
+          "estilo de vida",
+          "exercício",
+          "nutrição",
+          "álcool",
+          "cuidadores",
+          "apoio",
+          "evidência"
+        ],
+        "marketingUrl": "https://app.stepwell.example/pt",
+        "supportUrl": "https://app.stepwell.example/pt/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/pt/privacy"
+      },
+      "it": {
+        "title": "Stepwell",
+        "subtitle": "Prevenzione e sostegno tumori",
+        "promoText": "Chiedi di stile di vita e tumori: ogni risposta mostra le fonti e la solidità delle prove. Gratuito, privato, senza account.",
+        "description": "Stepwell ti aiuta a capire cosa dice la ricerca su stile di vita e tumori: che tu voglia ridurre il rischio, sia in trattamento, viva dopo un tumore o ti prenda cura di qualcuno.\n\nCHIEDI E LEGGI\n• Fai domande con parole tue. Le risposte provengono solo da una biblioteca selezionata di ricerche e linee guida.\n• Ogni affermazione rimanda al passaggio da cui proviene e mostra la solidità delle prove.\n• Leggi brevi sintesi su attività fisica, alcol, fumo, alimentazione, sonno, stanchezza, screening, paura di una recidiva e molto altro, adatte alla tua situazione.\n\nUN PASSO ALLA VOLTA\n• Crea il tuo piano personale a partire dalle sintesi e spunta ogni settimana ciò che hai fatto.\n• La verifica dello stile di vita confronta le tue abitudini con le raccomandazioni ufficiali. Non è un punteggio di rischio.\n• Prepara le domande per la prossima visita e prendi appunti durante il colloquio.\n• Facoltativi: promemoria settimanali, lettura ad alta voce, lettura offline e conteggio dei passi.\n\nSOSTEGNO RECIPROCO\n• Una piccola comunità moderata per incoraggiarsi: con soprannome, solo per i membri, e ogni post viene controllato prima di comparire.\n\nPRIVACY FIN DALL'INIZIO\n• Nessun account necessario. Il tuo profilo, il tuo piano e la tua verifica restano sul tuo dispositivo.\n• Niente pubblicità, niente tracciamento, nessuna vendita di dati.\n• Sincronizzazione facoltativa cifrata end-to-end tra i tuoi dispositivi.\n\nIn italiano, English, Français, Español, Português, Deutsch e العربية.\n\nIMPORTANTE\nStepwell offre informazioni generali sulla salute. Non fa diagnosi né cure e non sostituisce la tua équipe di cura. In caso di emergenza chiama il 112.",
+        "keywords": [
+          "tumore",
+          "cancro",
+          "prevenzione",
+          "stile di vita",
+          "attività fisica",
+          "alimentazione",
+          "caregiver",
+          "sostegno"
+        ],
+        "marketingUrl": "https://app.stepwell.example/it",
+        "supportUrl": "https://app.stepwell.example/it/imprint",
+        "privacyPolicyUrl": "https://app.stepwell.example/it/privacy"
+      }
+    }
+  }
+}

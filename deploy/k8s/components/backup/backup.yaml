@@ -1,0 +1,104 @@
+# pg_dump of the Stepwell database every night at 02:15 UTC to a dedicated volume, keeping 14 days; and a Qdrant
+# snapshot (created on the Qdrant node; configure Qdrant's snapshot storage to point at object storage).
+# Copy the dumps off-site with your storage tooling (volume snapshots, Velero, or a bucket sync).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: stepwell-backups
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 20Gi } }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  labels: { app.kubernetes.io/name: postgres-backup }
+spec:
+  schedule: "15 2 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels: { app.kubernetes.io/name: postgres-backup }
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          securityContext: { runAsNonRoot: true, runAsUser: 70, runAsGroup: 70, fsGroup: 70, seccompProfile: { type: RuntimeDefault } }
+          containers:
+            - name: pg-dump
+              image: postgres:17-alpine
+              command: ["/bin/sh", "-ec"]
+              args:
+                - |
+                  url="$(printf '%s' "$DATABASE_URL" | sed 's/^postgresql+psycopg:/postgresql:/')"
+                  stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+                  out="/backups/stepwell-$stamp.dump"
+                  pg_dump "$url" -Fc --no-owner -f "$out.partial"
+                  pg_restore --list "$out.partial" > /dev/null   # the archive is readable
+                  mv "$out.partial" "$out"
+                  sha256sum "$out" > "$out.sha256"
+                  find /backups -name 'stepwell-*.dump*' -mtime +14 -delete
+                  echo "backup ok: $out ($(du -h "$out" | cut -f1))"
+              env:
+                - name: DATABASE_URL
+                  valueFrom: { secretKeyRef: { name: stepwell-secrets, key: DATABASE_URL } }
+              resources:
+                requests: { cpu: 100m, memory: 256Mi }
+                limits: { memory: 1Gi }
+              securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+              volumeMounts:
+                - { name: backups, mountPath: /backups }
+                - { name: tmp, mountPath: /tmp }
+          volumes:
+            - { name: backups, persistentVolumeClaim: { claimName: stepwell-backups } }
+            - { name: tmp, emptyDir: {} }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: qdrant-snapshot
+  labels: { app.kubernetes.io/name: qdrant-snapshot }
+spec:
+  schedule: "45 2 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels: { app.kubernetes.io/name: qdrant-snapshot }
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          securityContext: { runAsNonRoot: true, runAsUser: 100, runAsGroup: 101, seccompProfile: { type: RuntimeDefault } }
+          containers:
+            - name: snapshot
+              image: curlimages/curl:8.11.1
+              command: ["/bin/sh", "-ec"]
+              args:
+                - |
+                  curl -fsS -X POST -H "api-key: $QDRANT_API_KEY" \
+                    "$QDRANT_URL/collections/${QDRANT_COLLECTION:-cancer_chunks}/snapshots?wait=true"
+                  echo
+              env:
+                - name: QDRANT_URL
+                  valueFrom: { configMapKeyRef: { name: stepwell-config, key: QDRANT_URL } }
+                - name: QDRANT_COLLECTION
+                  valueFrom: { configMapKeyRef: { name: stepwell-config, key: QDRANT_COLLECTION, optional: true } }
+                - name: QDRANT_API_KEY
+                  valueFrom: { secretKeyRef: { name: stepwell-secrets, key: QDRANT_API_KEY } }
+              resources:
+                requests: { cpu: 10m, memory: 16Mi }
+                limits: { memory: 64Mi }
+              securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }

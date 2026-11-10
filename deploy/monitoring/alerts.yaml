@@ -1,0 +1,96 @@
+# Stepwell alert rules (Prometheus Operator / kube-prometheus-stack). Thresholds follow docs/BUILD_SPEC.md §7.3.
+#   kubectl apply -n stepwell -f deploy/monitoring/alerts.yaml
+# Without the operator, copy `spec.groups` into a plain Prometheus rules file.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: stepwell
+  labels: { release: kube-prometheus-stack }
+spec:
+  groups:
+    - name: stepwell.safety
+      rules:
+        - alert: CommunityCrisisPostWaiting
+          expr: sum(increase(community_posts_total{outcome="held",reason=~"crisis|emergency"}[10m])) > 0
+          labels: { severity: critical, team: moderation }
+          annotations:
+            summary: A community member may be in crisis — review the moderation queue now (target < 1 h).
+            runbook: docs/OPERATIONS.md#incidents
+        - alert: SafetyTriggerRateShift
+          # Week-over-week change > 50 % with enough volume: drift in detection, a new abuse pattern, or a broken rule.
+          expr: |
+            (sum by (rule) (increase(safety_triggers_total[7d])) > 20)
+              and on (rule)
+            (abs(sum by (rule) (increase(safety_triggers_total[7d]))
+                 / clamp_min(sum by (rule) (increase(safety_triggers_total[7d] offset 7d)), 1) - 1) > 0.5)
+          labels: { severity: warning, team: clinical-safety }
+          annotations:
+            summary: "Safety rule {{ $labels.rule }} changed by more than 50 % week over week — CSO review."
+    - name: stepwell.quality
+      rules:
+        - alert: GroundedRatioLow
+          expr: |
+            sum(increase(chat_grounded_ratio_sum[7d])) / clamp_min(sum(increase(chat_grounded_ratio_count[7d])), 1) < 0.9
+            and sum(increase(chat_grounded_ratio_count[7d])) > 100
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: Mean share of verified statements fell below 0.9 over 7 days — check the model and the library.
+        - alert: ExtractiveFallbackHigh
+          expr: |
+            sum(rate(chat_answers_total{mode="extractive_fallback"}[1h]))
+              / clamp_min(sum(rate(chat_answers_total{mode=~"llm|extractive_fallback"}[1h])), 1e-9) > 0.2
+          for: 15m
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: More than 20 % of answers fall back to extractive mode — the model server is failing or saturated.
+        - alert: UnsupportedClaimsSpike
+          expr: sum(increase(chat_unsupported_claims_total[1d])) / clamp_min(sum(increase(chat_answers_total[1d])), 1) > 0.5
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: Many statements fail verification — possible model regression (roll back the adapter if recent).
+    - name: stepwell.canary
+      rules:
+        - alert: CanaryGroundingWorse
+          expr: |
+            (sum(rate(llm_variant_grounded_ratio_sum{variant="canary"}[1h]))
+               / clamp_min(sum(rate(llm_variant_grounded_ratio_count{variant="canary"}[1h])), 1e-9))
+            < (sum(rate(llm_variant_grounded_ratio_sum{variant="stable"}[1h]))
+               / clamp_min(sum(rate(llm_variant_grounded_ratio_count{variant="stable"}[1h])), 1e-9)) - 0.03
+            and sum(increase(llm_variant_grounded_ratio_count{variant="canary"}[1h])) > 20
+          for: 30m
+          labels: { severity: critical, team: ai }
+          annotations:
+            summary: The canary model's answers are less grounded than the stable model's — set LLM_CANARY_PERCENT=0.
+        - alert: CanaryFallbackHigh
+          expr: |
+            sum(rate(llm_variant_answers_total{variant="canary",mode="extractive_fallback"}[1h]))
+              / clamp_min(sum(rate(llm_variant_answers_total{variant="canary"}[1h])), 1e-9) > 0.1
+          for: 15m
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: More than 10 % of canary answers fall back to extractive mode — the candidate adapter is failing.
+    - name: stepwell.service
+      rules:
+        - alert: ApiErrorRateHigh
+          expr: sum(rate(http_requests_total{status=~"5.."}[10m])) / clamp_min(sum(rate(http_requests_total[10m])), 1e-9) > 0.01
+          for: 10m
+          labels: { severity: critical, team: platform }
+          annotations:
+            summary: More than 1 % of API requests fail.
+        - alert: AnswerLatencyHigh
+          expr: histogram_quantile(0.95, sum by (le) (rate(chat_stage_seconds_bucket{stage="generation"}[15m]))) > 10
+          for: 15m
+          labels: { severity: warning, team: ai }
+          annotations:
+            summary: p95 answer generation is above 10 s.
+        - alert: BackgroundJobsFailing
+          expr: sum by (kind) (increase(jobs_total{status="failed"}[1h])) > 2
+          labels: { severity: warning, team: platform }
+          annotations:
+            summary: "{{ $labels.kind }} jobs are failing — check the admin console (Jobs) and worker logs."
+        - alert: LibraryEmpty
+          expr: max(indexed_documents) == 0
+          for: 1h
+          labels: { severity: info, team: content }
+          annotations:
+            summary: No documents are indexed — link the evidence library (docs/OPERATIONS.md).

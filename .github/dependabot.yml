@@ -1,0 +1,27 @@
+# Weekly dependency updates, grouped so each ecosystem opens at most one pull request a week (security updates are
+# raised as soon as an advisory is published). CI, including the dependency audit, runs on every update.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /backend
+    schedule: { interval: weekly, day: monday }
+    groups: { backend: { patterns: ["*"] } }
+  - package-ecosystem: pip
+    directory: /ml
+    schedule: { interval: weekly, day: monday }
+    groups: { ml: { patterns: ["*"] } }
+  - package-ecosystem: npm   # pnpm workspace (pnpm-lock.yaml)
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    # Expo SDK packages move together with `npx expo install --fix`; update them with the SDK, not one by one.
+    ignore:
+      - dependency-name: "expo*"
+      - dependency-name: "@expo/*"
+      - dependency-name: "react-native*"
+    groups: { javascript: { patterns: ["*"] } }
+  - package-ecosystem: docker
+    directories: [/backend, /web, /ml]
+    schedule: { interval: weekly, day: monday }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }

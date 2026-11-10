@@ -1,0 +1,80 @@
+# ── Data (reserved folder: keep structure + docs, never commit corpus or generated artefacts)
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+data/processed/**
+!data/processed/.gitkeep
+data/index/**
+!data/index/.gitkeep
+data/cache/**
+!data/cache/.gitkeep
+data/finetune/**
+!data/finetune/.gitkeep
+data/eval/**
+!data/eval/.gitkeep
+!data/eval/*.example.jsonl
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# ── Node / web / mobile
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+.expo/
+.expo-shared/
+mobile/ios/
+mobile/android/
+web-build/
+npm-debug.log*
+pnpm-debug.log*
+
+# ── ML
+ml/outputs/
+ml/checkpoints/
+wandb/
+mlruns/
+
+# ── Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ── OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Expo web export
+mobile/dist-web/
+
+# Trained adapters, merged weights and GGUF files (large, licence-bound)
+models/
+ml/serve/ollama/*.gguf
+ml/**/eval_report*
+
+# Kubernetes secrets
+deploy/k8s/overlays/*/secrets.env
+
+# Playwright
+web/test-results/
+web/playwright-report/
