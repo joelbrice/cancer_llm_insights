@@ -1,7 +1,7 @@
 # Stepwell web (Next.js standalone). Build from the repository root (pnpm workspace):
 #   docker build -f web/Dockerfile -t stepwell-web --build-arg API_INTERNAL_URL=http://api:8000 .
 # API_INTERNAL_URL is baked into the /api/v1 rewrite at build time and read again at runtime by server components.
-FROM node:22-alpine AS deps
+FROM node:26-alpine AS deps
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 WORKDIR /repo
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
@@ -20,7 +20,7 @@ COPY packages/shared packages/shared
 COPY web web
 RUN pnpm --filter @stepwell/web build
 
-FROM node:22-alpine
+FROM node:26-alpine
 LABEL org.opencontainers.image.title="stepwell-web" org.opencontainers.image.licenses="MIT"
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
 WORKDIR /app
