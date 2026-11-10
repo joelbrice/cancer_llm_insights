@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - name: Shared package (types, i18n completeness, client, lifestyle, plan)
@@ -98,7 +98,7 @@ jobs:
         with: { python-version: "3.11", cache: pip, cache-dependency-path: backend/pyproject.toml }
       - run: pip install -e "backend[postgres,queue]"
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @stepwell/web build
@@ -141,7 +141,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       # No pnpm cache: this job only reads the lockfile (`pnpm audit`) and installs nothing, so there is no store to
       # save (saving a missing store fails the job when the lockfile changes).
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22 }
       # High and critical advisories fail the build. Two unpatched advisories in Expo's command-line tooling (not in
       # the app or the web server) are listed under pnpm.auditConfig in package.json; see docs/SECURITY_REVIEW.md.
