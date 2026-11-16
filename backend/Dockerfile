@@ -1,7 +1,7 @@
 # Stepwell API / worker image.
 #   docker build -t stepwell-api backend/                         # lean: hashing embeddings, remote LLM
 #   docker build -t stepwell-api --build-arg EXTRAS=prod,models backend/   # + local multilingual-e5 embeddings
-FROM python:3.12-slim AS build
+FROM python:3.15-slim AS build
 ARG EXTRAS=prod
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_ONLY_BINARY=lxml,numpy,psycopg-binary
 WORKDIR /src
@@ -12,7 +12,7 @@ RUN python -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip \
       /opt/venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cpu; fi \
  && /opt/venv/bin/pip install ".[${EXTRAS}]"
 
-FROM python:3.12-slim
+FROM python:3.15-slim
 LABEL org.opencontainers.image.title="stepwell-api" org.opencontainers.image.licenses="MIT"
 ENV PATH=/opt/venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
     DATA_DIR=/data HF_HOME=/models/huggingface ENVIRONMENT=production LOG_JSON=true
